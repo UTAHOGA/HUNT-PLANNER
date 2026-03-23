@@ -508,8 +508,7 @@ function renderOutfitterResults() {
   const baseLat = center && typeof center.lat === 'function' ? center.lat() : GOOGLE_BASELINE_DEFAULT_CENTER.lat;
   const baseLng = center && typeof center.lng === 'function' ? center.lng() : GOOGLE_BASELINE_DEFAULT_CENTER.lng;
   const cityOffsets = new Map();
-
-  container.innerHTML = matches.map(o => {
+container.innerHTML = matches.map(o => {
     const logoUrl = escapeHtml(o.logoUrl || 'https://www.uoga.org/assets/default-logo.png');
     return `
     <div class="outfitter-card">
@@ -524,7 +523,7 @@ function renderOutfitterResults() {
       <div class="hunt-card-meta"><strong>Phone:</strong> ${escapeHtml(formatPhoneList(o.phone) || 'N/A')}</div>
       ${o.website ? `<div class="hunt-card-meta" style="margin-top:4px;"><a href="${escapeHtml(o.website)}" target="_blank" rel="noopener noreferrer" class="outfitter-link">Visit Website ➔</a></div>` : ''}
     </div>
-  `}).join('');
+  `}).join('');  
 
   if (!outfittersEnabled || !googleBaselineMap || !google.maps.marker) return;
 
