@@ -13,67 +13,69 @@
       --muted: #6b5646;
       --accent: #bf6b34;
       --accent-dark: #9e5323;
-      --blue: #3653b3;
-      --blue-fill: rgba(54, 83, 179, 0.12);
-      --purple: #6d3bbd;
-      --purple-fill: rgba(139, 79, 125, 0.16);
       --shadow: 0 10px 28px rgba(58, 37, 18, 0.16);
       --font-display: Georgia, "Times New Roman", serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     }
-
     * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-ui); }
+    body { display: grid; grid-template-rows: auto 1fr; }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-ui);
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(244, 239, 228, 0.88);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 220ms ease, visibility 220ms ease;
     }
-
-    body {
-      display: grid;
-      grid-template-rows: auto 1fr;
+    .loading-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .squirrel-cage {
+      width: 64px;
+      height: 64px;
+      border: 6px solid #e4d8c8;
+      border-top-color: #c96b33;
+      border-radius: 50%;
+      animation: squirrel-spin 0.8s linear infinite;
+      margin-bottom: 14px;
+    }
+    .loading-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: #7d4320;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-align: center;
+      padding: 0 18px;
+    }
+    @keyframes squirrel-spin {
+      to { transform: rotate(360deg); }
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
       padding: 14px 18px;
       background: linear-gradient(180deg, rgba(255,252,246,.98), rgba(245,236,220,.94));
-      border-bottom: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      z-index: 2;
+      border-bottom: 1px solid var(--line); box-shadow: var(--shadow); z-index: 2;
     }
+    .brand h1 { margin: 0; font-family: var(--font-display); font-size: 28px; line-height: 1; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 
-    .brand h1 {
-      margin: 0;
-      font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
+    .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .control-group {
+      display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+      border: 1px solid rgba(185, 144, 111, 0.65); border-radius: 999px; background: var(--panel);
+    }
+    .control-group label { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .toggle-row {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -81,216 +83,122 @@
       border: 1px solid rgba(185, 144, 111, 0.65);
       border-radius: 999px;
       background: var(--panel);
+      flex-wrap: wrap;
     }
-
-    .control-group label {
+    .toggle-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
       font-size: 12px;
       font-weight: 800;
-      letter-spacing: .05em;
+      letter-spacing: .04em;
       text-transform: uppercase;
-      color: var(--muted);
+      white-space: nowrap;
+    }
+    .toggle-chip input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
     }
 
-    select,
-    button,
-    a.button-link {
-      border: 1px solid #b98962;
-      border-radius: 999px;
-      background: #fffaf3;
-      color: var(--text);
-      font: inherit;
-      padding: 10px 14px;
-      text-decoration: none;
+    select, button {
+      border: 1px solid #b98962; border-radius: 999px; background: #fffaf3;
+      color: var(--text); font: inherit; padding: 10px 14px;
     }
+    button { cursor: pointer; font-weight: 700; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; }
+    button.secondary { background: #fffaf3; color: var(--text); }
 
-    button,
-    a.button-link.primary {
-      cursor: pointer;
-      font-weight: 700;
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #fff6ed;
-    }
-
-    button.secondary,
-    a.button-link.secondary {
-      background: #fffaf3;
-      color: var(--text);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      min-height: 0;
-    }
-
+    .layout { display: grid; grid-template-columns: 340px 1fr; min-height: 0; }
     .sidebar {
       border-right: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(255,252,246,.98), rgba(245,236,220,.94));
-      overflow: auto;
-      padding: 14px;
+      overflow: auto; padding: 14px;
     }
 
     .panel {
-      border: 1px solid rgba(185, 144, 111, 0.75);
-      border-radius: 16px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 12px;
+      border: 1px solid rgba(185, 144, 111, 0.75); border-radius: 16px;
+      background: var(--panel); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px;
     }
-
     .panel h2 {
-      margin: 0;
-      padding: 10px 12px;
-      font-family: var(--font-display);
-      font-size: 20px;
-      line-height: 1.05;
-      background: linear-gradient(180deg, #c96b33, #b25928);
-      color: #fff6ed;
+      margin: 0; padding: 10px 12px; font-family: var(--font-display); font-size: 20px; line-height: 1.05;
+      background: linear-gradient(180deg, #c96b33, #b25928); color: #fff6ed;
     }
+    .panel-body { padding: 12px; }
+    .helper, .empty-note { color: var(--muted); line-height: 1.45; font-size: 14px; margin: 0; }
+    .status { margin-top: 10px; color: #6d4422; font-size: 13px; font-weight: 700; }
 
-    .panel-body {
-      padding: 12px;
+    .hunt-list { display: grid; gap: 10px; }
+    .outfitter-list { display: grid; gap: 10px; }
+    .hunt-card, .map-chooser-card {
+      border: 1px solid rgba(185, 144, 111, 0.7); border-radius: 12px; background: #fffaf3;
+      padding: 10px 11px; display: grid; gap: 6px; cursor: pointer;
+      transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
     }
-
-    .helper {
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 14px;
-      margin: 0;
-    }
-
-    .status {
-      margin-top: 10px;
-      color: #6d4422;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .hunt-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .hunt-card {
+    .outfitter-card {
       border: 1px solid rgba(185, 144, 111, 0.7);
       border-radius: 12px;
       background: #fffaf3;
       padding: 10px 11px;
       display: grid;
       gap: 6px;
-      cursor: pointer;
-      transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
     }
+    .hunt-card:hover, .hunt-card.is-selected, .map-chooser-card:hover {
+      border-color: var(--accent-dark); box-shadow: 0 8px 18px rgba(105, 70, 40, 0.12); transform: translateY(-1px);
+    }
+    .hunt-card-title { font-weight: 800; line-height: 1.25; }
+    .hunt-card-meta, .map-chooser-meta { font-size: 13px; color: var(--muted); line-height: 1.35; }
 
-    .hunt-card:hover,
-    .hunt-card.is-selected {
-      border-color: var(--accent-dark);
-      box-shadow: 0 8px 18px rgba(105, 70, 40, 0.12);
-      transform: translateY(-1px);
-    }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px; }
+    .detail-grid strong { display: block; margin-bottom: 2px; color: #5a3d28; }
 
-    .hunt-card-title {
-      font-weight: 800;
-      line-height: 1.25;
-    }
-
-    .hunt-card-meta {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      font-size: 14px;
-    }
-
-    .detail-grid strong {
-      display: block;
-      margin-bottom: 2px;
-      color: #5a3d28;
-    }
-
-    .map-wrap {
-      position: relative;
-      min-height: 0;
-    }
-
-    #map {
-      width: 100%;
-      height: 100%;
-      min-height: calc(100vh - 80px);
-    }
+    .map-wrap { position: relative; min-height: 0; }
+    #map { width: 100%; height: 100%; min-height: calc(100vh - 80px); }
 
     .map-card {
-      position: absolute;
-      left: 18px;
-      bottom: 18px;
-      z-index: 2;
-      width: min(420px, calc(100vw - 36px));
-      padding: 14px 16px;
-      border: 1px solid rgba(185, 144, 111, 0.75);
-      border-radius: 16px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      position: absolute; left: 18px; bottom: 18px; z-index: 2; width: min(420px, calc(100vw - 36px));
+      padding: 14px 16px; border: 1px solid rgba(185, 144, 111, 0.75); border-radius: 16px;
+      background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(10px);
     }
+    .map-card h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 22px; line-height: 1.05; }
+    .map-card p { margin: 0; color: var(--muted); line-height: 1.45; font-size: 14px; }
 
-    .map-card h3 {
-      margin: 0 0 6px;
-      font-family: var(--font-display);
-      font-size: 22px;
-      line-height: 1.05;
+    .map-chooser {
+      position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); z-index: 3;
+      width: min(640px, calc(100vw - 40px)); max-height: min(68vh, 720px);
+      display: none; flex-direction: column;
+      border: 1px solid rgba(185, 144, 111, 0.88); border-radius: 18px;
+      background: rgba(255, 250, 243, 0.98); box-shadow: 0 18px 36px rgba(58, 37, 18, 0.24);
+      overflow: hidden; backdrop-filter: blur(12px);
     }
-
-    .map-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 14px;
+    .map-chooser.is-open { display: flex; }
+    .map-chooser-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 14px; background: linear-gradient(180deg, #c96b33, #b25928); color: #fff6ed;
     }
-
-    .empty-note {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
-    }
+    .map-chooser-kicker { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; opacity: 0.92; margin: 0 0 3px; }
+    .map-chooser-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.05; }
+    .map-chooser-body { padding: 12px; overflow: auto; display: grid; gap: 10px; background: rgba(255, 250, 243, 0.98); }
+    .map-chooser-empty { color: var(--muted); font-size: 14px; line-height: 1.45; }
 
     @media (max-width: 1100px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .controls {
-        justify-content: flex-start;
-      }
-
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        border-right: none;
-        border-bottom: 1px solid var(--line);
-      }
-
-      #map {
-        min-height: 58vh;
-      }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .controls { justify-content: flex-start; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
+      #map { min-height: 58vh; }
     }
-
     @media (max-width: 720px) {
-      .detail-grid {
-        grid-template-columns: 1fr;
-      }
+      .detail-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="squirrel-cage" aria-hidden="true"></div>
+    <div id="loadingText" class="loading-text">Loading Hunt Data...</div>
+  </div>
+
   <header class="topbar">
     <div class="brand">
       <h1>Google DWR Mirror</h1>
@@ -306,8 +214,12 @@
           <option value="satellite">Satellite</option>
         </select>
       </div>
+      <div class="toggle-row">
+        <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked>USFS</label>
+        <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked>BLM</label>
+        <label class="toggle-chip"><input id="toggleOutfitters" type="checkbox" checked>Outfitters</label>
+      </div>
       <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
-      <a href="index.html" class="button-link secondary">Main Planner</a>
     </div>
   </header>
 
@@ -316,7 +228,7 @@
       <section class="panel">
         <h2>How This Works</h2>
         <div class="panel-body">
-          <p class="helper">This prototype starts where the Utah DWR planner starts: hunt boundaries first. Click a visible unit on the map, review the matching hunts for that boundary, then pick one to see the selected-hunt details.</p>
+          <p class="helper">Boundary-first flow: click a hunt unit on the map, choose from matching hunts, then view selected hunt details.</p>
           <div id="status" class="status">Loading native Google map…</div>
         </div>
       </section>
@@ -333,7 +245,16 @@
       <section class="panel">
         <h2>Selected Hunt</h2>
         <div class="panel-body" id="selectedHuntPanel">
-          <div class="empty-note">No hunt selected yet. Choose one from the matching-hunts list after clicking a unit boundary.</div>
+          <div class="empty-note">No hunt selected yet.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Matching Outfitters</h2>
+        <div class="panel-body">
+          <div id="outfitterResults" class="outfitter-list">
+            <div class="empty-note">Select a hunt to load matching vetted outfitters.</div>
+          </div>
         </div>
       </section>
     </aside>
@@ -342,7 +263,19 @@
       <div id="map" aria-label="Google DWR mirror map"></div>
       <div class="map-card">
         <h3>Boundary-First Google Prototype</h3>
-        <p>This page is focused on the real DWR workflow: visible hunt boundaries, click a boundary, choose a matching hunt, then review the hunt details.</p>
+        <p>Click a boundary and use the centered chooser to pick a hunt.</p>
+      </div>
+      <div id="mapChooser" class="map-chooser" aria-hidden="true">
+        <div class="map-chooser-head">
+          <div>
+            <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
+            <h3 id="mapChooserTitle" class="map-chooser-title">Matching Hunts</h3>
+          </div>
+          <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
+        </div>
+        <div id="mapChooserBody" class="map-chooser-body">
+          <div class="map-chooser-empty">Click a hunt boundary to load matching hunts.</div>
+        </div>
       </div>
     </section>
   </main>
