@@ -89,6 +89,13 @@ function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/
 function safe(v) { return String(v ?? ''); }
 function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
 function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
+function assetUrl(path) {
+  try {
+    return new URL(path, window.location.href).href;
+  } catch {
+    return path;
+  }
+}
 
 // --- DATA NORMALIZATION ---
 function normalizeSpeciesLabel(value) {
@@ -489,10 +496,11 @@ function closeSelectionInfoWindow() {
 }
 
 function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLinkText = '', detailsLink = '' }) {
+  const resolvedLogo = logo ? assetUrl(logo) : '';
   return `
     <div style="display:grid;gap:8px;min-width:270px;max-width:320px;">
       <div style="display:flex;align-items:center;gap:10px;">
-        ${logo ? `<img src="${logo}" alt="${escapeHtml(subtitle)} logo" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">` : ''}
+        ${resolvedLogo ? `<img src="${resolvedLogo}" alt="${escapeHtml(subtitle)} logo" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">` : ''}
         <div>
           <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">${escapeHtml(subtitle)}</div>
           <div style="font-size:15px;font-weight:900;color:#2b1c12;">${escapeHtml(title)}</div>
@@ -503,6 +511,7 @@ function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLink
     </div>`;
 }
 function buildDnrPlate(hunt, compact = false) {
+  const plateUrl = assetUrl(LOGO_DNR);
   const code = escapeHtml(getHuntCode(hunt) || '');
   const unit = escapeHtml(getUnitName(hunt) || getHuntTitle(hunt));
   const species = escapeHtml(getSpeciesDisplay(hunt) || 'N/A');
@@ -511,22 +520,22 @@ function buildDnrPlate(hunt, compact = false) {
   const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
   const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
   const boundaryLink = getBoundaryLink(hunt);
-  const wrapperWidth = compact ? 'min-width:360px;max-width:430px;' : 'width:100%;';
-  const titleSize = compact ? '18px' : '20px';
-  const metaSize = compact ? '12px' : '13px';
-  const infoTop = compact ? '18px' : '20px';
-  const infoLeft = compact ? '32%' : '31%';
+  const wrapperWidth = compact ? 'min-width:390px;max-width:470px;' : 'width:100%;max-width:100%;';
+  const titleSize = compact ? '17px' : '19px';
+  const metaSize = compact ? '11.5px' : '12.5px';
+  const infoTop = compact ? '14px' : '16px';
+  const infoLeft = compact ? '31.5%' : '31%';
 
   return `
-    <div style="position:relative;${wrapperWidth}border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
-      <img src="${LOGO_DNR}" alt="Utah DNR hunt information plate" style="display:block;width:100%;height:auto;">
-      <div style="position:absolute;top:${infoTop};left:${infoLeft};right:16px;bottom:16px;display:grid;align-content:start;gap:8px;color:#2b1c12;">
+    <div style="position:relative;${wrapperWidth}border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);aspect-ratio:1331 / 521;min-height:${compact ? '150px' : '168px'};background-image:url('${plateUrl}');background-size:cover;background-position:center;background-repeat:no-repeat;">
+      <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.001;pointer-events:none;" />
+      <div style="position:absolute;top:${infoTop};left:${infoLeft};right:14px;bottom:14px;display:grid;align-content:start;gap:${compact ? '6px' : '8px'};color:#2b1c12;">
         <div style="display:grid;gap:2px;">
           <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Selected Hunt</div>
           <div style="font-size:${titleSize};font-weight:900;line-height:1.05;">${code}</div>
-          <div style="font-size:${compact ? '15px' : '16px'};font-weight:800;line-height:1.12;">${unit}</div>
+          <div style="font-size:${compact ? '14px' : '15px'};font-weight:800;line-height:1.12;">${unit}</div>
         </div>
-        <div style="display:grid;gap:5px;font-size:${metaSize};line-height:1.3;">
+        <div style="display:grid;gap:${compact ? '3px' : '5px'};font-size:${metaSize};line-height:1.25;">
           <div><strong>Species:</strong> ${species}</div>
           <div><strong>Sex:</strong> ${sex}</div>
           <div><strong>Hunt Type:</strong> ${huntType}</div>
@@ -817,7 +826,7 @@ async function ensureSitlaLayer() {
   if (sitlaLayer || !googleBaselineMap) return sitlaLayer;
   sitlaLayer = createOwnershipLayer(
     props => getOwnershipBucket(props) === 'sitla',
-    { strokeColor: '#2a78d2', strokeWeight: 2, fillColor: '#6fb3ff', fillOpacity: 0.08 },
+    { strokeColor: '#2a78d2', strokeWeight: 2, fillColor: '#6fb3ff', fillOpacity: 0.08, zIndex: 18 },
     feature => buildLandInfoCard(buildOwnershipDetails('sitla', featureProps(feature)))
   );
   setLayerVisibility(sitlaLayer, !!toggleSITLA?.checked);
@@ -833,7 +842,7 @@ async function ensureStateLandsLayer() {
   if (stateLandsLayer || !googleBaselineMap) return stateLandsLayer;
   stateLandsLayer = createOwnershipLayer(
     props => getOwnershipBucket(props) === 'stateLands',
-    { strokeColor: '#2f8f9a', strokeWeight: 2, fillColor: '#6ac7d2', fillOpacity: 0.08 },
+    { strokeColor: '#2f8f9a', strokeWeight: 2, fillColor: '#6ac7d2', fillOpacity: 0.08, zIndex: 17 },
     feature => buildLandInfoCard(buildOwnershipDetails('stateLands', featureProps(feature)))
   );
   setLayerVisibility(stateLandsLayer, !!toggleStateLands?.checked);
@@ -843,7 +852,7 @@ async function ensureStateParksLayer() {
   if (stateParksLayer || !googleBaselineMap) return stateParksLayer;
   stateParksLayer = createOwnershipLayer(
     props => getOwnershipBucket(props) === 'stateParks',
-    { strokeColor: '#4d8b3b', strokeWeight: 2, fillColor: '#94c96f', fillOpacity: 0.08 },
+    { strokeColor: '#4d8b3b', strokeWeight: 2, fillColor: '#94c96f', fillOpacity: 0.08, zIndex: 19 },
     feature => buildLandInfoCard(buildOwnershipDetails('stateParks', featureProps(feature)))
   );
   setLayerVisibility(stateParksLayer, !!toggleStateParks?.checked);
@@ -853,7 +862,7 @@ async function ensureWmaLayer() {
   if (wmaLayer || !googleBaselineMap) return wmaLayer;
   wmaLayer = createOwnershipLayer(
     props => getOwnershipBucket(props) === 'wma',
-    { strokeColor: '#2f62c8', strokeWeight: 2, fillColor: '#7fa9ff', fillOpacity: 0.08 },
+    { strokeColor: '#2f62c8', strokeWeight: 2, fillColor: '#7fa9ff', fillOpacity: 0.08, zIndex: 20 },
     feature => buildLandInfoCard(buildOwnershipDetails('wma', featureProps(feature)))
   );
   setLayerVisibility(wmaLayer, !!toggleWma?.checked);
@@ -863,7 +872,7 @@ async function ensurePrivateLayer() {
   if (privateLayer || !googleBaselineMap) return privateLayer;
   privateLayer = createOwnershipLayer(
     props => getOwnershipBucket(props) === 'private',
-    { strokeColor: '#8f4a3a', strokeWeight: 1.5, fillColor: '#c99284', fillOpacity: 0.05 },
+    { strokeColor: '#8f4a3a', strokeWeight: 1.5, fillColor: '#c99284', fillOpacity: 0.05, zIndex: 16 },
     feature => buildLandInfoCard(buildOwnershipDetails('private', featureProps(feature)))
   );
   setLayerVisibility(privateLayer, !!togglePrivate?.checked);
@@ -879,7 +888,8 @@ async function ensureUsfsLayer() {
     strokeColor: '#2f6b3b',
     strokeWeight: 2,
     fillColor: '#7ea96b',
-    fillOpacity: 0.08
+    fillOpacity: 0.08,
+    zIndex: 30
   });
   usfsLayer.addListener('click', event => {
     closeSelectionInfoWindow();
@@ -907,7 +917,8 @@ async function ensureBlmLayer() {
     strokeColor: '#b9722f',
     strokeWeight: 2,
     fillColor: '#d8af7b',
-    fillOpacity: 0.04
+    fillOpacity: 0.04,
+    zIndex: 12
   });
   blmLayer.addListener('click', event => {
     closeSelectionInfoWindow();
@@ -969,6 +980,7 @@ function applyMapMode() {
   if (!googleBaselineMap || !mapWrap) return;
 
   if (value === 'globe') {
+    updateStatus('Globe mode active.');
     ensureCesiumViewer();
     mapWrap.classList.add('is-globe-mode');
     setTimeout(() => {
@@ -1000,6 +1012,7 @@ function applyMapMode() {
 
   mapWrap.classList.remove('is-globe-mode');
   googleBaselineMap.setMapTypeId(value);
+  updateStatus(`${titleCaseWords(value)} map active.`);
 }
 
 function resetMapView() {
@@ -1082,10 +1095,24 @@ function bindControls() {
   applyFiltersBtn?.addEventListener('click', () => {
     closeSelectedHuntPopup();
     closeSelectionInfoWindow();
+    selectedHunt = null;
+    selectedBoundaryFeature = null;
     refreshSelectionMatrix();
     styleBoundaryLayer();
     renderMatchingHunts();
     renderSelectedHunt();
+    renderOutfitters();
+    const results = getDisplayHunts();
+    const count = results.length;
+    if (typeof window !== 'undefined' && document.getElementById('matchingHunts')) {
+      document.getElementById('matchingHunts').scrollTop = 0;
+    }
+    if (count === 1) {
+      window.selectHuntByCode(getHuntCode(results[0]));
+      updateStatus('1 matching hunt applied and selected.');
+    } else {
+      updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
+    }
   });
   clearFiltersBtn?.addEventListener('click', resetAllFilters);
   document.getElementById('matchingHunts')?.addEventListener('click', event => {
@@ -1103,7 +1130,13 @@ function bindControls() {
   document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
   mapTypeSelect?.addEventListener('change', applyMapMode);
   resetViewBtn?.addEventListener('click', resetMapView);
-  toggleDwrUnits?.addEventListener('change', styleBoundaryLayer);
+  toggleDwrUnits?.addEventListener('change', () => {
+    if (!toggleDwrUnits.checked) {
+      closeSelectionInfoWindow();
+      closeSelectedHuntPopup();
+    }
+    styleBoundaryLayer();
+  });
   toggleUSFS?.addEventListener('change', async () => {
     if (toggleUSFS.checked) await ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
     setLayerVisibility(usfsLayer, !!toggleUSFS.checked);
