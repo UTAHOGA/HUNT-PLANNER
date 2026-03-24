@@ -7,6 +7,12 @@ const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
 const LOCAL_HUNT_BOUNDARIES_PATH = `${CLOUDFLARE_BASE}/hunt_boundaries.geojson`;
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`];
+const LOGO_DNR = './assets/logos/dnr-logo-small.bmp';
+const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
+const LOGO_USFS = './assets/logos/usfs.png';
+const LOGO_BLM = './assets/logos/blm.png';
+const LOGO_SITLA = './assets/logos/sitla.png';
+const LOGO_STATE_PARKS = './assets/logos/state-parks.png';
 
 const USFS_QUERY_URL = "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_ForestSystemBoundaries_01/MapServer/0/query?where=" + encodeURIComponent("FORESTNAME IN ('Ashley National Forest','Dixie National Forest','Fishlake National Forest','Manti-La Sal National Forest','Uinta-Wasatch-Cache National Forest')") + "&outFields=FORESTNAME&returnGeometry=true&outSR=4326&f=geojson";
 const BLM_QUERY_URL = 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
@@ -157,6 +163,7 @@ function normalizeHuntCategoryLabel(raw) {
 }
 function getHuntCategory(h) { return normalizeHuntCategoryLabel(firstNonEmpty(h.huntCategory, h.HuntCategory, h.category)); }
 function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
+function getBoundaryLink(h) { return firstNonEmpty(h.boundaryLink, h.boundaryURL, h.huntBoundaryLink); }
 
 // --- FILTERING ENGINE ---
 function getFilteredHunts(excludeKey = '') {
@@ -236,7 +243,7 @@ function refreshSelectionMatrix() {
   huntCategoryFilter.innerHTML = categoryOptions.map(v => `<option value="${v}">${v}</option>`).join('');
   huntCategoryFilter.value = categoryOptions.includes(prevHuntCategory) ? prevHuntCategory : 'All';
 
-  const nonUnitSelections = [
+  const hasNonUnitSelections = [
     safe(searchInput?.value).trim(),
     speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
     sexFilter.value !== 'All' ? sexFilter.value : '',
@@ -252,7 +259,8 @@ function refreshSelectionMatrix() {
   });
   const unitOptions = Array.from(unitsMap.entries()).sort((a, b) => a[1].localeCompare(b[1]));
   const prevUnit = unitFilter.value || '';
-  if (!nonUnitSelections) {
+  const hasUnitSelection = !!prevUnit;
+  if (!hasNonUnitSelections && !hasUnitSelection) {
     unitFilter.innerHTML = `<option value="">Select filters first</option>`;
     unitFilter.value = '';
   } else {
@@ -310,12 +318,30 @@ window.selectHuntByCode = (code) => {
 function renderSelectedHunt() {
   const p = document.getElementById('selectedHuntPanel');
   if (!p || !selectedHunt) return;
-  p.innerHTML = `<div class="detail-grid">
-    <div><strong>Hunt #</strong>${getHuntCode(selectedHunt)}</div>
-    <div><strong>Unit</strong>${getUnitName(selectedHunt)}</div>
-    <div><strong>Weapon</strong>${getWeapon(selectedHunt)}</div>
-    <div><strong>Dates</strong>${getDates(selectedHunt)}</div>
-  </div>`;
+  const boundaryLink = getBoundaryLink(selectedHunt);
+  p.innerHTML = `
+    <div style="display:grid;gap:12px;">
+      <div style="position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);">
+        <img src="${LOGO_DNR}" alt="Utah DNR logo" style="display:block;width:100%;height:auto;">
+        <div style="position:absolute;right:10px;top:10px;bottom:10px;width:52%;display:grid;align-content:start;gap:6px;padding:8px 10px;">
+          <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);">Selected Hunt</div>
+          <div style="font-size:17px;font-weight:900;line-height:1.05;color:var(--text);">${escapeHtml(getHuntCode(selectedHunt))}</div>
+          <div style="font-size:14px;font-weight:800;line-height:1.15;color:var(--text);">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt))}</div>
+          <div style="font-size:12px;line-height:1.25;color:var(--muted);">${escapeHtml(getSpeciesDisplay(selectedHunt))} | ${escapeHtml(getNormalizedSex(selectedHunt))}</div>
+          <div style="font-size:12px;line-height:1.25;color:var(--muted);">${escapeHtml(getHuntType(selectedHunt))} | ${escapeHtml(getWeapon(selectedHunt))}</div>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <div><strong>Species</strong>${escapeHtml(getSpeciesDisplay(selectedHunt))}</div>
+        <div><strong>Sex</strong>${escapeHtml(getNormalizedSex(selectedHunt))}</div>
+        <div><strong>Hunt Type</strong>${escapeHtml(getHuntType(selectedHunt))}</div>
+        <div><strong>Weapon</strong>${escapeHtml(getWeapon(selectedHunt))}</div>
+        <div><strong>Hunt Class</strong>${escapeHtml(getHuntCategory(selectedHunt))}</div>
+        <div><strong>DWR Hunt Unit</strong>${escapeHtml(getUnitName(selectedHunt))}</div>
+        <div style="grid-column:1 / -1;"><strong>Dates</strong>${escapeHtml(getDates(selectedHunt) || 'See official hunt details')}</div>
+        ${boundaryLink ? `<div style="grid-column:1 / -1;"><strong>Official Utah DWR Hunt Details</strong><a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer">Open official details</a></div>` : ''}
+      </div>
+    </div>`;
 }
 
 // --- MAP ENGINE ---
