@@ -28,12 +28,13 @@ const HUNT_BOUNDARY_SOURCES = [
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`, './data/outfitters.json'];
 const USFS_QUERY_URL = "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_ForestSystemBoundaries_01/MapServer/0/query?where=" + encodeURIComponent("FORESTNAME IN ('Ashley National Forest','Dixie National Forest','Fishlake National Forest','Manti-La Sal National Forest','Uinta-Wasatch-Cache National Forest')") + "&outFields=FORESTNAME&returnGeometry=true&outSR=4326&f=geojson";
 const BLM_QUERY_URL = 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
-const LAND_OWNERSHIP_BASE_URL = 'https://gis.trustlands.utah.gov/mapping/rest/services/Land_Ownership_WM/MapServer/0/query';
-const SITLA_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='State Trust Lands'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
-const STATE_LANDS_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd IN ('Other State','State Sovereign Land')")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
-const STATE_PARKS_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='State Parks and Recreation'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
-const WMA_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='State Wildlife Reserve/Management Area'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
-const PRIVATE_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='Private'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
+const LAND_OWNERSHIP_BASE_URL = 'https://gis.trustlands.utah.gov/mapping/rest/services/Land_Ownership/FeatureServer/0/query';
+const LAND_OWNERSHIP_OUT_FIELDS = 'owner,agency,admin,desig,state_lgd,ut_lgd,natl_lgd,label_federal,label_state,county,gis_acres';
+const SITLA_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("admin='SITLA'")}&outFields=${encodeURIComponent(LAND_OWNERSHIP_OUT_FIELDS)}&returnGeometry=true&outSR=4326&f=geojson`;
+const STATE_LANDS_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("owner='State' AND admin IN ('OS','FFSL')")}&outFields=${encodeURIComponent(LAND_OWNERSHIP_OUT_FIELDS)}&returnGeometry=true&outSR=4326&f=geojson`;
+const STATE_PARKS_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("admin='USP'")}&outFields=${encodeURIComponent(LAND_OWNERSHIP_OUT_FIELDS)}&returnGeometry=true&outSR=4326&f=geojson`;
+const WMA_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("admin='UDWR' AND desig='Wildlife Reserve/Management Area'")}&outFields=${encodeURIComponent(LAND_OWNERSHIP_OUT_FIELDS)}&returnGeometry=true&outSR=4326&f=geojson`;
+const PRIVATE_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("owner='Private'")}&outFields=${encodeURIComponent(LAND_OWNERSHIP_OUT_FIELDS)}&returnGeometry=true&outSR=4326&f=geojson`;
 const ARCGIS_PAGE_SIZE = 2000;
 const OFFICIAL_WATERFOWL_WMA_NAMES = [
   'Bicknell Bottoms WMA',
@@ -401,10 +402,69 @@ function isOfficialWaterfowlWmaFeature(feature) {
   );
 }
 
-function getOverlayFeatureLabel(feature) {
-  const properties = feature && feature.properties ? feature.properties : {};
+function getOverlayFeatureProperties(feature) {
+  return feature && feature.properties ? feature.properties : {};
+}
+
+function isOverlayToggleEnabled(kind) {
+  const toggleMap = {
+    usfs: toggleUSFS,
+    blm: toggleBLM,
+    sitla: toggleSITLA,
+    stateLands: toggleStateLands,
+    stateParks: toggleStateParks,
+    wildlifeWma: toggleWildlifeWma,
+    waterfowlWma: toggleWaterfowlWma,
+    private: togglePrivate
+  };
+  const toggle = toggleMap[kind];
+  return !!(toggle && toggle.checked);
+}
+
+function formatAcres(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) return '';
+  return `${numeric.toLocaleString(undefined, { maximumFractionDigits: 0 })} acres`;
+}
+
+function getOverlayFeatureLabel(kind, feature) {
+  const properties = getOverlayFeatureProperties(feature);
+  if (kind === 'usfs') {
+    return firstNonEmpty(
+      properties.FORESTNAME,
+      properties.label_federal,
+      properties.NAME,
+      'US Forest Service'
+    );
+  }
+
+  if (kind === 'blm') {
+    return firstNonEmpty(
+      properties.ADMU_NAME,
+      properties.ADMU_DISPLAY_NAME,
+      properties.ADMIN_ST_NAME,
+      properties.OFFICE_NAME,
+      properties.DISTRICT_NAME,
+      properties.PARENT_NAME,
+      properties.NAME,
+      'BLM Utah Administrative Unit'
+    );
+  }
+
+  if (kind === 'sitla' || kind === 'stateLands' || kind === 'stateParks' || kind === 'wildlifeWma' || kind === 'waterfowlWma' || kind === 'private') {
+    return firstNonEmpty(
+      properties.label_state,
+      properties.ut_lgd,
+      properties.desig,
+      properties.state_lgd,
+      properties.county ? `${properties.county} County` : '',
+      kind === 'private' ? 'Private Land' : 'Selected Area'
+    );
+  }
+
   return firstNonEmpty(
     properties.label_state,
+    properties.label_federal,
     properties.NAME,
     properties.name,
     properties.county,
@@ -412,9 +472,102 @@ function getOverlayFeatureLabel(feature) {
   );
 }
 
+function getOverlayFeatureSubtitle(kind, feature) {
+  const properties = getOverlayFeatureProperties(feature);
+
+  if (kind === 'usfs') {
+    return firstNonEmpty(properties.label_federal, 'US Forest Service');
+  }
+
+  if (kind === 'blm') {
+    return firstNonEmpty(
+      properties.ADMU_DISPLAY_NAME,
+      properties.ADMIN_ST_NAME,
+      properties.DISTRICT_NAME,
+      properties.OFFICE_NAME,
+      'BLM Utah Administrative Unit'
+    );
+  }
+
+  if (kind === 'sitla') {
+    return firstNonEmpty(properties.desig, properties.state_lgd, 'State Trust Lands');
+  }
+
+  if (kind === 'stateLands') {
+    return firstNonEmpty(properties.desig, properties.state_lgd, 'State Land');
+  }
+
+  if (kind === 'stateParks') {
+    return firstNonEmpty(properties.desig, properties.state_lgd, 'State Park');
+  }
+
+  if (kind === 'wildlifeWma') {
+    return 'Wildlife WMA';
+  }
+
+  if (kind === 'waterfowlWma') {
+    return 'Waterfowl WMA';
+  }
+
+  if (kind === 'private') {
+    return firstNonEmpty(properties.desig, properties.state_lgd, 'Private Land');
+  }
+
+  return '';
+}
+
+function getOverlayFeatureOwnerLine(kind, feature) {
+  const properties = getOverlayFeatureProperties(feature);
+
+  if (kind === 'usfs') return 'Land Owner: US Forest Service';
+  if (kind === 'blm') return 'Land Owner: Bureau of Land Management';
+  if (kind === 'sitla') return 'Land Owner: Utah Trust Lands Administration';
+  if (kind === 'stateParks') return 'Land Owner: Utah State Parks';
+  if (kind === 'wildlifeWma' || kind === 'waterfowlWma') return 'Land Owner: Utah Division of Wildlife Resources';
+  if (kind === 'stateLands') {
+    const adminName = firstNonEmpty(properties.admin, properties.agency, properties.owner, 'State');
+    return `Land Owner: ${adminName}`;
+  }
+  if (kind === 'private') return 'Land Owner: Private';
+
+  return '';
+}
+
+function getOverlayFeatureDetailLines(kind, feature) {
+  const properties = getOverlayFeatureProperties(feature);
+  const lines = [];
+  const ownerLine = getOverlayFeatureOwnerLine(kind, feature);
+  if (ownerLine) lines.push(ownerLine);
+
+  const designation = firstNonEmpty(properties.desig, properties.state_lgd, properties.ut_lgd, properties.natl_lgd);
+  if (designation && !/^(private|state trust lands)$/i.test(designation)) {
+    lines.push(`Type: ${designation}`);
+  }
+
+  const county = safe(properties.county).trim();
+  if (county) {
+    lines.push(`County: ${county}`);
+  }
+
+  const acres = formatAcres(properties.gis_acres);
+  if (acres) {
+    lines.push(`Area: ${acres}`);
+  }
+
+  if (kind === 'private' && !safe(properties.label_state).trim()) {
+    lines.push('Statewide layer only; individual owner names are not exposed here.');
+  }
+
+  return lines;
+}
+
 function buildOverlayInfoContent(kind, feature) {
-  const label = getOverlayFeatureLabel(feature);
+  const label = getOverlayFeatureLabel(kind, feature);
   const safeLabel = escapeHtml(label);
+  const subtitle = safe(getOverlayFeatureSubtitle(kind, feature)).trim();
+  const subtitleHtml = subtitle
+    ? `<div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6a5848;margin-bottom:4px;">${escapeHtml(subtitle)}</div>`
+    : '';
   const renderLogoHtml = (src, alt) => `
     <div style="margin-bottom:10px;text-align:center;">
       <img
@@ -424,13 +577,16 @@ function buildOverlayInfoContent(kind, feature) {
       >
     </div>
   `;
+  const detailLines = getOverlayFeatureDetailLines(kind, feature)
+    .map(line => `<div>${escapeHtml(line)}</div>`)
+    .join('');
 
   if (kind === 'usfs') {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_USFS_LOGO_URL, 'US Forest Service')}
-        <strong>${safeLabel}</strong><br>
-        United States Forest Service reference layer.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_USFS_PAGE_URL}" target="_blank" rel="noopener noreferrer">US Forest Service</a>
         </div>
@@ -442,8 +598,8 @@ function buildOverlayInfoContent(kind, feature) {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_BLM_LOGO_URL, 'Bureau of Land Management')}
-        <strong>${safeLabel}</strong><br>
-        Bureau of Land Management reference layer.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_BLM_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah BLM</a>
         </div>
@@ -455,8 +611,8 @@ function buildOverlayInfoContent(kind, feature) {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_SITLA_LOGO_URL, 'Utah SITLA')}
-        <strong>${safeLabel}</strong><br>
-        Official Utah Trust Lands reference.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_SITLA_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah Trust Lands</a>
         </div>
@@ -467,8 +623,8 @@ function buildOverlayInfoContent(kind, feature) {
   if (kind === 'stateLands') {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
-        <strong>${safeLabel}</strong><br>
-        Utah state lands reference layer.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_SITLA_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah Trust Lands</a>
           <a href="${OFFICIAL_STATE_PARKS_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah State Parks</a>
@@ -481,8 +637,8 @@ function buildOverlayInfoContent(kind, feature) {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_STATE_PARKS_LOGO_URL, 'Utah State Parks')}
-        <strong>${safeLabel}</strong><br>
-        Official Utah State Parks reference.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_STATE_PARKS_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah State Parks</a>
         </div>
@@ -494,8 +650,8 @@ function buildOverlayInfoContent(kind, feature) {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_DWR_WMA_LOGO_URL, 'Utah DWR WMA')}
-        <strong>${safeLabel}</strong><br>
-        Official Utah DWR waterfowl management area reference.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_DWR_WATERFOWL_CONDITIONS_URL}" target="_blank" rel="noopener noreferrer">Waterfowl Conditions & Maps</a>
           <a href="${OFFICIAL_DWR_WATERFOWL_MAPS_URL}" target="_blank" rel="noopener noreferrer">DWR Hunting Maps</a>
@@ -508,12 +664,21 @@ function buildOverlayInfoContent(kind, feature) {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_DWR_WMA_LOGO_URL, 'Utah DWR WMA')}
-        <strong>${safeLabel}</strong><br>
-        Official Utah DWR wildlife management area reference.
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
         <div style="margin-top:10px;display:grid;gap:6px;">
           <a href="${OFFICIAL_DWR_WMA_PAGE_URL}" target="_blank" rel="noopener noreferrer">DWR WMA Information</a>
           <a href="${OFFICIAL_DWR_WATERFOWL_MAPS_URL}" target="_blank" rel="noopener noreferrer">DWR Hunting Maps</a>
         </div>
+      </div>
+    `;
+  }
+
+  if (kind === 'private') {
+    return `
+      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+        ${subtitleHtml}<strong>${safeLabel}</strong><br>
+        ${detailLines}
       </div>
     `;
   }
@@ -526,11 +691,12 @@ function buildOverlayInfoContent(kind, feature) {
 }
 
 function bindOverlayLayerInteraction(kind, layer) {
-  if (!layer || kind === 'private') {
+  if (!layer) {
     return;
   }
 
   layer.addListener('click', event => {
+    if (!isOverlayToggleEnabled(kind)) return;
     if (!overlayInfoWindow) {
       overlayInfoWindow = new google.maps.InfoWindow();
     }
@@ -538,9 +704,25 @@ function bindOverlayLayerInteraction(kind, layer) {
     const featureData = {
       properties: {
         label_state: event.feature ? event.feature.getProperty('label_state') : '',
+        label_federal: event.feature ? event.feature.getProperty('label_federal') : '',
         NAME: event.feature ? event.feature.getProperty('NAME') : '',
         name: event.feature ? event.feature.getProperty('name') : '',
-        county: event.feature ? event.feature.getProperty('county') : ''
+        county: event.feature ? event.feature.getProperty('county') : '',
+        owner: event.feature ? event.feature.getProperty('owner') : '',
+        agency: event.feature ? event.feature.getProperty('agency') : '',
+        admin: event.feature ? event.feature.getProperty('admin') : '',
+        desig: event.feature ? event.feature.getProperty('desig') : '',
+        state_lgd: event.feature ? event.feature.getProperty('state_lgd') : '',
+        ut_lgd: event.feature ? event.feature.getProperty('ut_lgd') : '',
+        natl_lgd: event.feature ? event.feature.getProperty('natl_lgd') : '',
+        gis_acres: event.feature ? event.feature.getProperty('gis_acres') : '',
+        FORESTNAME: event.feature ? event.feature.getProperty('FORESTNAME') : '',
+        ADMU_NAME: event.feature ? event.feature.getProperty('ADMU_NAME') : '',
+        ADMU_DISPLAY_NAME: event.feature ? event.feature.getProperty('ADMU_DISPLAY_NAME') : '',
+        ADMIN_ST_NAME: event.feature ? event.feature.getProperty('ADMIN_ST_NAME') : '',
+        OFFICE_NAME: event.feature ? event.feature.getProperty('OFFICE_NAME') : '',
+        DISTRICT_NAME: event.feature ? event.feature.getProperty('DISTRICT_NAME') : '',
+        PARENT_NAME: event.feature ? event.feature.getProperty('PARENT_NAME') : ''
       }
     };
 
@@ -974,10 +1156,19 @@ function getFeatureBoundaryName(feature) {
 function buildHuntUnitHoverContent(feature) {
   const boundaryName = getFeatureBoundaryName(feature) || 'DWR Hunt Unit';
   return `
-    <div style="font-family:Segoe UI,Arial,sans-serif;font-size:12px;font-weight:700;color:#2b1c12;line-height:1.2;white-space:nowrap;">
-      ${escapeHtml(boundaryName)}
+    <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.2;white-space:nowrap;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6c43c8;">DWR Hunt Unit</div>
+      <div style="font-size:12px;font-weight:700;">${escapeHtml(boundaryName)}</div>
     </div>
   `;
+}
+
+function buildDwrHuntUnitPopupContent(boundaryName, matches) {
+  const singleMatch = Array.isArray(matches) && matches.length === 1 ? matches[0] : null;
+  const huntNumberLine = singleMatch
+    ? `<div style="font-size:12px;margin-top:2px;"><strong>Hunt #:</strong> ${escapeHtml(getHuntCode(singleMatch))}</div>`
+    : '';
+  return `<div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.25;"><div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6c43c8;">DWR Hunt Unit</div><strong>${escapeHtml(boundaryName)}</strong>${huntNumberLine}<div style="font-size:12px;margin-top:4px;">${matches.length} matching hunt${matches.length === 1 ? '' : 's'}</div></div>`;
 }
 
 function findMatchingHuntsForFeature(feature) {
@@ -1298,6 +1489,7 @@ window.selectHuntByCode = selectHuntByCode;
 function bindBoundaryLayerInteraction() {
   if (!huntUnitsLayer) return;
   huntUnitsLayer.addListener('mouseover', event => {
+    if (toggleDwrUnits && !toggleDwrUnits.checked) return;
     googleBaselineMap.setOptions({ draggableCursor: 'pointer' });
     if (!boundaryHoverInfoWindow) {
       boundaryHoverInfoWindow = new google.maps.InfoWindow({
@@ -1316,13 +1508,14 @@ function bindBoundaryLayerInteraction() {
     }
   });
   huntUnitsLayer.addListener('click', event => {
+    if (toggleDwrUnits && !toggleDwrUnits.checked) return;
     const matches = findMatchingHuntsForFeature(event.feature);
     selectedBoundaryMatches = matches;
     const boundaryName = getFeatureBoundaryName(event.feature);
     renderMapChooser(matches, boundaryName);
 
     if (!boundaryInfoWindow) boundaryInfoWindow = new google.maps.InfoWindow();
-    boundaryInfoWindow.setContent(`<div style="font-family:Segoe UI,Arial,sans-serif;"><strong>${escapeHtml(boundaryName)}</strong><br>${matches.length} matching hunt${matches.length === 1 ? '' : 's'}</div>`);
+    boundaryInfoWindow.setContent(buildDwrHuntUnitPopupContent(boundaryName, matches));
     boundaryInfoWindow.setPosition(event.latLng);
     boundaryInfoWindow.open({ map: googleBaselineMap });
   });
