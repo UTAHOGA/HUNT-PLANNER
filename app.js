@@ -122,8 +122,7 @@ const toggleBLM = document.getElementById('toggleBLM');
 const toggleSITLA = document.getElementById('toggleSITLA');
 const toggleStateLands = document.getElementById('toggleStateLands');
 const toggleStateParks = document.getElementById('toggleStateParks');
-const toggleWildlifeWma = document.getElementById('toggleWildlifeWma');
-const toggleWaterfowlWma = document.getElementById('toggleWaterfowlWma');
+const toggleWma = document.getElementById('toggleWma');
 const togglePrivate = document.getElementById('togglePrivate');
 const toggleDwrUnits = document.getElementById('toggleDwrUnits');
 const toggleOutfitters = document.getElementById('toggleOutfitters');
@@ -231,7 +230,7 @@ function setMapChooserOpen(isOpen) {
 
 function updateStateLayersSummary() {
   if (!stateLayersSummaryEl) return;
-  const toggles = [toggleStateLands, toggleStateParks, toggleWildlifeWma, toggleWaterfowlWma];
+  const toggles = [toggleStateLands, toggleStateParks, toggleWma];
   const activeCount = toggles.filter(toggle => toggle && toggle.checked).length;
   stateLayersSummaryEl.textContent = activeCount ? `State Lands (${activeCount})` : 'State Lands';
 }
@@ -573,12 +572,73 @@ function isOverlayToggleEnabled(kind) {
     sitla: toggleSITLA,
     stateLands: toggleStateLands,
     stateParks: toggleStateParks,
-    wildlifeWma: toggleWildlifeWma,
-    waterfowlWma: toggleWaterfowlWma,
+    wildlifeWma: toggleWma,
+    waterfowlWma: toggleWma,
     private: togglePrivate
   };
   const toggle = toggleMap[kind];
   return !!(toggle && toggle.checked);
+}
+
+function latLngToPoint(latLng) {
+  return { lat: Number(latLng.lat()), lng: Number(latLng.lng()) };
+}
+
+function pointInRing(point, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i].lng;
+    const yi = ring[i].lat;
+    const xj = ring[j].lng;
+    const yj = ring[j].lat;
+    const intersects = ((yi > point.lat) !== (yj > point.lat)) &&
+      (point.lng < ((xj - xi) * (point.lat - yi)) / ((yj - yi) || 1e-12) + xi);
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInPolygonRings(point, rings) {
+  if (!rings.length) return false;
+  if (!pointInRing(point, rings[0])) return false;
+  for (let i = 1; i < rings.length; i++) {
+    if (pointInRing(point, rings[i])) return false;
+  }
+  return true;
+}
+
+function geometryContainsLatLng(geometry, latLng) {
+  if (!geometry || !latLng) return false;
+  const point = latLngToPoint(latLng);
+  const type = geometry.getType();
+
+  if (type === 'Polygon') {
+    const rings = geometry.getArray().map(ring => ring.getArray().map(latLngToPoint));
+    return pointInPolygonRings(point, rings);
+  }
+
+  if (type === 'MultiPolygon') {
+    return geometry.getArray().some(polygon => geometryContainsLatLng(polygon, latLng));
+  }
+
+  if (type === 'GeometryCollection') {
+    return geometry.getArray().some(part => geometryContainsLatLng(part, latLng));
+  }
+
+  return false;
+}
+
+function layerContainsLatLng(layer, latLng) {
+  if (!layer || !latLng) return false;
+  let found = false;
+  layer.forEach(feature => {
+    if (found) return;
+    const geometry = feature.getGeometry();
+    if (geometryContainsLatLng(geometry, latLng)) {
+      found = true;
+    }
+  });
+  return found;
 }
 
 function formatAcres(value) {
@@ -611,7 +671,24 @@ function getOverlayFeatureLabel(kind, feature) {
     );
   }
 
-  if (kind === 'sitla' || kind === 'stateLands' || kind === 'stateParks' || kind === 'wildlifeWma' || kind === 'waterfowlWma' || kind === 'private') {
+  if (kind === 'sitla') {
+    const base = firstNonEmpty(properties.label_state, properties.desig, properties.state_lgd, 'Utah State Trust Lands');
+    if (/^utah state trust lands$/i.test(base) && safe(properties.county).trim()) {
+      return `${titleCaseWords(safe(properties.county).trim().toLowerCase())} County SITLA`;
+    }
+    return base;
+  }
+
+  if (kind === 'wildlifeWma' || kind === 'waterfowlWma') {
+    const base = firstNonEmpty(properties.label_state, properties.ut_lgd, properties.desig, properties.state_lgd, 'WMA');
+    return base
+      .replace(/\bState Wildlife Area\b/gi, 'WMA')
+      .replace(/\bWildlife Management Area\b/gi, 'WMA')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  if (kind === 'stateLands' || kind === 'stateParks' || kind === 'private') {
     return firstNonEmpty(
       properties.label_state,
       properties.ut_lgd,
@@ -840,6 +917,9 @@ function bindOverlayLayerInteraction(kind, layer) {
 
   layer.addListener('click', event => {
     if (!isOverlayToggleEnabled(kind)) return;
+    if (kind === 'blm' && toggleUSFS && toggleUSFS.checked && layerContainsLatLng(usfsLayer, event.latLng)) {
+      return;
+    }
     if (!overlayInfoWindow) {
       overlayInfoWindow = new google.maps.InfoWindow();
     }
@@ -1124,14 +1204,14 @@ async function syncOverlayToggles() {
       setOverlayVisibility('stateParks', false);
     }
 
-    if (toggleWildlifeWma && toggleWildlifeWma.checked) {
+    if (toggleWma && toggleWma.checked) {
       await ensureOverlayLayer('wildlifeWma');
       setOverlayVisibility('wildlifeWma', true);
     } else {
       setOverlayVisibility('wildlifeWma', false);
     }
 
-    if (toggleWaterfowlWma && toggleWaterfowlWma.checked) {
+    if (toggleWma && toggleWma.checked) {
       await ensureOverlayLayer('waterfowlWma');
       setOverlayVisibility('waterfowlWma', true);
     } else {
@@ -1380,13 +1460,15 @@ function buildDwrHuntUnitPopupContent(boundaryName, matches) {
   }
 
   const rows = matches.slice(0, 12).map(hunt => `
-    <div style="padding:8px 0;border-top:1px solid #d8c8b8;">
-      <div style="font-size:12px;font-weight:800;">${escapeHtml(getHuntCode(hunt))} | ${escapeHtml(getHuntTitle(hunt))}</div>
-      <div style="font-size:11px;color:#6b5646;margin-top:2px;">${escapeHtml(getWeapon(hunt))} | ${escapeHtml(getDates(hunt))}</div>
-      <div style="margin-top:6px;">
+    <tr>
+      <td style="padding:8px 6px;border-top:1px solid #d8c8b8;font-size:11px;font-weight:800;vertical-align:top;">${escapeHtml(getHuntCode(hunt))}</td>
+      <td style="padding:8px 6px;border-top:1px solid #d8c8b8;font-size:11px;vertical-align:top;">${escapeHtml(getHuntTitle(hunt))}</td>
+      <td style="padding:8px 6px;border-top:1px solid #d8c8b8;font-size:11px;vertical-align:top;">${escapeHtml(getWeapon(hunt))}</td>
+      <td style="padding:8px 6px;border-top:1px solid #d8c8b8;font-size:11px;vertical-align:top;">${escapeHtml(getDates(hunt))}</td>
+      <td style="padding:8px 6px;border-top:1px solid #d8c8b8;vertical-align:top;">
         <button type="button" onclick="window.selectHuntByCode && window.selectHuntByCode('${escapeHtml(getHuntCode(hunt))}')" style="border:none;border-radius:999px;padding:6px 10px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#bf6b34,#9e5323);color:#fff6ed;">Select</button>
-      </div>
-    </div>
+      </td>
+    </tr>
   `).join('');
 
   const moreNote = matches.length > 12
@@ -1401,7 +1483,20 @@ function buildDwrHuntUnitPopupContent(boundaryName, matches) {
       <div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6c43c8;">DWR Hunt Unit</div>
       <div style="font-size:16px;font-weight:800;margin-top:2px;">${escapeHtml(boundaryName)}</div>
       <div style="font-size:12px;margin-top:4px;">${matches.length} matching hunts</div>
-      <div style="margin-top:8px;">${rows}</div>
+      <div style="margin-top:8px;overflow:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;color:#6b5646;padding:0 6px 6px;">Ref</th>
+              <th style="text-align:left;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;color:#6b5646;padding:0 6px 6px;">Hunt</th>
+              <th style="text-align:left;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;color:#6b5646;padding:0 6px 6px;">Weapon</th>
+              <th style="text-align:left;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;color:#6b5646;padding:0 6px 6px;">Dates</th>
+              <th style="padding:0 6px 6px;"></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
       ${moreNote}
     </div>
   `;
@@ -1914,15 +2009,8 @@ function bindControls() {
     });
   }
 
-  if (toggleWildlifeWma) {
-    toggleWildlifeWma.addEventListener('change', () => {
-      updateStateLayersSummary();
-      void syncOverlayToggles();
-    });
-  }
-
-  if (toggleWaterfowlWma) {
-    toggleWaterfowlWma.addEventListener('change', () => {
+  if (toggleWma) {
+    toggleWma.addEventListener('change', () => {
       updateStateLayersSummary();
       void syncOverlayToggles();
     });
