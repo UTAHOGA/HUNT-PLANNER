@@ -135,7 +135,10 @@ const globeMapEl = document.getElementById('globeMap');
 const OFFICIAL_DWR_WMA_PAGE_URL = 'https://wildlife.utah.gov/discover/lands/wmas.html';
 const OFFICIAL_DWR_WATERFOWL_MAPS_URL = 'https://wildlife.utah.gov/hunting/maps.html';
 const OFFICIAL_DWR_WATERFOWL_CONDITIONS_URL = 'https://wildlife.utah.gov/waterfowl-opener-conditions';
-const OFFICIAL_DWR_WMA_LOGO_URL = 'https://static.wixstatic.com/media/43f827_414cd06f064548efad0a5c3c8a1c88e5~mv2.png';
+const OFFICIAL_DWR_WMA_LOGO_URL = 'https://static.wixstatic.com/media/43f827_42c37bffbd804a1ca0bae3654d4ad46c~mv2.jpg';
+const OFFICIAL_SITLA_PAGE_URL = 'https://trustlands.utah.gov/';
+const OFFICIAL_STATE_PARKS_PAGE_URL = 'https://stateparks.utah.gov/';
+const OFFICIAL_STATE_PARKS_LOGO_URL = 'https://static.wixstatic.com/media/43f827_a14118657cd642c5a5f1aa4febc6f82c~mv2.png';
 const stateLayersSummaryEl = document.getElementById('stateLayersSummary');
 
 function safe(value) {
@@ -406,7 +409,7 @@ function getOverlayFeatureLabel(feature) {
 function buildOverlayInfoContent(kind, feature) {
   const label = getOverlayFeatureLabel(feature);
   const safeLabel = escapeHtml(label);
-  const logoHtml = `
+  const wmaLogoHtml = `
     <div style="margin-bottom:10px;text-align:center;">
       <img
         src="${OFFICIAL_DWR_WMA_LOGO_URL}"
@@ -416,10 +419,45 @@ function buildOverlayInfoContent(kind, feature) {
     </div>
   `;
 
+  const stateParksLogoHtml = `
+    <div style="margin-bottom:10px;text-align:center;">
+      <img
+        src="${OFFICIAL_STATE_PARKS_LOGO_URL}"
+        alt="Utah State Parks"
+        style="display:block;margin:0 auto;max-width:88px;height:auto;"
+      >
+    </div>
+  `;
+
+  if (kind === 'sitla') {
+    return `
+      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+        <strong>${safeLabel}</strong><br>
+        Official Utah Trust Lands reference.
+        <div style="margin-top:10px;display:grid;gap:6px;">
+          <a href="${OFFICIAL_SITLA_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah Trust Lands</a>
+        </div>
+      </div>
+    `;
+  }
+
+  if (kind === 'stateParks') {
+    return `
+      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+        ${stateParksLogoHtml}
+        <strong>${safeLabel}</strong><br>
+        Official Utah State Parks reference.
+        <div style="margin-top:10px;display:grid;gap:6px;">
+          <a href="${OFFICIAL_STATE_PARKS_PAGE_URL}" target="_blank" rel="noopener noreferrer">Utah State Parks</a>
+        </div>
+      </div>
+    `;
+  }
+
   if (kind === 'waterfowlWma') {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
-        ${logoHtml}
+        ${wmaLogoHtml}
         <strong>${safeLabel}</strong><br>
         Official Utah DWR waterfowl management area reference.
         <div style="margin-top:10px;display:grid;gap:6px;">
@@ -433,7 +471,7 @@ function buildOverlayInfoContent(kind, feature) {
   if (kind === 'wildlifeWma') {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
-        ${logoHtml}
+        ${wmaLogoHtml}
         <strong>${safeLabel}</strong><br>
         Official Utah DWR wildlife management area reference.
         <div style="margin-top:10px;display:grid;gap:6px;">
@@ -452,7 +490,7 @@ function buildOverlayInfoContent(kind, feature) {
 }
 
 function bindOverlayLayerInteraction(kind, layer) {
-  if (!layer || kind === 'usfs' || kind === 'blm' || kind === 'sitla' || kind === 'stateLands' || kind === 'stateParks' || kind === 'private') {
+  if (!layer || kind === 'usfs' || kind === 'blm' || kind === 'stateLands' || kind === 'private') {
     return;
   }
 
