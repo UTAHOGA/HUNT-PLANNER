@@ -174,6 +174,20 @@ function normalizeBoundaryKey(value) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+function hasActiveMatrixSelections() {
+  return [
+    safe(searchInput?.value).trim(),
+    speciesFilter?.value && speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
+    sexFilter?.value && sexFilter.value !== 'All' ? sexFilter.value : '',
+    huntTypeFilter?.value && huntTypeFilter.value !== 'All' ? huntTypeFilter.value : '',
+    weaponFilter?.value && weaponFilter.value !== 'All' ? weaponFilter.value : '',
+    huntCategoryFilter?.value && huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : '',
+    unitFilter?.value || ''
+  ].filter(Boolean).length > 0;
+}
+function hasReadyUnitSelection() {
+  return !!safe(unitFilter?.value).trim();
+}
 
 // --- FILTERING ENGINE ---
 function getFilteredHunts(excludeKey = '') {
@@ -203,6 +217,11 @@ function getFilteredHunts(excludeKey = '') {
 
     return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk;
   });
+}
+
+function getDisplayHunts() {
+  if (!hasActiveMatrixSelections() && !selectedHunt) return [];
+  return getFilteredHunts();
 }
 
 function handleFilterChange(event) {
@@ -306,13 +325,13 @@ async function loadHuntData() {
 function renderMatchingHunts() {
   const container = document.getElementById('matchingHunts');
   if (!container) return;
-  const list = getFilteredHunts();
+  const list = getDisplayHunts();
   container.innerHTML = list.length ? list.map(h => `
     <div class="hunt-card ${selectedHunt && getHuntCode(selectedHunt) === getHuntCode(h) ? 'is-selected' : ''}" data-hunt-code="${escapeHtml(getHuntCode(h))}" role="button" tabindex="0">
       <div class="hunt-card-title">${getHuntTitle(h)}</div>
       <div class="hunt-card-meta">${getUnitName(h)} | ${getWeapon(h)}</div>
       <div class="hunt-card-meta">${getDates(h)}</div>
-    </div>`).join('') : '<div class="empty-note">No matches found.</div>';
+    </div>`).join('') : '<div class="empty-note">Use the matrix or click a hunt unit to load matching hunts.</div>';
 }
 
 window.selectHuntByCode = (code) => {
@@ -336,15 +355,16 @@ function renderSelectedHunt() {
   const boundaryLink = getBoundaryLink(selectedHunt);
   p.innerHTML = `
     <div style="display:grid;gap:12px;">
-      <div style="position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);">
-        <img src="${LOGO_DNR}" alt="Utah DNR logo" style="display:block;width:100%;height:auto;">
-        <div style="position:absolute;right:10px;top:10px;bottom:10px;width:52%;display:grid;align-content:start;gap:6px;padding:8px 10px;">
-          <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);">Selected Hunt</div>
-          <div style="font-size:17px;font-weight:900;line-height:1.05;color:var(--text);">${escapeHtml(getHuntCode(selectedHunt))}</div>
-          <div style="font-size:14px;font-weight:800;line-height:1.15;color:var(--text);">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt))}</div>
-          <div style="font-size:12px;line-height:1.25;color:var(--muted);">${escapeHtml(getSpeciesDisplay(selectedHunt))} | ${escapeHtml(getNormalizedSex(selectedHunt))}</div>
-          <div style="font-size:12px;line-height:1.25;color:var(--muted);">${escapeHtml(getHuntType(selectedHunt))} | ${escapeHtml(getWeapon(selectedHunt))}</div>
+      <div style="display:grid;gap:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px;box-shadow:var(--shadow);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="${LOGO_DNR}" alt="Utah DNR logo" style="width:56px;height:56px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid var(--line);">
+          <div style="display:grid;gap:3px;">
+            <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);">Selected Hunt</div>
+            <div style="font-size:18px;font-weight:900;line-height:1.05;color:var(--text);">${escapeHtml(getHuntCode(selectedHunt))}</div>
+            <div style="font-size:14px;font-weight:800;line-height:1.15;color:var(--text);">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt))}</div>
+          </div>
         </div>
+        <div style="font-size:12px;line-height:1.3;color:var(--muted);">${escapeHtml(getSpeciesDisplay(selectedHunt))} | ${escapeHtml(getNormalizedSex(selectedHunt))} | ${escapeHtml(getHuntType(selectedHunt))} | ${escapeHtml(getWeapon(selectedHunt))}</div>
       </div>
       <div class="detail-grid">
         <div><strong>Species</strong>${escapeHtml(getSpeciesDisplay(selectedHunt))}</div>
@@ -364,6 +384,10 @@ function ensureCesiumViewer() {
   const container = document.getElementById('globeMap');
   if (!container) return;
   cesiumViewer = new Cesium.Viewer(container, {
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+      url: 'https://tile.openstreetmap.org/'
+    }),
+    baseLayer: false,
     animation: false,
     timeline: false,
     geocoder: false,
@@ -376,6 +400,7 @@ function ensureCesiumViewer() {
     infoBox: false
   });
   cesiumViewer.scene.globe.enableLighting = false;
+  cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#d7e7f5');
 }
 
 function applyMapMode() {
@@ -446,7 +471,8 @@ function buildBoundaryLayer() {
 
 function styleBoundaryLayer() {
     if (!huntUnitsLayer) return;
-    const filtered = getFilteredHunts();
+    const showBoundaries = hasActiveMatrixSelections() || !!selectedHunt;
+    const filtered = getDisplayHunts();
     const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
     const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
     const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
@@ -454,7 +480,7 @@ function styleBoundaryLayer() {
         const id = safe(f.getProperty('BoundaryID'));
         const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
         const isMatch = boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name);
-        return { visible: isMatch, strokeColor: '#3653b3', fillOpacity: 0.1 };
+        return { visible: showBoundaries && isMatch, strokeColor: '#3653b3', fillOpacity: showBoundaries && isMatch ? 0.1 : 0 };
     });
 }
 
