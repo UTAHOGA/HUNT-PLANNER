@@ -4,6 +4,7 @@ const GOOGLE_BASELINE_DEFAULT_ZOOM = 7;
 
 // --- CLOUDFLARE JSON SOURCES ---
 const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
+const HUNT_DATA_VERSION = '20260324-master-1733';
 const LOCAL_HUNT_BOUNDARIES_PATH = `${CLOUDFLARE_BASE}/hunt_boundaries.geojson`;
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`];
 
@@ -11,16 +12,14 @@ const USFS_QUERY_URL = "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_Fore
 const BLM_QUERY_URL = 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
 
 const HUNT_DATA_SOURCES = [
-  { label: 'Buck Deer', required: true, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_BuckDeer_Pages_43_53.json`] },
-  { label: 'Pronghorn', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_Pronghorn.json`] },
-  { label: 'Moose', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_Moose.json`] },
-  { label: 'Mountain Goat', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_MountainGoat.json`] },
-  { label: 'Turkey', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_Turkey.json`] },
-  { label: 'Cougar', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_Cougar.json`] },
-  { label: 'Bull Elk', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_BullElk.json`] },
-  { label: 'General Elk', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_GeneralElk.json`] },
-  { label: 'Spike Elk', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_SpikeElk.json`] },
-  { label: 'Special Elk', required: false, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_SpecialElk.json`] }
+  {
+    label: 'Combined master',
+    required: true,
+    candidates: [
+      `${CLOUDFLARE_BASE}/utah-hunt-planner-master-all.json?v=${HUNT_DATA_VERSION}`,
+      `./data/utah-hunt-planner-master-all.json?v=${HUNT_DATA_VERSION}`
+    ]
+  }
 ];
 
 const HUNT_BOUNDARY_NAME_OVERRIDES = {
@@ -39,13 +38,20 @@ const huntPlannerMapStyle = [
   { featureType: 'transit', stylers: [{ visibility: 'off' }] }
 ];
 
-const HUNT_TYPE_ORDER = [ 'General', 'Youth', 'Limited Entry', 'Premium Limited Entry', 'Management', 'Dedicated Hunter', 'Cactus Buck', 'Once-in-a-Lifetime', 'Antlerless' ];
-const SEX_ORDER = ['Buck', 'Bull', 'Antlerless', 'Either Sex', "Hunter's Choice"];
+const HUNT_TYPE_ORDER = [ 'General', 'Youth', 'Limited Entry', 'Premium Limited Entry', 'Management', 'Dedicated Hunter', 'CWMU', 'Private Land Only', 'Conservation', 'Once-in-a-Lifetime', 'Antlerless' ];
+const HUNT_CLASS_ORDER = [ 'General Season', 'Limited Entry', 'Premium Limited Entry', 'Youth', 'Management', 'Antlerless', 'CWMU', 'Private Land Only', 'Conservation', 'Statewide Permit', 'Extended Archery' ];
+const SEX_ORDER = ['Buck', 'Bull', 'Ram', 'Ewe', 'Bearded', 'Antlerless', 'Either Sex', "Hunter's Choice"];
 const WEAPON_ORDER = [ 'Any Legal Weapon', 'Archery', 'Extended Archery', 'Restricted Archery', 'Muzzleloader', 'Restricted Muzzleloader', 'Restricted Rifle', 'HAMSS', 'Multiseason', 'Restricted Multiseason' ];
 
 let googleBaselineMap = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0;
 
-const searchInput = document.getElementById('searchInput'), speciesFilter = document.getElementById('speciesFilter'), sexFilter = document.getElementById('sexFilter'), weaponFilter = document.getElementById('weaponFilter'), huntTypeFilter = document.getElementById('huntTypeFilter'), unitFilter = document.getElementById('unitFilter');
+const searchInput = document.getElementById('searchInput'),
+  speciesFilter = document.getElementById('speciesFilter'),
+  sexFilter = document.getElementById('sexFilter'),
+  huntTypeFilter = document.getElementById('huntTypeFilter'),
+  weaponFilter = document.getElementById('weaponFilter'),
+  huntCategoryFilter = document.getElementById('huntCategoryFilter'),
+  unitFilter = document.getElementById('unitFilter');
 
 // --- UTILITIES ---
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -57,7 +63,12 @@ function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w =
 function normalizeSpeciesLabel(value) {
   const text = safe(value).trim().toLowerCase();
   if (!text) return '';
-  if (text === 'mule deer' || text === 'deer') return 'Mule Deer';
+  if (text === 'mule deer' || text === 'deer') return 'Deer';
+  if (text.includes('desert') && text.includes('bighorn')) return 'Desert Bighorn Sheep';
+  if (text.includes('rocky') && text.includes('bighorn')) return 'Rocky Mountain Bighorn Sheep';
+  if (text === 'bighorn sheep') {
+    return 'Bighorn Sheep';
+  }
   return titleCaseWords(text);
 }
 
@@ -68,12 +79,21 @@ function getSpeciesDisplay(h) { return getSpeciesDisplayList(h)[0] || ''; }
 
 function getNormalizedSex(valueOrHunt) {
   const raw = typeof valueOrHunt === 'string' ? safe(valueOrHunt).trim() : firstNonEmpty(valueOrHunt.sex, valueOrHunt.Sex);
+  const hunt = typeof valueOrHunt === 'string' ? null : valueOrHunt;
   const val = raw.toLowerCase();
   if (val.includes('choice')) return "Hunter's Choice";
   if (val.includes('either')) return 'Either Sex';
-  if (val === 'doe' || val === 'cow' || val === 'ewe' || val.includes('antlerless')) return 'Antlerless';
+  if (val === 'ewe') return 'Ewe';
+  if (val === 'doe' || val === 'cow' || val.includes('antlerless')) return 'Antlerless';
+  if (val.includes('bearded')) return 'Bearded';
+  if (val.includes('ram')) return 'Ram';
   if (val.includes('buck')) return 'Buck';
   if (val.includes('bull')) return 'Bull';
+  if (val.includes('male only') && hunt) {
+    const species = getSpeciesDisplay(hunt);
+    if (species === 'Rocky Mountain Bighorn Sheep') return 'Ram';
+    if (species === 'Desert Bighorn Sheep') return 'Ram';
+  }
   return titleCaseWords(raw) || 'All';
 }
 
@@ -82,8 +102,60 @@ function getHuntTitle(h) { return firstNonEmpty(h.title, h.Title, h.huntTitle, g
 function getUnitCode(h) { return firstNonEmpty(h.unitCode, h.unit_code, h.UnitCode); }
 function getUnitName(h) { return firstNonEmpty(h.unitName, h.unit_name, h.UnitName); }
 function getUnitValue(h) { return firstNonEmpty(getUnitCode(h), getUnitName(h)); }
-function getWeapon(h) { return firstNonEmpty(h.weapon, h.Weapon); }
-function getHuntType(h) { return firstNonEmpty(h.huntType, h.HuntType, h.type); }
+function normalizeWeaponLabel(raw) {
+  const value = safe(raw).trim();
+  const lower = value.toLowerCase();
+  if (!value) return '';
+  if (lower.includes('any legal weapon')) return 'Any Legal Weapon';
+  if (lower.includes('extended archery')) return 'Extended Archery';
+  if (lower.includes('restricted archery')) return 'Restricted Archery';
+  if (lower.includes('restricted muzzleloader')) return 'Restricted Muzzleloader';
+  if (lower.includes('restricted multiseason')) return 'Restricted Multiseason';
+  if (lower.includes('restricted rifle')) return 'Restricted Rifle';
+  if (lower.includes('muzzleloader')) return 'Muzzleloader';
+  if (lower.includes('archery')) return 'Archery';
+  if (lower.includes('dedicated hunter')) return 'Multiseason';
+  if (lower.includes('hamss') || lower.includes('shotgun') || lower.includes('straight-walled')) return 'HAMSS';
+  if (lower.includes('multiseason')) return 'Multiseason';
+  return value;
+}
+function getWeapon(h) { return normalizeWeaponLabel(firstNonEmpty(h.weapon, h.Weapon)); }
+function normalizeHuntTypeLabel(raw) {
+  const value = safe(raw).trim();
+  const lower = value.toLowerCase();
+  if (!value) return '';
+  if (lower.includes('private land only')) return 'Private Land Only';
+  if (lower.includes('premium')) return 'Premium Limited Entry';
+  if (lower.includes('limited')) return 'Limited Entry';
+  if (lower.includes('once-in-a-lifetime')) return 'Once-in-a-Lifetime';
+  if (lower.includes('dedicated hunter')) return 'Dedicated Hunter';
+  if (lower.includes('management')) return 'Management';
+  if (lower.includes('youth')) return 'Youth';
+  if (lower.includes('conservation')) return 'Conservation';
+  if (lower.includes('cwmu')) return 'CWMU';
+  if (lower.includes('antlerless')) return 'Antlerless';
+  if (lower.includes('general')) return 'General';
+  return value;
+}
+function getHuntType(h) { return normalizeHuntTypeLabel(firstNonEmpty(h.huntType, h.HuntType, h.type)); }
+function normalizeHuntCategoryLabel(raw) {
+  const value = safe(raw).trim();
+  const lower = value.toLowerCase();
+  if (!value) return '';
+  if (lower.includes('statewide permit')) return 'Statewide Permit';
+  if (lower.includes('private land only')) return 'Private Land Only';
+  if (lower.includes('extended archery')) return 'Extended Archery';
+  if (lower.includes('premium')) return 'Premium Limited Entry';
+  if (lower.includes('limited')) return 'Limited Entry';
+  if (lower.includes('cwmu')) return 'CWMU';
+  if (lower.includes('youth')) return 'Youth';
+  if (lower.includes('conservation')) return 'Conservation';
+  if (lower.includes('management')) return 'Management';
+  if (lower.includes('antlerless')) return 'Antlerless';
+  if (lower.includes('general')) return 'General Season';
+  return value;
+}
+function getHuntCategory(h) { return normalizeHuntCategoryLabel(firstNonEmpty(h.huntCategory, h.HuntCategory, h.category)); }
 function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
 
 // --- FILTERING ENGINE ---
@@ -91,29 +163,37 @@ function getFilteredHunts(excludeKey = '') {
   const search = safe(searchInput?.value).trim().toLowerCase();
   const species = safe(speciesFilter?.value || 'All Species');
   const sex = safe(sexFilter?.value || 'All');
+  const huntType = safe(huntTypeFilter?.value || 'All');
   const weapon = safe(weaponFilter?.value || 'All');
+  const huntCategory = safe(huntCategoryFilter?.value || 'All');
   const unit = safe(unitFilter?.value || '');
 
   return huntData.filter(h => {
     const sDisplay = getSpeciesDisplay(h);
     const hSex = getNormalizedSex(h);
+    const hHuntType = getHuntType(h);
     const hWeapon = getWeapon(h);
+    const hHuntCategory = getHuntCategory(h);
     const hUnit = getUnitValue(h);
 
     const searchOk = !search || getHuntTitle(h).toLowerCase().includes(search) || getHuntCode(h).toLowerCase().includes(search);
     const speciesOk = excludeKey === 'species' || species === 'All Species' || sDisplay === species;
     const sexOk = excludeKey === 'sex' || sex === 'All' || hSex === sex;
+    const huntTypeOk = excludeKey === 'huntType' || huntType === 'All' || hHuntType === huntType;
     const weaponOk = excludeKey === 'weapon' || weapon === 'All' || hWeapon === weapon;
+    const huntCategoryOk = excludeKey === 'huntCategory' || huntCategory === 'All' || hHuntCategory === huntCategory;
     const unitOk = excludeKey === 'unit' || !unit || hUnit === unit;
 
-    return searchOk && speciesOk && sexOk && weaponOk && unitOk;
+    return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk;
   });
 }
 
 function handleFilterChange(event) {
   if (event && event.target && event.target.id === 'speciesFilter') {
     if (sexFilter) sexFilter.value = 'All';
+    if (huntTypeFilter) huntTypeFilter.value = 'All';
     if (weaponFilter) weaponFilter.value = 'All';
+    if (huntCategoryFilter) huntCategoryFilter.value = 'All';
     if (unitFilter) unitFilter.value = '';
   }
   refreshSelectionMatrix();
@@ -122,51 +202,83 @@ function handleFilterChange(event) {
 }
 
 function refreshSelectionMatrix() {
-  const selectedSpecies = speciesFilter?.value || 'All Species';
-  
-  // Create current species dataset
-  const speciesData = huntData.filter(h => selectedSpecies === 'All Species' || getSpeciesDisplay(h) === selectedSpecies);
+  if (!speciesFilter || !sexFilter || !huntTypeFilter || !weaponFilter || !huntCategoryFilter || !unitFilter) return;
 
-  // Update Sex Dropdown based on Species
-  const sexSet = new Set(['All']);
-  speciesData.forEach(h => sexSet.add(getNormalizedSex(h)));
-  const sexOptions = sortWithPreferredOrder(Array.from(sexSet), ['All', ...SEX_ORDER]);
-  const prevSex = sexFilter.value;
+  const speciesOptions = sortWithPreferredOrder(
+    Array.from(new Set(huntData.map(getSpeciesDisplay).filter(Boolean))),
+    ['Deer', 'Elk', 'Pronghorn', 'Moose', 'Bison', 'Black Bear', 'Cougar', 'Turkey', 'Desert Bighorn Sheep', 'Rocky Mountain Bighorn Sheep', 'Mountain Goat']
+  );
+  const previousSpecies = speciesFilter.value || 'All Species';
+  speciesFilter.innerHTML = `<option value="All Species">All Species</option>` + speciesOptions.map(v => `<option value="${v}">${v}</option>`).join('');
+  speciesFilter.value = speciesOptions.includes(previousSpecies) ? previousSpecies : 'All Species';
+
+  const sexData = getFilteredHunts('sex');
+  const sexOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...sexData.map(getNormalizedSex).filter(Boolean)])), ['All', ...SEX_ORDER]);
+  const prevSex = sexFilter.value || 'All';
   sexFilter.innerHTML = sexOptions.map(v => `<option value="${v}">${v}</option>`).join('');
   sexFilter.value = sexOptions.includes(prevSex) ? prevSex : 'All';
 
-  // Update Weapon Dropdown
-  const weaponSet = new Set(['All']);
-  speciesData.forEach(h => weaponSet.add(getWeapon(h)));
-  const weaponOptions = sortWithPreferredOrder(Array.from(weaponSet), ['All', ...WEAPON_ORDER]);
-  const prevWeapon = weaponFilter.value;
+  const huntTypeData = getFilteredHunts('huntType');
+  const huntTypeOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...huntTypeData.map(getHuntType).filter(Boolean)])), ['All', ...HUNT_TYPE_ORDER]);
+  const prevHuntType = huntTypeFilter.value || 'All';
+  huntTypeFilter.innerHTML = huntTypeOptions.map(v => `<option value="${v}">${v}</option>`).join('');
+  huntTypeFilter.value = huntTypeOptions.includes(prevHuntType) ? prevHuntType : 'All';
+
+  const weaponData = getFilteredHunts('weapon');
+  const weaponOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...weaponData.map(getWeapon).filter(Boolean)])), ['All', ...WEAPON_ORDER]);
+  const prevWeapon = weaponFilter.value || 'All';
   weaponFilter.innerHTML = weaponOptions.map(v => `<option value="${v}">${v}</option>`).join('');
   weaponFilter.value = weaponOptions.includes(prevWeapon) ? prevWeapon : 'All';
-  
-  // Update Units
+
+  const categoryData = getFilteredHunts('huntCategory');
+  const categoryOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...categoryData.map(getHuntCategory).filter(Boolean)])), ['All', ...HUNT_CLASS_ORDER]);
+  const prevHuntCategory = huntCategoryFilter.value || 'All';
+  huntCategoryFilter.innerHTML = categoryOptions.map(v => `<option value="${v}">${v}</option>`).join('');
+  huntCategoryFilter.value = categoryOptions.includes(prevHuntCategory) ? prevHuntCategory : 'All';
+
+  const nonUnitSelections = [
+    safe(searchInput?.value).trim(),
+    speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
+    sexFilter.value !== 'All' ? sexFilter.value : '',
+    huntTypeFilter.value !== 'All' ? huntTypeFilter.value : '',
+    weaponFilter.value !== 'All' ? weaponFilter.value : '',
+    huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : ''
+  ].filter(Boolean).length > 0;
+
   const unitsMap = new Map();
-  speciesData.forEach(h => unitsMap.set(getUnitValue(h), getUnitName(h)));
-  const unitOptions = Array.from(unitsMap.entries()).sort((a,b) => a[1].localeCompare(b[1]));
-  unitFilter.innerHTML = `<option value="">All Units</option>` + unitOptions.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+  getFilteredHunts('unit').forEach(h => {
+    const unitValue = getUnitValue(h);
+    if (unitValue) unitsMap.set(unitValue, getUnitName(h) || unitValue);
+  });
+  const unitOptions = Array.from(unitsMap.entries()).sort((a, b) => a[1].localeCompare(b[1]));
+  const prevUnit = unitFilter.value || '';
+  if (!nonUnitSelections) {
+    unitFilter.innerHTML = `<option value="">Select filters first</option>`;
+    unitFilter.value = '';
+  } else {
+    unitFilter.innerHTML = `<option value="">All DWR Hunt Units</option>` + unitOptions.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    unitFilter.value = unitOptions.some(([v]) => v === prevUnit) ? prevUnit : '';
+  }
 }
 
 // --- CORE APP LOGIC ---
 async function loadHuntData() {
   let merged = [];
   for (let s of HUNT_DATA_SOURCES) {
-    try {
-      const resp = await fetch(s.candidates[0], { cache: 'no-store' });
-      if (!resp.ok) continue;
-      
-      const json = await resp.json();
-      const records = Array.isArray(json.records) ? json.records : (Array.isArray(json) ? json : []);
-      
-      if (records.length > 0) {
-        merged.push(...records);
-        console.log(`Successfully loaded ${records.length} hunts for ${s.label}`);
+    for (const candidate of s.candidates) {
+      try {
+        const resp = await fetch(candidate, { cache: 'no-store' });
+        if (!resp.ok) continue;
+        const json = await resp.json();
+        const records = Array.isArray(json.records) ? json.records : (Array.isArray(json) ? json : []);
+        if (records.length > 0) {
+          merged.push(...records);
+          console.log(`Successfully loaded ${records.length} hunts for ${s.label} from ${candidate}`);
+          break;
+        }
+      } catch (e) {
+        console.error(`Failed to load ${s.label} from ${candidate}.`, e);
       }
-    } catch (e) { 
-      console.error(`Failed to load ${s.label}.`, e); 
     }
   }
   huntData = merged;
@@ -238,7 +350,7 @@ function styleBoundaryLayer() {
 }
 
 function bindControls() {
-  [searchInput, speciesFilter, sexFilter, weaponFilter].forEach(el => {
+  [searchInput, speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
     el?.addEventListener('change', handleFilterChange);
     el?.addEventListener('input', handleFilterChange);
   });
