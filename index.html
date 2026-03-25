@@ -178,6 +178,10 @@
     }
     .wheel-foreground::before { box-shadow: inset 0 0 0 5px rgba(232, 154, 82, 0.94); }
     .wheel-foreground::after { box-shadow: inset 0 0 0 16px rgba(84, 53, 31, 0.98); }
+    .wheel-foreground .spoke-5 { transform: rotate(22.5deg); }
+    .wheel-foreground .spoke-6 { transform: rotate(67.5deg); }
+    .wheel-foreground .spoke-7 { transform: rotate(112.5deg); }
+    .wheel-foreground .spoke-8 { transform: rotate(157.5deg); }
     .stand { position: absolute; left: 50%; bottom: 6px; width: 340px; height: 128px; transform: translateX(-50%); pointer-events:none; }
     .upright { position: absolute; top: 0; width: 8px; height: 94px; background: linear-gradient(180deg, #7d5a3e, #4a3322); border-radius: 999px; box-shadow: 0 6px 12px rgba(58, 37, 18, 0.2); }
     .upright.left { left: 86px; transform: rotate(16deg); } .upright.right { right: 86px; transform: rotate(-16deg); }
@@ -564,7 +568,7 @@
         <div class="loader-wheel-aura"></div>
         <div class="wheel"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span><span class="hub"></span></div>
         <div class="loader-video-shell">
-          <video id="loaderVideo" class="loader-video" autoplay playsinline preload="auto" poster="stylized-running-elk.jpg">
+          <video id="loaderVideo" class="loader-video" autoplay muted playsinline preload="auto" poster="stylized-running-elk.jpg">
             <source src="./assets/RUNNING_ELK.mp4" type="video/mp4">
           </video>
           <div class="loader-video-fallback elk-loader" aria-hidden="true">
@@ -572,7 +576,7 @@
             <span class="shadow"></span><span class="dust dust-1"></span><span class="dust dust-2"></span><span class="dust dust-3"></span>
           </div>
         </div>
-        <div class="wheel-foreground"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span></div>
+        <div class="wheel-foreground"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span><span class="spoke spoke-5"></span><span class="spoke spoke-6"></span><span class="spoke spoke-7"></span><span class="spoke spoke-8"></span></div>
         <div class="stand"><span class="upright left"></span><span class="upright right"></span><span class="base"></span></div>
         <div class="loader-plaque">Hunt Planner Loading Dock</div>
       </div>
