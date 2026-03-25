@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>U.O.G.A. | How Vetting Works</title>
+  <style>
+    :root {
+      --bg: #141414;
+      --panel: rgba(35, 30, 26, 0.9);
+      --panel2: #2b231d;
+      --line: #5c412d;
+      --text: #f4efe4;
+      --muted: #b39c88;
+      --accent: #d66a1f;
+      --accent-dark: #b75519;
+      --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
+      --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #141414 url('https://static.wixstatic.com/media/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg/v1/fill/w_1519,h_220,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg') center/cover fixed;
+      color: var(--text);
+      font-family: var(--font-ui);
+    }
+    .shell { max-width: 1240px; margin: 0 auto; padding: 22px; }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+      padding:16px 18px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand { display:flex; align-items:center; gap:16px; }
+    .brand img { height:72px; background:#fff; border-radius:6px; padding:2px; }
+    .brand-copy h1 { margin:0; font-family:var(--font-display); font-size:34px; line-height:1; }
+    .brand-copy p { margin:6px 0 0; color:var(--accent); font-size:26px; font-family:var(--font-display); line-height:1; }
+    .nav { display:flex; gap:10px; flex-wrap:wrap; }
+    .nav a {
+      display:inline-flex; align-items:center; justify-content:center; padding:10px 16px; border-radius:999px;
+      border:1px solid var(--line); background:var(--panel2); color:var(--text); text-decoration:none; font-weight:800; letter-spacing:.04em; text-transform:uppercase; font-size:12px;
+    }
+    .nav a.active, .nav a:hover { border-color:var(--accent); background:rgba(214,106,31,0.16); }
+    .hero, .panel {
+      margin-top:18px; padding:22px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero h2 { margin:0; font-family:var(--font-display); font-size:48px; line-height:.95; }
+    .hero p { margin:14px 0 0; max-width:900px; color:var(--muted); font-size:18px; line-height:1.55; }
+    .grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px; margin-top:18px; }
+    .panel h3 { margin:0 0 12px; font-family:var(--font-display); color:var(--accent); font-size:24px; }
+    .panel p, .panel li { color:var(--muted); line-height:1.55; }
+    .panel ul { margin:0; padding-left:18px; }
+    .callout {
+      margin-top:18px; padding:18px 20px; border-radius:16px; border:1px solid rgba(214,106,31,0.45); background:rgba(214,106,31,0.12);
+    }
+    .callout strong { color:var(--text); }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero h2 { font-size:36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. logo">
+        <div class="brand-copy">
+          <h1>How Vetting Works</h1>
+          <p>Neutral Matching Standards</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="./index.html">Hunt Planner</a>
+        <a href="./hunt-research.html">Hunt Research</a>
+        <a href="./vetting.html" class="active">How Vetting Works</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h2>Professional, Fair, Transparent</h2>
+      <p>The goal of this service is to help hunting clients find qualified Utah outfitters without hidden favoritism. Listings should be earned through clear standards, and hunt matches should follow neutral criteria that a visitor can understand.</p>
+      <div class="callout"><strong>Recommended operating rule:</strong> if U.O.G.A. or the site owner is also listed as an outfitter, that listing must follow the same published placement rules as every other qualified operator.</div>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h3>Baseline Vetting Standard</h3>
+        <ul>
+          <li>Utah licensing and registration status verified</li>
+          <li>Insurance and contact information current</li>
+          <li>Species and hunt areas clearly identified</li>
+          <li>Service type disclosed: guided, drop camp, access, or consulting</li>
+          <li>Public-facing business information reviewed for consistency</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>Referral Fairness</h3>
+        <ul>
+          <li>Match outfitters by species, hunt unit, and service fit first</li>
+          <li>Display all qualified vetted matches, not just one</li>
+          <li>If sponsored or featured placement exists, label it clearly</li>
+          <li>Use neutral sorting or rotation for equally qualified listings</li>
+          <li>Apply the same rule set to every outfitter, including your own listing</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>Client Trust Signals</h3>
+        <p>Visitors should understand why a given outfitter appears for a hunt. Good labels include species served, units served, guide type, and whether the match is direct or broader regional coverage.</p>
+      </article>
+      <article class="panel">
+        <h3>Complete Outfitter List</h3>
+        <p>The next step is a normalized master outfitter list with one clean record per operator. That master list can feed both the map match system and a public directory page.</p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

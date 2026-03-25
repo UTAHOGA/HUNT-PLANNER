@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>U.O.G.A. Hunt Research</title>
+  <style>
+    :root {
+      --bg: #141414;
+      --panel: rgba(35, 30, 26, 0.9);
+      --panel2: #2b231d;
+      --line: #5c412d;
+      --text: #f4efe4;
+      --muted: #b39c88;
+      --accent: #d66a1f;
+      --accent-dark: #b75519;
+      --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
+      --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #141414 url('https://static.wixstatic.com/media/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg/v1/fill/w_1519,h_220,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg') center/cover fixed;
+      color: var(--text);
+      font-family: var(--font-ui);
+    }
+    .shell { max-width: 1240px; margin: 0 auto; padding: 22px; }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+      padding:16px 18px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand { display:flex; align-items:center; gap:16px; }
+    .brand img { height:72px; background:#fff; border-radius:6px; padding:2px; }
+    .brand-copy h1 { margin:0; font-family:var(--font-display); font-size:34px; line-height:1; }
+    .brand-copy p { margin:6px 0 0; color:var(--accent); font-size:26px; font-family:var(--font-display); line-height:1; }
+    .nav { display:flex; gap:10px; flex-wrap:wrap; }
+    .nav a {
+      display:inline-flex; align-items:center; justify-content:center; padding:10px 16px; border-radius:999px;
+      border:1px solid var(--line); background:var(--panel2); color:var(--text); text-decoration:none; font-weight:800; letter-spacing:.04em; text-transform:uppercase; font-size:12px;
+    }
+    .nav a.active, .nav a:hover { border-color:var(--accent); background:rgba(214,106,31,0.16); }
+    .hero, .panel {
+      margin-top:18px; padding:22px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero h2 { margin:0; font-family:var(--font-display); font-size:48px; line-height:.95; }
+    .hero p { margin:14px 0 0; max-width:820px; color:var(--muted); font-size:18px; line-height:1.55; }
+    .grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px; margin-top:18px; }
+    .panel h3 { margin:0 0 12px; font-family:var(--font-display); color:var(--accent); font-size:24px; }
+    .panel p, .panel li { color:var(--muted); line-height:1.55; }
+    .panel ul { margin:0; padding-left:18px; }
+    .callout {
+      margin-top:18px; padding:18px 20px; border-radius:16px; border:1px solid rgba(214,106,31,0.45); background:rgba(214,106,31,0.12);
+    }
+    .callout strong { color:var(--text); }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero h2 { font-size:36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. logo">
+        <div class="brand-copy">
+          <h1>Hunt Research</h1>
+          <p>Utah Hunt Intelligence</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="./index.html">Hunt Planner</a>
+        <a href="./hunt-research.html" class="active">Hunt Research</a>
+        <a href="./vetting.html">How Vetting Works</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h2>The Research Database We Need</h2>
+      <p>This page is the home for the Utah hunt research database. It should help a visitor move from "what hunts exist" to "which hunt is actually right for me" using official Utah DWR data, deadlines, and practical hunt-quality signals.</p>
+      <div class="callout"><strong>Next build targets:</strong> permit totals, success rates, harvest statistics, draw odds, regulation links, application deadlines, and a hunt-by-hunt calendar.</div>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h3>Planned Hunt Stats</h3>
+        <ul>
+          <li>Permits and quota totals</li>
+          <li>Hunters and harvest counts</li>
+          <li>Success percentage</li>
+          <li>Average days hunted</li>
+          <li>Satisfaction survey results</li>
+          <li>Trophy / premium hunt flags</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>Planned Research Tools</h3>
+        <ul>
+          <li>Draw-odds tables</li>
+          <li>Important regulation links</li>
+          <li>Season and application calendar</li>
+          <li>Unit comparison views</li>
+          <li>Weapon-specific hunt filters</li>
+          <li>Official Utah DWR source links for every hunt</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>Why This Matters</h3>
+        <p>Hunters need more than a map. They need a decision engine: what the hunt is, how hard it is to draw, how it has performed, and whether it fits their goals.</p>
+      </article>
+      <article class="panel">
+        <h3>Data Standard</h3>
+        <p>This research page should stay tied to official Utah DWR source material wherever possible, then add U.O.G.A. interpretation and outfitter context on top of that base.</p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

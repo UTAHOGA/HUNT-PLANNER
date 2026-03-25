@@ -133,6 +133,24 @@
     
     /* --- CONTROLS --- */
     .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .utility-nav { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .utility-link {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:var(--panel2);
+      color:var(--text);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .utility-link:hover { background:var(--panel); border-color:var(--accent); }
     .control-group { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); }
     .control-group label { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
     .toggle-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); flex-wrap: wrap; }
@@ -439,6 +457,10 @@
       </div>
     </div>
     <div class="controls">
+      <nav class="utility-nav" aria-label="Site sections">
+        <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
+        <a class="utility-link" href="./vetting.html">How Vetting Works</a>
+      </nav>
       <button id="themeToggleBtn" type="button" class="secondary">Light Mode</button>
       <div class="control-group">
         <label for="mapTypeSelect">Map</label>
@@ -456,15 +478,13 @@
         <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked>BLM</label>
         <label class="toggle-chip"><input id="toggleSITLA" type="checkbox">SITLA</label>
         <details class="toggle-menu">
-          <summary id="stateLayersSummary">State Lands</summary>
+          <summary id="stateLayersSummary">State Access</summary>
           <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleStateLands" type="checkbox"><span class="toggle-chip-label">State<br>Lands</span></label>
             <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State<br>Parks</span></label>
-            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">WMA</span></label>
+            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">UT. DWR<br>W.M.A.'s</span></label>
           </div>
         </details>
         <label class="toggle-chip"><input id="togglePrivate" type="checkbox">Private</label>
-        <label class="toggle-chip"><input id="toggleOutfitters" type="checkbox" checked>Outfitters</label>
       </div>
       <button id="streetViewBtn" type="button" class="secondary">Street View</button>
       <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
@@ -493,12 +513,12 @@
             <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
           </div>
           <div class="field">
-            <label for="weaponFilter">Weapon Type</label>
-            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
-          </div>
-          <div class="field">
             <label for="huntCategoryFilter">Hunt Class</label>
             <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="weaponFilter">Weapon Type</label>
+            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
           </div>
           <div class="field">
             <label for="unitFilter">DWR Hunt Units</label>
@@ -587,6 +607,7 @@
       <section class="panel">
         <h2>Outfitters</h2>
         <div class="panel-body">
+          <p class="helper" style="margin-bottom:12px;">Qualified vetted outfitters are matched neutrally by species, hunt unit, and service fit. <a href="./vetting.html">See how vetting and referrals work</a>.</p>
           <div id="outfitterResults" class="outfitter-list">
             <div class="empty-note">Select a hunt to load matching vetted outfitters.</div>
           </div>

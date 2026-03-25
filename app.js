@@ -55,6 +55,8 @@ const HUNT_TYPE_ORDER = [ 'General', 'Youth', 'Limited Entry', 'Premium Limited 
 const HUNT_CLASS_ORDER = [ 'General Season', 'Limited Entry', 'Premium Limited Entry', 'Youth', 'Management', 'Antlerless', 'CWMU', 'Private Land Only', 'Conservation', 'Statewide Permit', 'Extended Archery' ];
 const SEX_ORDER = ['Buck', 'Bull', 'Ram', 'Ewe', 'Bearded', 'Antlerless', 'Either Sex', "Hunter's Choice"];
 const WEAPON_ORDER = [ 'Any Legal Weapon', 'Archery', 'Extended Archery', 'Restricted Archery', 'Muzzleloader', 'Restricted Muzzleloader', 'Restricted Rifle', 'HAMSS', 'Multiseason', 'Restricted Multiseason' ];
+const DNR_ORANGE = '#d66a1f';
+const DNR_BROWN = '#4f2b14';
 
 let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0;
 const outfitterGeocodeCache = new Map();
@@ -78,12 +80,10 @@ const searchInput = document.getElementById('searchInput'),
   toggleUSFS = document.getElementById('toggleUSFS'),
   toggleBLM = document.getElementById('toggleBLM'),
   toggleSITLA = document.getElementById('toggleSITLA'),
-  toggleStateLands = document.getElementById('toggleStateLands'),
   toggleStateParks = document.getElementById('toggleStateParks'),
   toggleWma = document.getElementById('toggleWma'),
   togglePrivate = document.getElementById('togglePrivate'),
   stateLayersSummary = document.getElementById('stateLayersSummary'),
-  toggleOutfitters = document.getElementById('toggleOutfitters'),
   mapChooser = document.getElementById('mapChooser'),
   mapChooserTitle = document.getElementById('mapChooserTitle'),
   mapChooserKicker = document.getElementById('mapChooserKicker'),
@@ -116,8 +116,21 @@ function normalizeSpeciesLabel(value) {
   return titleCaseWords(text);
 }
 
-function getSpeciesDisplayList(h) { 
-  return Array.from(new Set(safe(firstNonEmpty(h.species, h.Species)).split(',').map(normalizeSpeciesLabel).filter(Boolean))); 
+function inferBighornSpecies(hunt) {
+  const code = safe(getHuntCode(hunt)).toUpperCase();
+  const title = safe(getHuntTitle(hunt)).toLowerCase();
+  const rawSpecies = safe(firstNonEmpty(hunt.species, hunt.Species)).toLowerCase();
+  const haystack = `${title} ${rawSpecies}`;
+  if (code.startsWith('DS') || haystack.includes('desert bighorn')) return 'Desert Bighorn Sheep';
+  if (code.startsWith('RS') || code.startsWith('RE') || haystack.includes('rocky mountain bighorn')) return 'Rocky Mountain Bighorn Sheep';
+  return 'Bighorn Sheep';
+}
+
+function getSpeciesDisplayList(h) {
+  const rawSpecies = safe(firstNonEmpty(h.species, h.Species));
+  const normalized = rawSpecies.split(',').map(normalizeSpeciesLabel).filter(Boolean);
+  const resolved = normalized.map(species => species === 'Bighorn Sheep' ? inferBighornSpecies(h) : species);
+  return Array.from(new Set(resolved));
 }
 function getSpeciesDisplay(h) { return getSpeciesDisplayList(h)[0] || ''; }
 
@@ -125,16 +138,18 @@ function getNormalizedSex(valueOrHunt) {
   const raw = typeof valueOrHunt === 'string' ? safe(valueOrHunt).trim() : firstNonEmpty(valueOrHunt.sex, valueOrHunt.Sex);
   const hunt = typeof valueOrHunt === 'string' ? null : valueOrHunt;
   const val = raw.toLowerCase();
+  const species = hunt ? getSpeciesDisplay(hunt) : '';
   if (val.includes('choice')) return "Hunter's Choice";
   if (val.includes('either')) return 'Either Sex';
   if (val === 'ewe') return 'Ewe';
+  if ((val === 'doe' || val === 'cow' || val.includes('antlerless')) && species === 'Rocky Mountain Bighorn Sheep') return 'Ewe';
+  if ((val === 'doe' || val === 'cow' || val.includes('antlerless')) && species === 'Desert Bighorn Sheep') return 'Ram';
   if (val === 'doe' || val === 'cow' || val.includes('antlerless')) return 'Antlerless';
   if (val.includes('bearded')) return 'Bearded';
   if (val.includes('ram')) return 'Ram';
   if (val.includes('buck')) return 'Buck';
   if (val.includes('bull')) return 'Bull';
   if (val.includes('male only') && hunt) {
-    const species = getSpeciesDisplay(hunt);
     if (species === 'Rocky Mountain Bighorn Sheep') return 'Ram';
     if (species === 'Desert Bighorn Sheep') return 'Ram';
   }
@@ -204,8 +219,8 @@ function getHuntCategory(h) { return normalizeHuntCategoryLabel(firstNonEmpty(h.
 function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
 function getBoundaryLink(h) { return firstNonEmpty(h.boundaryLink, h.boundaryURL, h.huntBoundaryLink); }
 function getSpeciesHeadingLabel(species) {
-  if (species === 'Rocky Mountain Bighorn Sheep') return 'R.M. Sheep';
-  if (species === 'Desert Bighorn Sheep') return 'Desert Sheep';
+  if (species === 'Rocky Mountain Bighorn Sheep') return 'R.M. Bighorn Sheep';
+  if (species === 'Desert Bighorn Sheep') return 'Desert Bighorn Sheep';
   return species;
 }
 function getPermitTotal(hunt) {
@@ -255,12 +270,16 @@ function getPanelHeading(hunt) {
 
   if (isTrophy) {
     parts.push('Trophy');
-    parts.push(speciesHeading);
+    if (species === 'Elk' || species === 'Deer') {
+      if (classLabel && !/^antlerless$/i.test(classLabel)) parts.push(classLabel);
+      parts.push(speciesHeading);
+    } else {
+      parts.push(speciesHeading);
+    }
   } else {
     if (classLabel) parts.push(classLabel);
     parts.push(speciesHeading);
   }
-  parts.push('Hunt');
   return parts.join(' ');
 }
 function normalizeBoundaryKey(value) {
@@ -276,8 +295,8 @@ function hasActiveMatrixSelections() {
     speciesFilter?.value && speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
     sexFilter?.value && sexFilter.value !== 'All' ? sexFilter.value : '',
     huntTypeFilter?.value && huntTypeFilter.value !== 'All' ? huntTypeFilter.value : '',
-    weaponFilter?.value && weaponFilter.value !== 'All' ? weaponFilter.value : '',
     huntCategoryFilter?.value && huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : '',
+    weaponFilter?.value && weaponFilter.value !== 'All' ? weaponFilter.value : '',
     unitFilter?.value || ''
   ].filter(Boolean).length > 0;
 }
@@ -366,11 +385,9 @@ function getOwnershipBucket(props) {
 function getOwnershipSubtitle(bucket, props) {
   if (bucket === 'sitla') return 'SITLA';
   if (bucket === 'stateParks') return 'State Parks';
-  if (bucket === 'stateLands') return 'State Lands';
   if (bucket === 'private') return 'Private Land';
   if (bucket === 'wma') {
-    const name = slugText(getOwnershipName(props));
-    return WATERFOWL_WMA_NAMES.has(name) ? 'WMA' : 'WMA';
+    return "UT. DWR W.M.A.'s";
   }
   return '';
 }
@@ -475,25 +492,25 @@ function refreshSelectionMatrix() {
   huntTypeFilter.innerHTML = huntTypeOptions.map(v => `<option value="${v}">${v}</option>`).join('');
   huntTypeFilter.value = huntTypeOptions.includes(prevHuntType) ? prevHuntType : 'All';
 
-  const weaponData = getFilteredHunts('weapon');
-  const weaponOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...weaponData.map(getWeapon).filter(Boolean)])), ['All', ...WEAPON_ORDER]);
-  const prevWeapon = weaponFilter.value || 'All';
-  weaponFilter.innerHTML = weaponOptions.map(v => `<option value="${v}">${v}</option>`).join('');
-  weaponFilter.value = weaponOptions.includes(prevWeapon) ? prevWeapon : 'All';
-
   const categoryData = getFilteredHunts('huntCategory');
   const categoryOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...categoryData.map(getHuntCategory).filter(Boolean)])), ['All', ...HUNT_CLASS_ORDER]);
   const prevHuntCategory = huntCategoryFilter.value || 'All';
   huntCategoryFilter.innerHTML = categoryOptions.map(v => `<option value="${v}">${v}</option>`).join('');
   huntCategoryFilter.value = categoryOptions.includes(prevHuntCategory) ? prevHuntCategory : 'All';
 
+  const weaponData = getFilteredHunts('weapon');
+  const weaponOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...weaponData.map(getWeapon).filter(Boolean)])), ['All', ...WEAPON_ORDER]);
+  const prevWeapon = weaponFilter.value || 'All';
+  weaponFilter.innerHTML = weaponOptions.map(v => `<option value="${v}">${v}</option>`).join('');
+  weaponFilter.value = weaponOptions.includes(prevWeapon) ? prevWeapon : 'All';
+
   const hasNonUnitSelections = [
     safe(searchInput?.value).trim(),
     speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
     sexFilter.value !== 'All' ? sexFilter.value : '',
     huntTypeFilter.value !== 'All' ? huntTypeFilter.value : '',
-    weaponFilter.value !== 'All' ? weaponFilter.value : '',
-    huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : ''
+    huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : '',
+    weaponFilter.value !== 'All' ? weaponFilter.value : ''
   ].filter(Boolean).length > 0;
 
   const unitsMap = new Map();
@@ -563,11 +580,14 @@ function closeSelectionInfoWindow() {
   }
 }
 
-function closeSelectedHuntFloat() {
+function closeSelectedHuntFloat(zoomToUnit = false) {
   if (!selectedHuntFloat) return;
   selectedHuntFloat.classList.remove('is-open');
   selectedHuntFloat.setAttribute('aria-hidden', 'true');
   selectedHuntFloat.innerHTML = '';
+  if (zoomToUnit && selectedHunt && safe(mapTypeSelect?.value).toLowerCase() !== 'globe') {
+    zoomToSelectedBoundary();
+  }
 }
 
 function openSelectedHuntFloat() {
@@ -583,7 +603,7 @@ function openSelectedHuntFloat() {
   selectedHuntFloat.classList.add('is-open');
   selectedHuntFloat.setAttribute('aria-hidden', 'false');
   selectedHuntFloat.querySelector('[data-close-selected-hunt-float]')?.addEventListener('click', () => {
-    closeSelectedHuntFloat();
+    closeSelectedHuntFloat(true);
   });
 }
 
@@ -812,12 +832,12 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
       <div style="position:relative;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
         <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
         <div style="position:absolute;left:48px;top:292px;width:220px;display:grid;gap:4px;color:#2b1c12;">
-          <div style="font-size:19px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#d36f22;line-height:1;">Hunt #</div>
-          <div style="font-size:40px;font-weight:900;line-height:0.98;color:#d36f22;">${code}</div>
+          <div style="font-size:20px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:${DNR_ORANGE};line-height:1.02;">Hunt #</div>
+          <div style="font-size:42px;font-weight:900;line-height:0.98;color:${DNR_BROWN};">${code}</div>
         </div>
-        <div style="position:absolute;top:132px;left:38%;right:36px;bottom:32px;display:grid;align-content:start;gap:10px;color:#2b1c12;">
+        <div style="position:absolute;top:148px;left:38%;right:36px;bottom:32px;display:grid;align-content:start;gap:12px;color:#2b1c12;">
           <div style="display:grid;gap:6px;justify-items:center;text-align:center;">
-            <div style="font-size:18px;font-weight:900;letter-spacing:.03em;text-transform:none;color:#d36f22;line-height:1.05;">${heading}</div>
+            <div style="font-size:20px;font-weight:900;letter-spacing:.03em;text-transform:none;color:${DNR_ORANGE};line-height:1.08;">${heading}</div>
             <div style="font-size:32px;font-weight:900;line-height:1.02;">${unit}</div>
           </div>
           <div style="display:grid;gap:7px;font-size:18px;line-height:1.28;">
@@ -1050,7 +1070,7 @@ function geocodeOutfitter(outfitter) {
 async function updateOutfitterMarkers(matches) {
   clearOutfitterMarkers();
   const runId = outfitterMarkerRunId;
-  if (!toggleOutfitters?.checked || !googleBaselineMap || safe(mapTypeSelect?.value).toLowerCase() === 'globe') return;
+  if (!googleBaselineMap || safe(mapTypeSelect?.value).toLowerCase() === 'globe') return;
   const unique = [];
   const seen = new Set();
   for (const outfitter of matches.slice(0, 8)) {
@@ -1075,8 +1095,8 @@ async function updateOutfitterMarkers(matches) {
 
 function updateStateLayersSummary() {
   if (!stateLayersSummary) return;
-  const count = [toggleStateLands, toggleStateParks, toggleWma].filter(el => !!el?.checked).length;
-  stateLayersSummary.textContent = count ? `State Lands (${count})` : 'State Lands';
+  const count = [toggleStateParks, toggleWma].filter(el => !!el?.checked).length;
+  stateLayersSummary.textContent = count ? `State Access (${count})` : 'State Access';
 }
 
 function openSelectedHuntPopup() {
@@ -1272,7 +1292,7 @@ async function ensureStateLandsLayer() {
     { strokeColor: '#2f8f9a', strokeWeight: 2, fillColor: '#6ac7d2', fillOpacity: 0.08, zIndex: 17 },
     feature => buildLandInfoCard(buildOwnershipDetails('stateLands', featureProps(feature)))
   );
-  setLayerVisibility(stateLandsLayer, !!toggleStateLands?.checked);
+  setLayerVisibility(stateLandsLayer, false);
   return stateLandsLayer;
 }
 async function ensureStateParksLayer() {
@@ -1568,7 +1588,6 @@ function initGoogleBaseline() {
   if (toggleBLM?.checked) ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
   if (toggleUSFS?.checked) ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
   if (toggleSITLA?.checked) ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
-  if (toggleStateLands?.checked) ensureStateLandsLayer().catch(err => console.error('State lands layer failed', err));
   if (toggleStateParks?.checked) ensureStateParksLayer().catch(err => console.error('State parks layer failed', err));
   if (toggleWma?.checked) ensureWmaLayer().catch(err => console.error('WMA layer failed', err));
   if (togglePrivate?.checked) ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
@@ -1705,11 +1724,6 @@ function bindControls() {
     if (toggleSITLA.checked) await ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
     setLayerVisibility(sitlaLayer, !!toggleSITLA.checked);
   });
-  toggleStateLands?.addEventListener('change', async () => {
-    if (toggleStateLands.checked) await ensureStateLandsLayer().catch(err => console.error('State lands layer failed', err));
-    setLayerVisibility(stateLandsLayer, !!toggleStateLands.checked);
-    updateStateLayersSummary();
-  });
   toggleStateParks?.addEventListener('change', async () => {
     if (toggleStateParks.checked) await ensureStateParksLayer().catch(err => console.error('State parks layer failed', err));
     setLayerVisibility(stateParksLayer, !!toggleStateParks.checked);
@@ -1723,15 +1737,6 @@ function bindControls() {
   togglePrivate?.addEventListener('change', async () => {
     if (togglePrivate.checked) await ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
     setLayerVisibility(privateLayer, !!togglePrivate.checked);
-  });
-  toggleOutfitters?.addEventListener('change', () => {
-    const section = document.getElementById('outfitterResults')?.closest('.panel');
-    if (section) section.style.display = toggleOutfitters.checked ? '' : 'none';
-    if (!toggleOutfitters.checked) {
-      clearOutfitterMarkers();
-    } else if (selectedHunt) {
-      updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
-    }
   });
 }
 
