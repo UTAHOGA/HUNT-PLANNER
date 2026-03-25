@@ -134,7 +134,7 @@
       height: 100%;
       border-radius: 999px;
       object-fit: cover;
-      object-position: center 100%;
+      object-position: 42% 100%;
       background: #050505;
       opacity: 0.98;
     }
@@ -253,7 +253,21 @@
     .dust { position: absolute; bottom: 7px; width: 6px; height: 6px; border-radius: 50%; background: rgba(191, 107, 52, 0.35); opacity: 0; }
     .dust-1 { left: 18px; animation: elk-dust 0.8s linear infinite; } .dust-2 { left: 26px; animation: elk-dust 0.8s linear infinite 0.15s; } .dust-3 { left: 34px; animation: elk-dust 0.8s linear infinite 0.3s; }
     .loading-text { font-family: var(--font-display); font-size: 24px; color: var(--accent); font-weight: 700; letter-spacing: 0.02em; text-align: center; padding: 0 18px; text-shadow: 0 2px 4px rgba(255,255,255,0.6); }
-    .loading-sub { margin-top: 8px; font-size: 13px; color: var(--text); font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; background: var(--panel2); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); }
+    
+    .loader-sound-btn {
+      margin-top: 12px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(214,106,31,0.42);
+      background: rgba(18, 14, 12, 0.88);
+      color: #f4efe4;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .loader-sound-btn:hover { border-color: var(--accent); background: rgba(34, 24, 18, 0.92); }
 
     @keyframes elk-wheel-spin { to { transform: translateX(-50%) rotate(360deg); } }
     @keyframes elk-gallop { 
@@ -619,6 +633,7 @@
     </div>
     <div id="loadingText" class="loading-text">Loading the herd...</div>
     <div class="loading-sub">Fetching Live Hunt Data</div>
+    <button id="loaderSoundBtn" class="loader-sound-btn" type="button">Enable Sound</button>
   </div>
 
   <header class="topbar">
@@ -796,11 +811,25 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const loaderVideo = document.getElementById('loaderVideo');
+      const loaderSoundBtn = document.getElementById('loaderSoundBtn');
       if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
           document.body.classList.toggle('theme-dark');
           const isDark = document.body.classList.contains('theme-dark');
           themeToggleBtn.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+        });
+      }
+      if (loaderVideo && loaderSoundBtn) {
+        loaderSoundBtn.addEventListener('click', async () => {
+          try {
+            loaderVideo.muted = !loaderVideo.muted;
+            if (loaderVideo.paused) await loaderVideo.play();
+            loaderSoundBtn.textContent = loaderVideo.muted ? 'Enable Sound' : 'Sound On';
+          } catch {
+            loaderVideo.muted = true;
+            loaderSoundBtn.textContent = 'Enable Sound';
+          }
         });
       }
     });
@@ -810,3 +839,4 @@
   <script src="app.js?v=20260324-master-1733"></script>
 </body>
 </html>
+
