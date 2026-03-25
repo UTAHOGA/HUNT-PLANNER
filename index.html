@@ -88,9 +88,28 @@
       filter: blur(6px);
       pointer-events: none;
     }
+    .loader-dust-trail {
+      position: absolute;
+      left: calc(50% - 250px);
+      bottom: 92px;
+      width: 240px;
+      height: 130px;
+      pointer-events: none;
+      filter: blur(1px);
+      opacity: 0.9;
+    }
+    .loader-dust-trail span {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(214,106,31,0.32) 0%, rgba(140,88,46,0.18) 42%, rgba(0,0,0,0) 78%);
+      animation: dust-plume 2.4s ease-out infinite;
+    }
+    .loader-dust-trail .dust-cloud-1 { width: 112px; height: 70px; left: 82px; bottom: 18px; animation-delay: 0s; }
+    .loader-dust-trail .dust-cloud-2 { width: 92px; height: 56px; left: 34px; bottom: 36px; animation-delay: 0.55s; }
+    .loader-dust-trail .dust-cloud-3 { width: 70px; height: 44px; left: 0; bottom: 58px; animation-delay: 1.05s; }
     .loader-video-shell {
       position: absolute;
-      top: 118px;
+      top: 176px;
       left: 50%;
       transform: translateX(-50%);
       width: min(420px, calc(100vw - 210px));
@@ -115,7 +134,7 @@
       height: 100%;
       border-radius: 999px;
       object-fit: cover;
-      object-position: center 78%;
+      object-position: center 92%;
       background: #050505;
       opacity: 0.98;
     }
@@ -130,8 +149,8 @@
       overflow: hidden;
       background: radial-gradient(circle at center, rgba(0,0,0,0.96), rgba(5,5,5,0.99) 72%);
     }
-    .loader-video-fallback .realistic-elk-vector { top: 70px; width: 170px; margin-left: -85px; }
-    .loader-video-fallback .shadow { left: calc(50% - 28px); bottom: 26px; }
+    .loader-video-fallback .realistic-elk-vector { top: 104px; width: 170px; margin-left: -85px; }
+    .loader-video-fallback .shadow { left: calc(50% - 28px); bottom: 18px; }
     .loader-video-fallback .dust-1 { left: calc(50% - 42px); }
     .loader-video-fallback .dust-2 { left: calc(50% - 24px); }
     .loader-video-fallback .dust-3 { left: calc(50% - 8px); }
@@ -243,6 +262,11 @@
     }
     @keyframes elk-shadow { 0% { transform: scaleX(1); opacity: 0.2; } 100% { transform: scaleX(0.7); opacity: 0.05; } }
     @keyframes elk-dust { 0% { opacity: 0; transform: translate(0, 0) scale(0.7); } 15% { opacity: 0.8; } 100% { opacity: 0; transform: translate(-20px, -12px) scale(1.5); } }
+    @keyframes dust-plume {
+      0% { opacity: 0; transform: translate3d(18px, 10px, 0) scale(0.68); }
+      18% { opacity: 0.72; }
+      100% { opacity: 0; transform: translate3d(-64px, -18px, 0) scale(1.28); }
+    }
 
     /* --- TOPBAR & LOGO LOCKUP --- */
     .topbar { 
@@ -554,9 +578,10 @@
       #map { min-height: 58vh; }
       .loader-stage { width: 100%; }
       .loader-wheel-shell { width: min(94vw, 660px); height: 390px; }
+      .loader-dust-trail { left: calc(50% - 194px); bottom: 74px; width: 180px; height: 104px; }
       .wheel { width: 320px; height: 320px; top: 24px; }
       .spoke { height: 136px; margin-top: -136px; }
-      .loader-video-shell { width: min(66vw, 340px); height: 156px; top: 90px; }
+      .loader-video-shell { width: min(66vw, 340px); height: 156px; top: 132px; }
       .stand { width: 250px; height: 100px; }
       .upright { height: 72px; }
       .upright.left { left: 62px; }
@@ -575,6 +600,7 @@
     
     <div class="loader-stage">
       <div class="loader-wheel-shell" aria-hidden="true">
+        <div class="loader-dust-trail"><span class="dust-cloud-1"></span><span class="dust-cloud-2"></span><span class="dust-cloud-3"></span></div>
         <div class="loader-wheel-aura"></div>
         <div class="wheel"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span><span class="hub"></span></div>
         <div class="loader-video-shell">
