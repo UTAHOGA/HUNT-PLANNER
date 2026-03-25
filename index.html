@@ -95,7 +95,7 @@
       width: min(456px, calc(100vw - 180px));
       height: 206px;
       padding: 0;
-      border-radius: 999px;
+      border-radius: 0;
       background: #050505;
       border: 0;
       box-shadow: none;
@@ -105,14 +105,13 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: transparent;
-      pointer-events: none;
+      display: none;
     }
     .loader-video {
       display: block;
       width: 100%;
       height: 100%;
-      border-radius: 999px;
+      border-radius: 0;
       object-fit: cover;
       object-position: 40% 98%;
       background: #050505;
@@ -125,7 +124,7 @@
       width: 100%;
       height: 100%;
       margin: 0;
-      border-radius: 14px;
+      border-radius: 0;
       overflow: hidden;
       background: radial-gradient(circle at center, rgba(0,0,0,0.96), rgba(5,5,5,0.99) 72%);
     }
@@ -172,8 +171,6 @@
         rgba(214, 136, 72, 0.98) 0deg 2.4deg,
         transparent 2.4deg 45deg
       );
-      -webkit-mask: radial-gradient(circle, #000 0 188px, transparent 188px 100%);
-      mask: radial-gradient(circle, #000 0 188px, transparent 188px 100%);
     }
     .wheel-foreground::before,
     .wheel-foreground::after {
@@ -569,10 +566,6 @@
       .upright.left { left: 62px; }
       .upright.right { right: 62px; }
       .wheel-foreground { width: 320px; height: 320px; top: 24px; }
-      .wheel-spokes-front {
-        -webkit-mask: radial-gradient(circle, #000 0 138px, transparent 138px 100%);
-        mask: radial-gradient(circle, #000 0 138px, transparent 138px 100%);
-      }
     }
   </style>
 </head>
