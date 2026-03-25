@@ -56,7 +56,8 @@ const HUNT_CLASS_ORDER = [ 'General Season', 'Limited Entry', 'Premium Limited E
 const SEX_ORDER = ['Buck', 'Bull', 'Ram', 'Ewe', 'Bearded', 'Antlerless', 'Either Sex', "Hunter's Choice"];
 const WEAPON_ORDER = [ 'Any Legal Weapon', 'Archery', 'Extended Archery', 'Restricted Archery', 'Muzzleloader', 'Restricted Muzzleloader', 'Restricted Rifle', 'HAMSS', 'Multiseason', 'Restricted Multiseason' ];
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'osm';
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0;
+const outfitterGeocodeCache = new Map();
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -67,6 +68,8 @@ const searchInput = document.getElementById('searchInput'),
   unitFilter = document.getElementById('unitFilter'),
   mapTypeSelect = document.getElementById('mapTypeSelect'),
   globeBasemapSelect = document.getElementById('globeBasemapSelect'),
+  globeBasemapGrid = document.getElementById('globeBasemapGrid'),
+  streetViewBtn = document.getElementById('streetViewBtn'),
   resetViewBtn = document.getElementById('resetViewBtn'),
   applyFiltersBtn = document.getElementById('applyFiltersBtn'),
   clearFiltersBtn = document.getElementById('clearFiltersBtn'),
@@ -600,6 +603,19 @@ function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLink
     </div>`;
 }
 
+function openLandInfoWindow(card, position) {
+  closeSelectedHuntFloat();
+  closeSelectedHuntPopup();
+  closeSelectionInfoWindow();
+  selectionInfoWindow = new google.maps.InfoWindow({
+    content: card,
+    position,
+    pixelOffset: new google.maps.Size(0, -12),
+    maxWidth: 340
+  });
+  selectionInfoWindow.open(googleBaselineMap);
+}
+
 function createGlobeImageryProvider(key) {
   if (typeof Cesium === 'undefined') return null;
   const providers = {
@@ -642,6 +658,32 @@ function createGlobeImageryProvider(key) {
   return providers[key]?.() || providers.osm();
 }
 
+function getGlobeBasemapLabel(key) {
+  const labels = {
+    osm: 'OpenStreetMap',
+    osmHot: 'OSM Humanitarian',
+    openTopo: 'OpenTopoMap',
+    cartoLight: 'Carto Light',
+    cartoDark: 'Carto Dark',
+    esriImagery: 'Esri World Imagery',
+    esriTopo: 'Esri World Topo',
+    esriStreet: 'Esri World Street',
+    esriNatGeo: 'Esri NatGeo',
+    usgsImagery: 'USGS Imagery',
+    usgsTopo: 'USGS Topo'
+  };
+  return labels[key] || key;
+}
+
+function syncGlobeBasemapButtons() {
+  if (!globeBasemapGrid) return;
+  globeBasemapGrid.querySelectorAll('[data-globe-basemap]').forEach(btn => {
+    const isActive = btn.getAttribute('data-globe-basemap') === currentGlobeBasemap;
+    btn.classList.toggle('is-active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+}
+
 function applyGlobeBasemap(key = currentGlobeBasemap) {
   if (!cesiumViewer || typeof Cesium === 'undefined') return;
   const imageryProvider = createGlobeImageryProvider(key);
@@ -653,6 +695,92 @@ function applyGlobeBasemap(key = currentGlobeBasemap) {
   if (globeBasemapSelect) {
     globeBasemapSelect.value = currentGlobeBasemap;
   }
+  syncGlobeBasemapButtons();
+  const container = document.getElementById('globeMap');
+  if (container) {
+    container.style.background = currentGlobeBasemap === 'cartoDark' ? '#10141d' : '#d7e7f5';
+  }
+}
+
+async function ensureCesiumHuntBoundaries() {
+  if (!cesiumViewer || typeof Cesium === 'undefined' || !huntBoundaryGeoJson) return;
+  if (cesiumHuntDataSource) return cesiumHuntDataSource;
+  cesiumHuntDataSource = await Cesium.GeoJsonDataSource.load(huntBoundaryGeoJson, {
+    clampToGround: true
+  });
+  cesiumViewer.dataSources.add(cesiumHuntDataSource);
+  if (cesiumHuntDataSource?.entities?.values) {
+    cesiumHuntDataSource.entities.values.forEach(entity => {
+      if (entity.polygon) {
+        entity.polygon.fill = true;
+        entity.polygon.outline = true;
+        entity.polygon.outlineColor = Cesium.Color.fromCssColorString('#3653b3');
+        entity.polygon.material = Cesium.Color.fromCssColorString('#3653b3').withAlpha(0.08);
+        entity.polygon.outlineWidth = 2;
+      }
+      if (entity.polyline) {
+        entity.polyline.width = 2;
+        entity.polyline.material = Cesium.Color.fromCssColorString('#3653b3');
+      }
+      entity.show = false;
+    });
+  }
+  updateCesiumBoundaryStyles();
+  return cesiumHuntDataSource;
+}
+
+function getCesiumEntityMatches(entity) {
+  const properties = entity?.properties;
+  const boundaryId = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
+  const boundaryName = normalizeBoundaryKey(
+    properties?.Boundary_Name?.getValue?.()
+    ?? properties?.BOUNDARY_NAME?.getValue?.()
+    ?? properties?.BoundaryName?.getValue?.()
+  );
+  return huntData.filter(h => {
+    const hBoundaryId = safe(getBoundaryId(h));
+    const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
+    const hUnitName = normalizeBoundaryKey(getUnitName(h));
+    return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
+  });
+}
+
+function updateCesiumBoundaryStyles() {
+  if (!cesiumHuntDataSource?.entities?.values || typeof Cesium === 'undefined') return;
+  const showBoundaries = !!toggleDwrUnits?.checked && (hasActiveMatrixSelections() || !!selectedHunt);
+  const filtered = getDisplayHunts();
+  const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
+  const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
+  const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
+  cesiumHuntDataSource.entities.values.forEach(entity => {
+    const properties = entity.properties;
+    const id = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
+    const name = normalizeBoundaryKey(
+      properties?.Boundary_Name?.getValue?.()
+      ?? properties?.BOUNDARY_NAME?.getValue?.()
+      ?? properties?.BoundaryName?.getValue?.()
+    );
+    const isMatch = boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name);
+    const isSelected = !!selectedHunt && (
+      id === safe(getBoundaryId(selectedHunt))
+      || name === normalizeBoundaryKey(getUnitCode(selectedHunt))
+      || name === normalizeBoundaryKey(getUnitName(selectedHunt))
+    );
+    const visible = showBoundaries && isMatch;
+    entity.show = visible;
+    const strokeColor = Cesium.Color.fromCssColorString(isSelected ? '#8b1e3f' : '#3653b3');
+    const fillColor = Cesium.Color.fromCssColorString(isSelected ? '#8b1e3f' : '#3653b3').withAlpha(isSelected ? 0.16 : 0.08);
+    if (entity.polygon) {
+      entity.polygon.outlineColor = strokeColor;
+      entity.polygon.material = fillColor;
+      entity.polygon.outlineWidth = isSelected ? 3 : 2;
+    }
+    if (entity.polyline) {
+      entity.polyline.material = strokeColor;
+      entity.polyline.width = isSelected ? 3 : 2;
+    }
+  });
+  cesiumViewer?.scene?.requestRender?.();
 }
 function buildDnrPlate(hunt, compact = false, roomy = false) {
   const plateUrl = assetUrl(roomy ? LOGO_DNR_ROOMY : LOGO_DNR);
@@ -683,23 +811,23 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
     return `
       <div style="position:relative;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
         <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
-        <div style="position:absolute;left:48px;top:302px;width:210px;display:grid;gap:6px;color:#2b1c12;">
-          <div style="font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Hunt #</div>
-          <div style="font-size:32px;font-weight:900;line-height:1;">${code}</div>
+        <div style="position:absolute;left:48px;top:292px;width:220px;display:grid;gap:4px;color:#2b1c12;">
+          <div style="font-size:19px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#d36f22;line-height:1;">Hunt #</div>
+          <div style="font-size:40px;font-weight:900;line-height:0.98;color:#d36f22;">${code}</div>
         </div>
         <div style="position:absolute;top:132px;left:38%;right:36px;bottom:32px;display:grid;align-content:start;gap:10px;color:#2b1c12;">
-          <div style="display:grid;gap:6px;">
-            <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">${heading}</div>
-            <div style="font-size:30px;font-weight:900;line-height:1.02;">${unit}</div>
+          <div style="display:grid;gap:6px;justify-items:center;text-align:center;">
+            <div style="font-size:18px;font-weight:900;letter-spacing:.03em;text-transform:none;color:#d36f22;line-height:1.05;">${heading}</div>
+            <div style="font-size:32px;font-weight:900;line-height:1.02;">${unit}</div>
           </div>
-          <div style="display:grid;gap:7px;font-size:17px;line-height:1.28;">
+          <div style="display:grid;gap:7px;font-size:18px;line-height:1.28;">
             <div><strong>Species:</strong> ${species}</div>
             <div><strong>Sex:</strong> ${sex}</div>
             <div><strong>Hunt Type:</strong> ${huntType}</div>
             <div><strong>Weapon:</strong> ${weapon}</div>
             <div><strong>Dates:</strong> ${dates}</div>
           </div>
-          ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;color:#2f7fd1;font-size:17px;font-weight:800;text-decoration:none;">Official Utah DWR Hunt Details</a>` : ''}
+          ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;color:#2f7fd1;font-size:18px;font-weight:800;text-decoration:none;">Official Utah DWR Hunt Details</a>` : ''}
         </div>
       </div>`;
   }
@@ -793,11 +921,13 @@ function renderOutfitters() {
   if (!container) return;
   if (!selectedHunt) {
     container.innerHTML = '<div class="empty-note">Select a hunt to load matching vetted outfitters.</div>';
+    clearOutfitterMarkers();
     return;
   }
   const matches = getMatchingOutfittersForHunt(selectedHunt);
   if (!matches.length) {
     container.innerHTML = '<div class="empty-note">No vetted outfitters matched this hunt yet.</div>';
+    clearOutfitterMarkers();
     return;
   }
   container.innerHTML = matches.map(o => {
@@ -817,6 +947,130 @@ function renderOutfitters() {
         ${phone ? `<div class="hunt-card-meta">${escapeHtml(phone)}</div>` : ''}
       </div>`;
   }).join('');
+  updateOutfitterMarkers(matches);
+}
+
+function getOutfitterLocationText(outfitter) {
+  return firstNonEmpty(
+    safe(outfitter.address),
+    safe(outfitter.hometown),
+    safe(outfitter.city) ? `${safe(outfitter.city)}, Utah` : '',
+    safe(outfitter.region) ? `${safe(outfitter.region)}` : ''
+  );
+}
+
+function buildOutfitterPopupCard(outfitter) {
+  const logo = safe(outfitter.logoUrl).trim();
+  const name = safe(outfitter.listingName).trim() || 'Outfitter';
+  const website = safe(outfitter.website).trim();
+  const phone = normalizeListValues(outfitter.phone)[0] || '';
+  const location = getOutfitterLocationText(outfitter);
+  return `
+    <div style="display:grid;gap:8px;min-width:260px;max-width:320px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        ${logo ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(name)} logo" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">` : ''}
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Vetted Outfitter</div>
+          <div style="font-size:16px;font-weight:900;color:#2b1c12;">${escapeHtml(name)}</div>
+        </div>
+      </div>
+      ${location ? `<div style="font-size:13px;color:#6b5646;line-height:1.35;">${escapeHtml(location)}</div>` : ''}
+      ${phone ? `<div style="font-size:13px;color:#6b5646;">${escapeHtml(phone)}</div>` : ''}
+      ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">Visit website</a>` : ''}
+    </div>`;
+}
+
+function clearOutfitterMarkers() {
+  outfitterMarkerRunId += 1;
+  outfitterMarkers.forEach(marker => marker?.setMap?.(null));
+  outfitterMarkers = [];
+}
+
+function createOutfitterLogoMarker(position, outfitter) {
+  const marker = new google.maps.OverlayView();
+  marker.position = position;
+  marker.outfitter = outfitter;
+  marker.div = null;
+  marker.onAdd = function() {
+    const div = document.createElement('div');
+    div.className = 'outfitter-logo-pin-shell';
+    div.innerHTML = `
+      <div class="outfitter-logo-pin-base"></div>
+      <div class="outfitter-logo-pin-center">
+        ${safe(outfitter.logoUrl).trim() ? `<img src="${escapeHtml(outfitter.logoUrl)}" alt="${escapeHtml(outfitter.listingName || 'Outfitter')}">` : ''}
+      </div>`;
+    div.title = safe(outfitter.listingName).trim() || 'Outfitter';
+    div.addEventListener('click', () => {
+      closeSelectionInfoWindow();
+      selectionInfoWindow = new google.maps.InfoWindow({
+        content: buildOutfitterPopupCard(outfitter),
+        position,
+        pixelOffset: new google.maps.Size(0, -36)
+      });
+      selectionInfoWindow.open(googleBaselineMap);
+    });
+    this.div = div;
+    this.getPanes().overlayMouseTarget.appendChild(div);
+  };
+  marker.draw = function() {
+    if (!this.div) return;
+    const projection = this.getProjection();
+    if (!projection) return;
+    const point = projection.fromLatLngToDivPixel(position);
+    if (!point) return;
+    this.div.style.position = 'absolute';
+    this.div.style.left = `${point.x - 22}px`;
+    this.div.style.top = `${point.y - 58}px`;
+  };
+  marker.onRemove = function() {
+    if (this.div?.parentNode) this.div.parentNode.removeChild(this.div);
+    this.div = null;
+  };
+  return marker;
+}
+
+function geocodeOutfitter(outfitter) {
+  const key = `${safe(outfitter.listingName)}|${getOutfitterLocationText(outfitter)}`;
+  if (outfitterGeocodeCache.has(key)) {
+    return Promise.resolve(outfitterGeocodeCache.get(key));
+  }
+  if (!google.maps?.Geocoder) return Promise.resolve(null);
+  const query = getOutfitterLocationText(outfitter);
+  if (!query || query.toLowerCase() === 'utah') return Promise.resolve(null);
+  const geocoder = new google.maps.Geocoder();
+  return new Promise(resolve => {
+    geocoder.geocode({ address: query }, (results, status) => {
+      const loc = status === 'OK' && results?.[0]?.geometry?.location ? results[0].geometry.location : null;
+      outfitterGeocodeCache.set(key, loc);
+      resolve(loc);
+    });
+  });
+}
+
+async function updateOutfitterMarkers(matches) {
+  clearOutfitterMarkers();
+  const runId = outfitterMarkerRunId;
+  if (!toggleOutfitters?.checked || !googleBaselineMap || safe(mapTypeSelect?.value).toLowerCase() === 'globe') return;
+  const unique = [];
+  const seen = new Set();
+  for (const outfitter of matches.slice(0, 8)) {
+    const name = safe(outfitter.listingName).trim();
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    unique.push(outfitter);
+  }
+  for (const outfitter of unique) {
+    try {
+      const location = await geocodeOutfitter(outfitter);
+      if (runId !== outfitterMarkerRunId) return;
+      if (!location) continue;
+      const marker = createOutfitterLogoMarker(location, outfitter);
+      marker.setMap(googleBaselineMap);
+      outfitterMarkers.push(marker);
+    } catch (error) {
+      console.error('Outfitter marker failed', outfitter?.listingName, error);
+    }
+  }
 }
 
 function updateStateLayersSummary() {
@@ -990,14 +1244,8 @@ function createOwnershipLayer(filterFn, style, clickBuilder) {
   }).catch(err => console.error('Ownership layer failed', err));
   layer.setStyle(style);
   layer.addListener('click', event => {
-    closeSelectionInfoWindow();
     const card = clickBuilder(event.feature);
-    selectionInfoWindow = new google.maps.InfoWindow({
-      content: card,
-      position: event.latLng,
-      pixelOffset: new google.maps.Size(-110, -8)
-    });
-    selectionInfoWindow.open(googleBaselineMap);
+    openLandInfoWindow(card, event.latLng);
   });
   return layer;
 }
@@ -1071,17 +1319,11 @@ async function ensureUsfsLayer() {
     zIndex: 30
   });
   usfsLayer.addListener('click', event => {
-    closeSelectionInfoWindow();
-    selectionInfoWindow = new google.maps.InfoWindow({
-      content: buildLandInfoCard({
-        logo: LOGO_USFS,
-        title: firstNonEmpty(event.feature.getProperty('FORESTNAME'), 'National Forest'),
-        subtitle: 'US Forest Service'
-      }),
-      position: event.latLng,
-      pixelOffset: new google.maps.Size(-110, -8)
-    });
-    selectionInfoWindow.open(googleBaselineMap);
+    openLandInfoWindow(buildLandInfoCard({
+      logo: LOGO_USFS,
+      title: firstNonEmpty(event.feature.getProperty('FORESTNAME'), 'National Forest'),
+      subtitle: 'US Forest Service'
+    }), event.latLng);
   });
   setLayerVisibility(usfsLayer, !!toggleUSFS?.checked);
   return usfsLayer;
@@ -1100,22 +1342,16 @@ async function ensureBlmLayer() {
     zIndex: 12
   });
   blmLayer.addListener('click', event => {
-    closeSelectionInfoWindow();
-    selectionInfoWindow = new google.maps.InfoWindow({
-      content: buildLandInfoCard({
-        logo: LOGO_BLM,
-        title: firstNonEmpty(
-          event.feature.getProperty('ADMU_NAME'),
-          event.feature.getProperty('DISTRICT_NAME'),
-          event.feature.getProperty('FIELD_OFFICE'),
-          'BLM Land'
-        ),
-        subtitle: 'Bureau of Land Management'
-      }),
-      position: event.latLng,
-      pixelOffset: new google.maps.Size(-110, -8)
-    });
-    selectionInfoWindow.open(googleBaselineMap);
+    openLandInfoWindow(buildLandInfoCard({
+      logo: LOGO_BLM,
+      title: firstNonEmpty(
+        event.feature.getProperty('ADMU_NAME'),
+        event.feature.getProperty('DISTRICT_NAME'),
+        event.feature.getProperty('FIELD_OFFICE'),
+        'BLM Land'
+      ),
+      subtitle: 'Bureau of Land Management'
+    }), event.latLng);
   });
   setLayerVisibility(blmLayer, !!toggleBLM?.checked);
   return blmLayer;
@@ -1140,6 +1376,7 @@ function ensureCesiumViewer() {
   applyGlobeBasemap(currentGlobeBasemap);
   cesiumViewer.scene.globe.enableLighting = false;
   cesiumViewer.scene.globe.showGroundAtmosphere = false;
+  cesiumViewer.scene.globe.depthTestAgainstTerrain = false;
   cesiumViewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#d7e7f5');
   if (cesiumViewer.scene.skyBox) cesiumViewer.scene.skyBox.show = false;
   if (cesiumViewer.scene.skyAtmosphere) cesiumViewer.scene.skyAtmosphere.show = false;
@@ -1147,7 +1384,54 @@ function ensureCesiumViewer() {
   if (cesiumViewer.scene.moon) cesiumViewer.scene.moon.show = false;
   cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#d7e7f5');
   cesiumViewer.scene.requestRenderMode = false;
+  cesiumViewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
   container.style.background = '#d7e7f5';
+  if (huntBoundaryGeoJson) {
+    ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
+  }
+  const handler = new Cesium.ScreenSpaceEventHandler(cesiumViewer.scene.canvas);
+  handler.setInputAction((movement) => {
+    const picked = cesiumViewer.scene.pick(movement.position);
+    const entity = picked?.id;
+    if (!entity?.properties) return;
+    const matches = getCesiumEntityMatches(entity);
+    if (!matches.length) return;
+    if (matches.length === 1) {
+      window.selectHuntByCode(getHuntCode(matches[0]));
+      return;
+    }
+    selectedBoundaryMatches = matches.slice();
+    if (mapChooser && mapChooserBody && mapChooserTitle && mapChooserKicker) {
+      mapChooserKicker.textContent = 'Selected Unit';
+      mapChooserTitle.textContent = firstNonEmpty(
+        entity.properties?.Boundary_Name?.getValue?.(),
+        entity.properties?.BOUNDARY_NAME?.getValue?.(),
+        'Selected Unit'
+      );
+      mapChooserBody.innerHTML = matches.slice(0, 12).map(h => `
+        <div class="map-chooser-card" data-popup-hunt-code="${escapeHtml(getHuntCode(h))}" role="button" tabindex="0">
+          <div class="hunt-card-title">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
+          <div class="map-chooser-meta">${escapeHtml(getSpeciesDisplay(h))} | ${escapeHtml(getNormalizedSex(h))} | ${escapeHtml(getHuntType(h))}</div>
+          <div class="map-chooser-meta">${escapeHtml(getWeapon(h))} | ${escapeHtml(getDates(h) || 'See official hunt details')}</div>
+        </div>
+      `).join('');
+      mapChooser.classList.add('is-open');
+      mapChooser.setAttribute('aria-hidden', 'false');
+      mapChooserBody.querySelectorAll('[data-popup-hunt-code]').forEach(card => {
+        const select = () => {
+          closeSelectedHuntPopup();
+          window.selectHuntByCode(card.getAttribute('data-popup-hunt-code'));
+        };
+        card.addEventListener('click', select);
+        card.addEventListener('keydown', evt => {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            select();
+          }
+        });
+      });
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
 function applyMapMode() {
@@ -1156,7 +1440,9 @@ function applyMapMode() {
   if (!googleBaselineMap || !mapWrap) return;
 
   if (value === 'globe') {
-    updateStatus('Globe mode active.');
+    googleBaselineMap.getStreetView()?.setVisible(false);
+    clearOutfitterMarkers();
+    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
     ensureCesiumViewer();
     mapWrap.classList.add('is-globe-mode');
     setTimeout(() => {
@@ -1188,6 +1474,10 @@ function applyMapMode() {
 
   mapWrap.classList.remove('is-globe-mode');
   googleBaselineMap.setMapTypeId(value);
+  googleBaselineMap.getStreetView()?.setVisible(false);
+  if (selectedHunt) {
+    updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
+  }
   updateStatus(`${titleCaseWords(value)} map active.`);
 }
 
@@ -1204,11 +1494,74 @@ function resetMapView() {
   }
 }
 
+function getSelectedHuntCenter() {
+  if (!selectedHunt || !huntUnitsLayer) return null;
+  const boundaryId = safe(getBoundaryId(selectedHunt));
+  const unitCode = normalizeBoundaryKey(getUnitCode(selectedHunt));
+  const unitName = normalizeBoundaryKey(getUnitName(selectedHunt));
+  let center = null;
+  huntUnitsLayer.forEach(f => {
+    const id = safe(f.getProperty('BoundaryID'));
+    const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
+    if (id === boundaryId || name === unitCode || name === unitName) {
+      const bounds = new google.maps.LatLngBounds();
+      f.getGeometry().forEachLatLng(ll => bounds.extend(ll));
+      center = bounds.getCenter();
+    }
+  });
+  return center;
+}
+
+function openStreetViewAtFocus() {
+  if (!googleBaselineMap || typeof google === 'undefined' || !google.maps?.StreetViewService) return;
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
+    mapTypeSelect.value = 'terrain';
+    applyMapMode();
+  }
+  const pano = googleBaselineMap.getStreetView();
+  const target = getSelectedHuntCenter() || googleBaselineMap.getCenter();
+  if (!target) {
+    updateStatus('No Street View location available yet.');
+    return;
+  }
+
+  const streetViewService = new google.maps.StreetViewService();
+  const radii = [5000, 15000, 50000];
+  const tryRadius = (index) => {
+    if (index >= radii.length) {
+      updateStatus('No Street View imagery found near this hunt.');
+      return;
+    }
+    streetViewService.getPanorama({
+      location: target,
+      radius: radii[index],
+      preference: google.maps.StreetViewPreference.NEAREST,
+      source: google.maps.StreetViewSource.OUTDOOR
+    }, (data, status) => {
+      if (status === google.maps.StreetViewStatus.OK && data?.location?.latLng) {
+        googleBaselineMap.setCenter(data.location.latLng);
+        pano.setPosition(data.location.latLng);
+        pano.setPov({ heading: 0, pitch: 0 });
+        pano.setVisible(true);
+        updateStatus('Street View active.');
+        return;
+      }
+      tryRadius(index + 1);
+    });
+  };
+
+  tryRadius(0);
+}
+
 // --- MAP ENGINE ---
 function initGoogleBaseline() {
   googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
-    styles: huntPlannerMapStyle, mapTypeId: 'terrain'
+    styles: huntPlannerMapStyle,
+    mapTypeId: 'terrain',
+    streetViewControl: true,
+    fullscreenControl: true,
+    mapTypeControl: false
   });
   googleApiReady = true;
   if (huntBoundaryGeoJson) buildBoundaryLayer();
@@ -1261,6 +1614,7 @@ function styleBoundaryLayer() {
           fillOpacity: showBoundaries && isMatch ? (isSelected ? 0.16 : 0.08) : 0
         };
     });
+    updateCesiumBoundaryStyles();
 }
 
 function bindControls() {
@@ -1309,8 +1663,23 @@ function bindControls() {
   globeBasemapSelect?.addEventListener('change', () => {
     currentGlobeBasemap = safe(globeBasemapSelect.value || 'osm');
     applyGlobeBasemap(currentGlobeBasemap);
-    updateStatus(`${titleCaseWords(currentGlobeBasemap.replace(/([A-Z])/g, ' $1').trim())} globe basemap active.`);
+    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
   });
+  globeBasemapGrid?.addEventListener('click', event => {
+    const btn = event.target.closest('[data-globe-basemap]');
+    if (!btn) return;
+    currentGlobeBasemap = safe(btn.getAttribute('data-globe-basemap') || currentGlobeBasemap);
+    if (globeBasemapSelect) {
+      globeBasemapSelect.value = currentGlobeBasemap;
+    }
+    if (safe(mapTypeSelect?.value).toLowerCase() !== 'globe' && mapTypeSelect) {
+      mapTypeSelect.value = 'globe';
+      applyMapMode();
+    }
+    applyGlobeBasemap(currentGlobeBasemap);
+    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
+  });
+  streetViewBtn?.addEventListener('click', openStreetViewAtFocus);
   resetViewBtn?.addEventListener('click', resetMapView);
   toggleDwrUnits?.addEventListener('change', () => {
     if (!toggleDwrUnits.checked) {
@@ -1358,6 +1727,11 @@ function bindControls() {
   toggleOutfitters?.addEventListener('change', () => {
     const section = document.getElementById('outfitterResults')?.closest('.panel');
     if (section) section.style.display = toggleOutfitters.checked ? '' : 'none';
+    if (!toggleOutfitters.checked) {
+      clearOutfitterMarkers();
+    } else if (selectedHunt) {
+      updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
+    }
   });
 }
 

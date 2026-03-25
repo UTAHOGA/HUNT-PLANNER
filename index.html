@@ -356,6 +356,37 @@
       line-height: 1.35;
       color: var(--muted);
     }
+    .globe-basemap-select { display: none; }
+    .globe-basemap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .globe-basemap-btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel2);
+      color: var(--text);
+      padding: 9px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .03em;
+      line-height: 1.15;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: none;
+      transition: transform 0.1s, box-shadow 0.1s, border-color 0.15s, background 0.15s;
+    }
+    .globe-basemap-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+    }
+    .globe-basemap-btn.is-active {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #fff6ed;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+    }
     .map-chooser-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; }
     .map-chooser-kicker { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: 0.95; margin: 0 0 4px; color: rgba(255,255,255,0.8); }
     .map-chooser-title { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.05; }
@@ -435,6 +466,7 @@
         <label class="toggle-chip"><input id="togglePrivate" type="checkbox">Private</label>
         <label class="toggle-chip"><input id="toggleOutfitters" type="checkbox" checked>Outfitters</label>
       </div>
+      <button id="streetViewBtn" type="button" class="secondary">Street View</button>
       <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
     </div>
   </header>
@@ -520,7 +552,7 @@
       <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
         <div class="globe-basemap-title">Globe Basemap</div>
         <p class="globe-basemap-note">Switch between imagery, topo, dark, and street-style globe backgrounds.</p>
-        <select id="globeBasemapSelect" class="hunt-select">
+        <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
           <option value="osm">OpenStreetMap</option>
           <option value="esriImagery">Esri World Imagery</option>
           <option value="esriTopo">Esri World Topo</option>
@@ -531,8 +563,19 @@
           <option value="openTopo">OpenTopoMap</option>
           <option value="cartoLight">Carto Light</option>
           <option value="cartoDark">Carto Dark</option>
-          <option value="osmHot">OSM Humanitarian</option>
         </select>
+        <div id="globeBasemapGrid" class="globe-basemap-grid">
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriStreet">Esri Street</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriNatGeo">Esri NatGeo</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="openTopo">OpenTopoMap</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="osm">OpenStreetMap</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoLight">Carto Light</button>
+          <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoDark">Carto Dark</button>
+        </div>
       </div>
     </section>
 
