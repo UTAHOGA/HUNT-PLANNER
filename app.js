@@ -13,7 +13,7 @@ const OUTFITTERS_DATA_SOURCES = [
   './data/outfitters.json'
 ];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
-const LOGO_DNR_ROOMY = './assets/logos/HUNT PANEL.bmp';
+const LOGO_DNR_ROOMY = './assets/logos/Hunt-panel-png.png';
 const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
