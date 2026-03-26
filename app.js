@@ -13,7 +13,7 @@ const OUTFITTERS_DATA_SOURCES = [
   './data/outfitters.json'
 ];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
-const LOGO_DNR_ROOMY = './assets/logos/hunt-panel-final.png';
+const LOGO_DNR_ROOMY = './assets/logos/HUNT-PANEL-WITH-HUNT-#.png';
 const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
@@ -1023,13 +1023,12 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
     return `
       <div style="position:relative;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;border:1px solid ${DNR_ORANGE};border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
         <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:contain;border:0;">
-        <div style="position:absolute;left:44px;top:270px;width:230px;display:grid;gap:1px;color:#2b1c12;">
-          <div style="font-size:28px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;color:${DNR_ORANGE};line-height:1.0;">Hunt #</div>
+        <div style="position:absolute;left:52px;top:322px;width:220px;display:grid;gap:1px;color:#2b1c12;">
           <div style="font-size:42px;font-weight:900;line-height:0.98;color:${DNR_BROWN};">${code}</div>
         </div>
-        <div style="position:absolute;top:126px;left:37%;right:34px;bottom:28px;display:grid;align-content:start;gap:10px;color:#2b1c12;">
+        <div style="position:absolute;top:140px;left:37%;right:34px;bottom:28px;display:grid;align-content:start;gap:10px;color:#2b1c12;">
           <div style="display:grid;gap:4px;justify-items:center;text-align:center;">
-            <div style="font-size:30px;font-weight:900;letter-spacing:.01em;text-transform:none;color:${DNR_ORANGE};line-height:1.02;">${heading}</div>
+            <div style="font-size:28px;font-weight:900;letter-spacing:.01em;text-transform:uppercase;color:${DNR_ORANGE};line-height:1.02;">${heading}</div>
             <div style="font-size:32px;font-weight:900;line-height:1.02;">${unit}</div>
           </div>
           <div style="display:grid;gap:6px;font-size:18px;line-height:1.28;">
