@@ -240,6 +240,10 @@
     .outfitter-card-subline { color: var(--muted); font-size: 13px; line-height: 1.35; }
     .outfitter-card-meta-row { display: flex; flex-wrap: wrap; gap: 6px; }
     .outfitter-card-chip { display: inline-flex; align-items: center; padding: 5px 9px; border-radius: 999px; background: rgba(214,106,31,0.11); color: var(--text); border: 1px solid rgba(214,106,31,0.2); font-size: 12px; font-weight: 800; letter-spacing: .02em; }
+    .outfitter-card-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:2px; }
+    .outfitter-action-btn { display:inline-flex; align-items:center; justify-content:center; min-height:38px; padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--text); font-size:13px; font-weight:900; letter-spacing:.02em; text-decoration:none; cursor:pointer; }
+    .outfitter-action-btn:hover { border-color:var(--accent); box-shadow:0 6px 14px rgba(0,0,0,0.12); }
+    .outfitter-action-btn.primary { background:linear-gradient(180deg, var(--accent), var(--accent-dark)); color:#fff6ed; border-color:transparent; }
     
     /* Brighter, more visible blue links */
     .outfitter-link, .detail-grid a { color: #3ea6ff; font-weight: 800; text-decoration: none; transition: color 0.2s; display: inline-block; }
@@ -250,9 +254,9 @@
     body.theme-dark .outfitter-link:hover, body.theme-dark .detail-grid a:hover { color: #82c4f8; }
 
     /* --- CUSTOM GOOGLE LOGO PINS --- */
-    .outfitter-logo-pin-shell { position: relative; width: 58px; height: 78px; transform: translateY(-100%); cursor: pointer; z-index: 40; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5)); }
-    .outfitter-logo-pin-base { position: absolute; left: 10px; top: 29px; width: 40px; height: 40px; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); border: 2px solid rgba(58, 37, 18, 0.88); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.38); }
-    .outfitter-logo-pin-center { position: absolute; left: 10px; top: 9px; width: 38px; height: 38px; border-radius: 50%; background: #fff; border: 2px solid rgba(58, 37, 18, 0.24); overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    .outfitter-logo-pin-shell { position: relative; width: 54px; height: 82px; transform: translateY(-100%); cursor: pointer; z-index: 40; filter: drop-shadow(0 8px 14px rgba(0,0,0,0.46)); }
+    .outfitter-logo-pin-base { position:absolute; left:6px; top:4px; width:42px; height:42px; background:linear-gradient(180deg, var(--accent), var(--accent-dark)); border:2px solid rgba(58, 37, 18, 0.84); border-radius:50% 50% 50% 0; transform:rotate(-45deg); box-shadow: 0 6px 12px rgba(0,0,0,0.30); }
+    .outfitter-logo-pin-center { position:absolute; left:11px; top:9px; width:32px; height:32px; border-radius:50%; background:#fff; border:2px solid rgba(255,255,255,0.95); overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
     .outfitter-logo-pin-center img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
     .outfitter-logo-pin-fallback { font-size: 15px; font-weight: 900; color: #3b2417; letter-spacing: .02em; }
 

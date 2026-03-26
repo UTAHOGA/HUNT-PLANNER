@@ -1162,10 +1162,23 @@ function renderOutfitters() {
         </div>
         ${location ? `<div class="outfitter-card-subline">${escapeHtml(location)}</div>` : ''}
         ${tags.length ? `<div class="outfitter-card-meta-row">${tags.map(tag => `<span class="outfitter-card-chip">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
-        ${website ? `<a class="outfitter-link" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer">Visit website</a>` : ''}
+        <div class="outfitter-card-actions">
+          <button type="button" class="outfitter-action-btn primary" data-outfitter-focus="${escapeHtml(firstNonEmpty(o.id, o.slug, o.listingName))}">Map Link</button>
+          ${website ? `<a class="outfitter-action-btn" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer">Website</a>` : ''}
+        </div>
         ${phone ? `<div class="hunt-card-meta">${escapeHtml(phone)}</div>` : ''}
       </div>`;
   }).join('');
+  container.querySelectorAll('[data-outfitter-focus]').forEach(button => {
+    const outfitterId = button.getAttribute('data-outfitter-focus');
+    const outfitter = matches.find(item => firstNonEmpty(item.id, item.slug, item.listingName) === outfitterId);
+    if (!outfitter) return;
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      focusOutfitter(outfitter);
+    });
+  });
   container.querySelectorAll('[data-outfitter-id]').forEach(card => {
     const outfitterId = card.getAttribute('data-outfitter-id');
     const outfitter = matches.find(item => firstNonEmpty(item.id, item.slug, item.listingName) === outfitterId);
@@ -1264,6 +1277,48 @@ function openOutfitterInfoWindow(outfitter, position) {
   });
   selectionInfoWindow.open(googleBaselineMap);
 }
+function toLatLngLiteral(value) {
+  if (!value) return null;
+  if (typeof value.lat === 'function' && typeof value.lng === 'function') {
+    return { lat: value.lat(), lng: value.lng() };
+  }
+  if (typeof value.lat === 'number' && typeof value.lng === 'number') {
+    return { lat: value.lat, lng: value.lng };
+  }
+  return null;
+}
+function getDistanceMeters(a, b) {
+  const p1 = toLatLngLiteral(a);
+  const p2 = toLatLngLiteral(b);
+  if (!p1 || !p2) return Number.POSITIVE_INFINITY;
+  const toRad = (deg) => deg * Math.PI / 180;
+  const earthRadius = 6371000;
+  const dLat = toRad(p2.lat - p1.lat);
+  const dLng = toRad(p2.lng - p1.lng);
+  const lat1 = toRad(p1.lat);
+  const lat2 = toRad(p2.lat);
+  const h = Math.sin(dLat / 2) ** 2
+    + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * earthRadius * Math.asin(Math.sqrt(h));
+}
+function findNearbyOutfitterMarker(position, maxDistanceMeters = 120) {
+  let nearest = null;
+  let nearestDistance = Number.POSITIVE_INFINITY;
+  outfitterMarkerIndex.forEach(({ position: markerPosition, outfitter }) => {
+    const distance = getDistanceMeters(position, markerPosition);
+    if (distance < nearestDistance && distance <= maxDistanceMeters) {
+      nearest = { outfitter, position: markerPosition, distance };
+      nearestDistance = distance;
+    }
+  });
+  return nearest;
+}
+function resolveOutfitterPriorityClick(position) {
+  const nearby = findNearbyOutfitterMarker(position);
+  if (!nearby) return false;
+  focusOutfitter(nearby.outfitter);
+  return true;
+}
 
 function clearOutfitterMarkers() {
   outfitterMarkerRunId += 1;
@@ -1319,8 +1374,8 @@ function createOutfitterLogoMarker(position, outfitter) {
     const point = projection.fromLatLngToDivPixel(position);
     if (!point) return;
     this.div.style.position = 'absolute';
-    this.div.style.left = `${point.x - 29}px`;
-    this.div.style.top = `${point.y - 78}px`;
+    this.div.style.left = `${point.x - 27}px`;
+    this.div.style.top = `${point.y - 82}px`;
   };
   marker.onRemove = function() {
     if (this.div?.parentNode) this.div.parentNode.removeChild(this.div);
@@ -1589,6 +1644,7 @@ function createOwnershipLayer(filterFn, style, clickBuilder) {
   layer.setStyle(style);
   layer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
+    if (resolveOutfitterPriorityClick(event.latLng)) return;
     const card = clickBuilder(event.feature);
     openLandInfoWindow(card, event.latLng);
   });
@@ -1665,6 +1721,7 @@ async function ensureUsfsLayer() {
   });
   usfsLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
+    if (resolveOutfitterPriorityClick(event.latLng)) return;
     openLandInfoWindow(buildLandInfoCard({
       logo: LOGO_USFS,
       title: firstNonEmpty(event.feature.getProperty('FORESTNAME'), 'National Forest'),
@@ -1689,6 +1746,7 @@ async function ensureBlmLayer() {
   });
   blmLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
+    if (resolveOutfitterPriorityClick(event.latLng)) return;
     openLandInfoWindow(buildLandInfoCard({
       logo: LOGO_BLM,
       title: firstNonEmpty(
