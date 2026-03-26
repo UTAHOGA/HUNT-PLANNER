@@ -43,8 +43,8 @@
       "state": "Utah",
       "mailingAddress": "",
       "publicMeetingLocation": "",
-      "latitude": null,
-      "longitude": null
+      "latitude": 39.2574155,
+      "longitude": -111.631482
     },
     "serviceArea": {
       "speciesServed": [
@@ -1174,7 +1174,7 @@
       "city": "Manti",
       "region": "Utah",
       "state": "Utah",
-      "mailingAddress": "Manti, 84642, 242 North 300 East, 242 N 300 E, MANTI, UT. 84642, MANTI",
+      "mailingAddress": "242 N 300 E, Manti, UT 84642",
       "publicMeetingLocation": "",
       "latitude": null,
       "longitude": null
