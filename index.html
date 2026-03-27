@@ -578,23 +578,28 @@
         </select>
       </div>
       <div class="toggle-row">
-        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">DWR<br>Hunt Units</span></label>
+        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
         <details class="toggle-menu">
-          <summary id="federalLayersSummary">Federal Lands</summary>
+          <summary id="federalLayersSummary">Federal</summary>
           <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS<br>Lands</span></label>
-            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM<br>Lands</span></label>
+            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
           </div>
         </details>
-        <label class="toggle-chip"><input id="toggleSITLA" type="checkbox">SITLA</label>
         <details class="toggle-menu">
-          <summary id="stateLayersSummary">State Lands</summary>
+          <summary id="stateLayersSummary">State</summary>
           <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State<br>Parks</span></label>
-            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">UT. DWR<br>W.M.A.'s</span></label>
+            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
           </div>
         </details>
-        <label class="toggle-chip"><input id="togglePrivate" type="checkbox">Private</label>
+        <details class="toggle-menu">
+          <summary id="privateLayersSummary">Private</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+          </div>
+        </details>
       </div>
       <button id="streetViewBtn" type="button" class="secondary">Street View</button>
       <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
@@ -758,7 +763,7 @@
   </script>
   <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
-  <script src="app.js?v=20260324-master-1733"></script>
+  <script src="app.js?v=20260327-wma-public-1"></script>
 </body>
 </html>
 
