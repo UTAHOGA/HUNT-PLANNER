@@ -18,7 +18,8 @@ const OUTFITTERS_DATA_SOURCES = [
 ];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
 const LOGO_DNR_ROOMY = 'https://static.wixstatic.com/media/43f827_28020dbfc9b9434c91dc6d92d9a07cd4~mv2.png';
-const LOGO_DWR_WMA = './assets/logos/dwr-wma.png';
+const LOGO_CWMU = './assets/logos/DWR-CWMU-LOGO.png';
+const LOGO_DWR_WMA = './assets/logos/DWR-WMA.LOGO.png';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
 const LOGO_SITLA = './assets/logos/sitla.png';
@@ -1997,7 +1998,7 @@ async function ensureCwmuLayer() {
     if (resolveOutfitterPriorityClick(event.latLng)) return;
     fitDataFeatureBounds(event.feature, 12);
     openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_DNR,
+      logo: LOGO_CWMU,
       title: firstNonEmpty(
         event.feature.getProperty('Boundary_Name'),
         event.feature.getProperty('NAME'),
