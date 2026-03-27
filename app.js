@@ -67,8 +67,8 @@ const huntPlannerMapStyle = [
   { featureType: 'transit', stylers: [{ visibility: 'off' }] }
 ];
 
-const HUNT_TYPE_ORDER = [ 'General', 'Youth', 'Limited Entry', 'Premium Limited Entry', 'Management', 'Dedicated Hunter', 'CWMU', 'Private Land Only', 'Conservation', 'Once-in-a-Lifetime', 'Antlerless' ];
-const HUNT_CLASS_ORDER = [ 'General Season', 'General Bull', 'Spike Only', 'Limited Entry', 'Premium Limited Entry', 'Youth', 'Management', 'Antlerless', 'CWMU', 'Private Land Only', 'Conservation', 'Statewide Permit', 'Extended Archery' ];
+const HUNT_TYPE_ORDER = [ 'General Season', 'Youth', 'Limited Entry', 'Premium Limited Entry', 'Management', 'Dedicated Hunter', 'CWMU', 'Private Land Only', 'Conservation', 'Once-in-a-Lifetime', 'Antlerless' ];
+const HUNT_CLASS_ORDER = [ 'General Season', 'General Bull', 'Spike Only', 'Mature Bull', 'Limited Entry', 'Premium Limited Entry', 'Youth', 'Management', 'Antlerless', 'CWMU', 'Private Land Only', 'Conservation', 'Statewide Permit', 'Extended Archery' ];
 const SEX_ORDER = ['Buck', 'Bull', 'Ram', 'Ewe', 'Bearded', 'Antlerless', 'Either Sex', "Hunter's Choice"];
 const WEAPON_ORDER = [ 'Any Legal Weapon', 'Archery', 'Extended Archery', 'Restricted Archery', 'Muzzleloader', 'Restricted Muzzleloader', 'Restricted Rifle', 'HAMSS', 'Multiseason', 'Restricted Multiseason' ];
 const DNR_ORANGE = '#ff6600';
@@ -264,7 +264,7 @@ function normalizeHuntTypeLabel(raw) {
   if (lower.includes('conservation')) return 'Conservation';
   if (lower.includes('cwmu')) return 'CWMU';
   if (lower.includes('antlerless')) return 'Antlerless';
-  if (lower.includes('general')) return 'General';
+  if (lower.includes('general')) return 'General Season';
   return value;
 }
 function getHuntType(h) { return normalizeHuntTypeLabel(firstNonEmpty(h.huntType, h.HuntType, h.type)); }
@@ -287,7 +287,42 @@ function normalizeHuntCategoryLabel(raw) {
   if (lower.includes('general')) return 'General Season';
   return value;
 }
-function getHuntCategory(h) { return normalizeHuntCategoryLabel(firstNonEmpty(h.huntCategory, h.HuntCategory, h.category)); }
+function getHuntCategory(h) {
+  const raw = firstNonEmpty(h.huntCategory, h.HuntCategory, h.category);
+  const normalized = normalizeHuntCategoryLabel(raw);
+  const huntType = getHuntType(h);
+  const species = getSpeciesDisplay(h);
+  const sex = getNormalizedSex(h);
+  const haystack = `${safe(raw)} ${getHuntTitle(h)} ${getUnitName(h)}`.toLowerCase();
+
+  if (species === 'Elk' && sex === 'Bull') {
+    if (huntType === 'Limited Entry') {
+      if (
+        haystack.includes('bull elk') ||
+        haystack.includes('mature bull') ||
+        haystack.includes('any bull') ||
+        normalized === 'General Bull' ||
+        normalized === 'General Season'
+      ) {
+        return 'Mature Bull';
+      }
+    }
+
+    if (huntType === 'General Season') {
+      if (haystack.includes('spike')) return 'Spike Only';
+      if (
+        haystack.includes('bull elk') ||
+        haystack.includes('any bull') ||
+        haystack.includes('hunters choice') ||
+        normalized === 'General Bull'
+      ) {
+        return 'General Bull';
+      }
+    }
+  }
+
+  return normalized;
+}
 function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
 function getBoundaryLink(h) { return firstNonEmpty(h.boundaryLink, h.boundaryURL, h.huntBoundaryLink); }
 function getSpeciesHeadingLabel(species) {
