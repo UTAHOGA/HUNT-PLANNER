@@ -96,6 +96,8 @@ const KNOWN_OUTFITTER_COORDS = new Map([
 let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 const outfitterGeocodeCache = new Map();
 const outfitterMarkerIndex = new Map();
+const blmOwnershipPointCache = new Map();
+const blmDistrictPointCache = new Map();
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -654,14 +656,7 @@ function shouldShowWildernessOverlay() {
   return !!(toggleUSFS?.checked || toggleBLM?.checked);
 }
 function shouldDeprioritizeFederalClicks() {
-  return !!(
-    toggleCwmu?.checked ||
-    toggleWma?.checked ||
-    toggleStateParks?.checked ||
-    togglePrivate?.checked ||
-    toggleSITLA?.checked ||
-    shouldShowHuntBoundaries()
-  );
+  return !!shouldShowHuntBoundaries();
 }
 function updateWildernessOverlayVisibility() {
   setLayerVisibility(wildernessLayer, shouldShowWildernessOverlay());
@@ -1998,6 +1993,38 @@ async function fetchArcGisPagedGeoJson(layerUrl, where, pageSize = 2000) {
     features: allFeatures
   };
 }
+function getLatLngCacheKey(latLng, precision = 4) {
+  if (!latLng) return '';
+  return `${Number(latLng.lat()).toFixed(precision)},${Number(latLng.lng()).toFixed(precision)}`;
+}
+async function queryBlmOwnershipAtLatLng(latLng) {
+  if (!latLng) return null;
+  const cacheKey = getLatLngCacheKey(latLng);
+  if (blmOwnershipPointCache.has(cacheKey)) return blmOwnershipPointCache.get(cacheKey);
+  const queryUrl = `${BLM_SURFACE_OWNERSHIP_LAYER_URL}/query?where=${encodeURIComponent("UT_LGD IN ('Bureau of Land Management (BLM)','BLM Wilderness Area')")}&geometry=${encodeURIComponent(`${latLng.lng()},${latLng.lat()}`)}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=UT_LGD,COUNTY,CO_NAME,GIS_ACRES,ACRES,OWNER&returnGeometry=false&f=json`;
+  const promise = fetchJson(queryUrl)
+    .then(json => Array.isArray(json?.features) ? json.features[0]?.attributes || null : null)
+    .catch(error => {
+      console.error('BLM ownership point query failed', error);
+      return null;
+    });
+  blmOwnershipPointCache.set(cacheKey, promise);
+  return promise;
+}
+async function queryBlmDistrictAtLatLng(latLng) {
+  if (!latLng) return null;
+  const cacheKey = getLatLngCacheKey(latLng);
+  if (blmDistrictPointCache.has(cacheKey)) return blmDistrictPointCache.get(cacheKey);
+  const queryUrl = `${BLM_ADMIN_QUERY_URL.replace('/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson', '')}/query?where=1%3D1&geometry=${encodeURIComponent(`${latLng.lng()},${latLng.lat()}`)}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ADMU_NAME,DISTRICT_NAME,FIELD_OFFICE&returnGeometry=false&f=json`;
+  const promise = fetchJson(queryUrl)
+    .then(json => Array.isArray(json?.features) ? json.features[0]?.attributes || null : null)
+    .catch(error => {
+      console.error('BLM district point query failed', error);
+      return null;
+    });
+  blmDistrictPointCache.set(cacheKey, promise);
+  return promise;
+}
 const OWNERSHIP_BUCKET_QUERIES = {
   sitla: "state_lgd = 'State Trust Lands'",
   private: "state_lgd = 'Private'",
@@ -2272,17 +2299,30 @@ async function ensureBlmLayer() {
     if (shouldSuppressLandClick()) return;
     if (resolveOutfitterPriorityClick(event.latLng)) return;
     if (shouldDeprioritizeFederalClicks()) return;
-    openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_BLM,
-      title: firstNonEmpty(
-        event.feature.getProperty('ADMU_NAME'),
-        event.feature.getProperty('DISTRICT_NAME'),
-        event.feature.getProperty('FIELD_OFFICE'),
-        'BLM Land'
-      ),
-      subtitle: 'Bureau of Land Management',
-      logoSize: 68
-    }), event.latLng);
+    Promise.all([
+      queryBlmOwnershipAtLatLng(event.latLng),
+      queryBlmDistrictAtLatLng(event.latLng)
+    ]).then(([detailHit, districtHit]) => {
+      if (!detailHit) return;
+      const county = firstNonEmpty(detailHit.COUNTY, detailHit.CO_NAME);
+      const acres = firstNonEmpty(detailHit.GIS_ACRES, detailHit.ACRES);
+      const detailText = [county ? `${county} County` : '', acres ? `${acres} acres` : ''].filter(Boolean).join(' | ');
+      openLandInfoWindow(buildLandInfoCard({
+        logo: LOGO_BLM,
+        title: firstNonEmpty(
+          districtHit?.ADMU_NAME,
+          districtHit?.DISTRICT_NAME,
+          districtHit?.FIELD_OFFICE,
+          event.feature.getProperty('ADMU_NAME'),
+          event.feature.getProperty('DISTRICT_NAME'),
+          event.feature.getProperty('FIELD_OFFICE'),
+          'BLM Land'
+        ),
+        subtitle: 'Bureau of Land Management',
+        detailText,
+        logoSize: 68
+      }), event.latLng);
+    });
   });
   setLayerVisibility(blmLayer, !!toggleBLM?.checked);
   return blmLayer;
@@ -2307,33 +2347,44 @@ async function ensureBlmDetailLayer() {
     if (shouldSuppressLandClick()) return;
     if (resolveOutfitterPriorityClick(event.latLng)) return;
     if (shouldDeprioritizeFederalClicks()) return;
-    const title = firstNonEmpty(
-      event.feature.getProperty('UT_LGD'),
-      event.feature.getProperty('ut_lgd'),
-      event.feature.getProperty('OWNER'),
-      event.feature.getProperty('owner'),
-      'Bureau of Land Management (BLM)'
-    );
-    const county = firstNonEmpty(
-      event.feature.getProperty('COUNTY'),
-      event.feature.getProperty('county'),
-      event.feature.getProperty('CO_NAME'),
-      event.feature.getProperty('co_name')
-    );
-    const acres = firstNonEmpty(
-      event.feature.getProperty('GIS_ACRES'),
-      event.feature.getProperty('gis_acres'),
-      event.feature.getProperty('ACRES'),
-      event.feature.getProperty('acres')
-    );
-    const detailText = [county ? `${county} County` : '', acres ? `${acres} acres` : ''].filter(Boolean).join(' | ');
-    openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_BLM,
-      title,
-      subtitle: 'BLM Ownership Detail',
-      detailText,
-      logoSize: 68
-    }), event.latLng);
+    queryBlmDistrictAtLatLng(event.latLng).then(districtHit => {
+      const county = firstNonEmpty(
+        event.feature.getProperty('COUNTY'),
+        event.feature.getProperty('county'),
+        event.feature.getProperty('CO_NAME'),
+        event.feature.getProperty('co_name')
+      );
+      const acres = firstNonEmpty(
+        event.feature.getProperty('GIS_ACRES'),
+        event.feature.getProperty('gis_acres'),
+        event.feature.getProperty('ACRES'),
+        event.feature.getProperty('acres')
+      );
+      const surfaceLabel = firstNonEmpty(
+        event.feature.getProperty('UT_LGD'),
+        event.feature.getProperty('ut_lgd'),
+        event.feature.getProperty('OWNER'),
+        event.feature.getProperty('owner'),
+        'Bureau of Land Management (BLM)'
+      );
+      const detailText = [
+        county ? `${county} County` : '',
+        acres ? `${acres} acres` : '',
+        surfaceLabel
+      ].filter(Boolean).join(' | ');
+      openLandInfoWindow(buildLandInfoCard({
+        logo: LOGO_BLM,
+        title: firstNonEmpty(
+          districtHit?.ADMU_NAME,
+          districtHit?.DISTRICT_NAME,
+          districtHit?.FIELD_OFFICE,
+          'BLM Land'
+        ),
+        subtitle: 'Bureau of Land Management',
+        detailText,
+        logoSize: 68
+      }), event.latLng);
+    });
   });
   setLayerVisibility(blmDetailLayer, !!toggleBLMDetail?.checked);
   return blmDetailLayer;
