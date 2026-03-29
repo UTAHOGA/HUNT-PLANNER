@@ -60,6 +60,7 @@ const {
 } = window.UOGA_DATA;
 
 let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleMapsLoadTimeoutId = null;
 const outfitterGeocodeCache = new Map();
 const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
@@ -2635,13 +2636,30 @@ function ensureCesiumViewer() {
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
+function fallbackToGlobeMode(reason = 'Google map unavailable.') {
+  const mapWrap = document.querySelector('.map-wrap');
+  if (!mapWrap) return;
+  if (mapTypeSelect) {
+    mapTypeSelect.value = 'globe';
+  }
+  ensureCesiumViewer();
+  mapWrap.classList.add('is-globe-mode');
+  setTimeout(() => {
+    if (cesiumViewer) {
+      cesiumViewer.resize();
+      cesiumViewer.scene.requestRender();
+    }
+  }, 0);
+  updateStatus(reason);
+}
+
 function applyMapMode() {
   const value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
   const mapWrap = document.querySelector('.map-wrap');
-  if (!googleBaselineMap || !mapWrap) return;
+  if (!mapWrap) return;
 
   if (value === 'globe') {
-    googleBaselineMap.getStreetView()?.setVisible(false);
+    googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
     updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
     ensureCesiumViewer();
@@ -2671,6 +2689,11 @@ function applyMapMode() {
       }
     }
     updateCesiumBoundaryStyles();
+    return;
+  }
+
+  if (!googleBaselineMap) {
+    fallbackToGlobeMode('Google map is unavailable. Switched to globe view.');
     return;
   }
 
@@ -2756,6 +2779,10 @@ function openStreetViewAtFocus() {
 
 // --- MAP ENGINE ---
 function initGoogleBaseline() {
+  if (googleMapsLoadTimeoutId) {
+    clearTimeout(googleMapsLoadTimeoutId);
+    googleMapsLoadTimeoutId = null;
+  }
   googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
@@ -2781,6 +2808,10 @@ function initGoogleBaseline() {
   updatePrivateLayersSummary();
   updateStatus('Map ready. Select filters or click a hunt unit.');
   bindControls();
+}
+
+if (typeof window !== 'undefined') {
+  window.initGoogleBaseline = initGoogleBaseline;
 }
 
 function buildBoundaryLayer() {
@@ -3012,7 +3043,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load Map
   const script = document.createElement('script');
   script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&callback=initGoogleBaseline`;
+  script.async = true;
+  script.defer = true;
+  script.onerror = () => {
+    console.error('Google Maps API failed to load.');
+    fallbackToGlobeMode('Google map failed to load. Switched to globe view.');
+  };
   document.head.appendChild(script);
+  googleMapsLoadTimeoutId = setTimeout(() => {
+    if (!googleApiReady) {
+      console.error('Google Maps API load timed out.');
+      fallbackToGlobeMode('Google map timed out. Switched to globe view.');
+    }
+  }, 7000);
   
   // Load Data
   await loadHuntData();
