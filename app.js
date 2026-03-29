@@ -11,7 +11,7 @@ const UTAH_LOCATION_BOUNDS = {
 // --- CLOUDFLARE JSON SOURCES ---
 const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
-const OUTFITTERS_DATA_VERSION = '20260327-outfitters-public-lean-1';
+const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
 const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
 const HUNT_BOUNDARY_SOURCES = [
   `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
