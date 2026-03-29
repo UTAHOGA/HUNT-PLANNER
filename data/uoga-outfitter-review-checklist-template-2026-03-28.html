@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UOGA Outfitter Review Checklist Template</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;line-height:1.45;margin:24px;color:#1f2937;background:#f8fafc}
+main{max-width:1100px;margin:0 auto;background:#fff;padding:24px 28px;border:1px solid #dbe3ea;border-radius:12px}
+h1,h2{margin:0 0 12px;color:#0f172a} h2{margin-top:24px}
+ul{margin:8px 0 0 20px} li{margin:4px 0}
+code{background:#eef2f7;padding:2px 6px;border-radius:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{border:1px solid #dbe3ea;border-radius:10px;padding:14px;background:#fbfdff}
+.note{margin-top:16px;padding:12px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px}
+</style>
+</head>
+<body>
+<main>
+<h1>UOGA Outfitter Review Checklist Template</h1>
+<p>This is the field guide for the CSV checklist template. Use the CSV for data entry and this page as the reviewer reference.</p>
+<div class="grid">
+<div class="card"><h2>Possible Outcomes</h2><ul><li><code>Hold / Do Not Publish</code></li><li><code>Vetted</code></li><li><code>C.P.O.</code></li></ul></div>
+<div class="card"><h2>Minimum For Vetted</h2><ul><li>Identity substantially complete</li><li>Operational profile substantially complete</li><li>No blocking conflict</li><li>Suitable for publication as a trusted resource</li></ul></div>
+<div class="card"><h2>Additional For C.P.O.</h2><ul><li>All Vetted criteria met</li><li>Higher professional completeness</li><li>Stronger consistency and responsiveness</li><li>No unresolved material concern</li></ul></div>
+</div>
+<h2>Checklist Sections</h2>
+<ul>
+<li>Identity</li>
+<li>Operational Profile</li>
+<li>Registration / Licensing</li>
+<li>Authority / Access Claims</li>
+<li>Professional Completeness</li>
+<li>Risk / Conflict Check</li>
+<li>Decision Fields</li>
+</ul>
+<h2>Decision Fields In CSV</h2>
+<ul>
+<li><code>reviewOutcome</code></li>
+<li><code>publish</code></li>
+<li><code>eligibleForVetted</code></li>
+<li><code>eligibleForCpo</code></li>
+<li><code>needsFollowUp</code></li>
+<li><code>reviewerNotes</code></li>
+<li><code>reviewedBy</code></li>
+<li><code>reviewedDate</code></li>
+</ul>
+<div class="note">
+<strong>Note:</strong> Keep the CSV as the source-of-truth working file. This HTML page is just a readable reference for the same checklist structure.
+</div>
+</main>
+</body>
+</html>
