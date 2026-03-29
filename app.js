@@ -83,7 +83,14 @@ const HUNT_BOUNDARY_NAME_OVERRIDES = {
   DB1510: ['Monroe'], DB1540: ['Monroe'], DB1506: ['Fillmore'], DB1536: ['Fillmore'],
   EA1220: ['Manti, North', 'Manti, South', 'Manti, West', 'Manti, Central', 'Manti, Mohrland-Stump Flat', 'Manti, Horn Mtn', 'Manti, Gordon Creek-Price Canyon', 'Manti, Ferron Canyon'],
   EA1221: ['Fishlake/Thousand Lakes', 'Fishlake/Thousand Lakes East', 'Fishlake/Thousand Lakes West'],
-  EA1258: ['La Sal Mtns', 'Dolores Triangle', 'La Sal, La Sal Mtns-North']
+  EA1258: ['La Sal Mtns', 'Dolores Triangle', 'La Sal, La Sal Mtns-North'],
+  'la-sal-conservation': ['La Sal'],
+  'fishlake-conservation': ['Fishlake'],
+  'manti-conservation': ['Manti, North', 'Manti, South', 'Manti, West', 'Manti, Central', 'Manti, Mohrland-Stump Flat', 'Manti, Horn Mtn', 'Manti, Gordon Creek-Price Canyon', 'Manti, Ferron Canyon', 'South Manti', 'Manti, Northeast', 'Manti, Northwest', 'Manti, Southeast', 'Manti, Southwest'],
+  'cache-conservation': ['Cache'],
+  'wasatch-mtns-conservation': ['Wasatch Mtns, West', 'Wasatch Mtns, East', 'Wasatch Mtns, Cascade', 'Wasatch Mtns, Currant Creek', 'Wasatch Mtns, Timpanogos A', 'Wasatch Mtns, Box Elder Peak', 'Wasatch Mtns, Lone Peak', 'Wasatch Mtns, Provo Peak', 'Wasatch Mtns, Alpine'],
+  'antelope-island-conservation-expo': ['Antelope Island'],
+  'book-cliffs-north-and-south': ['Book Cliffs, North', 'Book Cliffs, South']
 };
 
 const huntPlannerMapStyle = [
@@ -220,9 +227,34 @@ function getUnitCode(h) { return firstNonEmpty(h.unitCode, h.unit_code, h.UnitCo
 function getUnitName(h) { return firstNonEmpty(h.unitName, h.unit_name, h.UnitName); }
 function getBoundaryNamesForHunt(h) {
   const code = safe(getUnitCode(h)).trim();
-  const base = [getUnitName(h)];
+  const unitName = safe(getUnitName(h)).trim();
+  const strippedUnitName = unitName.replace(/\s*\((?:conservation|private lands only|select areas only)\)\s*$/i, '').trim();
+  const base = [unitName, strippedUnitName];
   const overrides = Array.isArray(HUNT_BOUNDARY_NAME_OVERRIDES[code]) ? HUNT_BOUNDARY_NAME_OVERRIDES[code] : [];
   return [...new Set([...base, ...overrides].map(v => safe(v).trim()).filter(Boolean))];
+}
+
+function buildBoundaryMatcher(hunts) {
+  const boundaryIds = new Set();
+  const exactNames = new Set();
+  const prefixNames = new Set();
+  hunts.forEach(hunt => {
+    const boundaryId = safe(getBoundaryId(hunt)).trim();
+    if (boundaryId) boundaryIds.add(boundaryId);
+    const names = getBoundaryNamesForHunt(hunt).map(normalizeBoundaryKey).filter(Boolean);
+    names.forEach(name => exactNames.add(name));
+    if (!boundaryId) names.forEach(name => prefixNames.add(name));
+  });
+  return {
+    matches(featureBoundaryId, featureName) {
+      if (boundaryIds.has(featureBoundaryId)) return true;
+      if (exactNames.has(featureName)) return true;
+      for (const prefix of prefixNames) {
+        if (featureName.startsWith(`${prefix}-`) || prefix.startsWith(`${featureName}-`)) return true;
+      }
+      return false;
+    }
+  };
 }
 function getRequiredUsfsForestsForHunt(hunt) {
   const boundaryKeys = getBoundaryNamesForHunt(hunt).map(normalizeBoundaryKey);
@@ -1400,9 +1432,8 @@ function updateCesiumBoundaryStyles() {
   const showBoundaries = shouldShowHuntBoundaries();
   const showAllUnits = shouldShowAllHuntUnits();
   const filtered = getDisplayHunts();
-  const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
-  const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
-  const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
+  const matcher = buildBoundaryMatcher(filtered);
+  const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
   cesiumHuntDataSource.entities.values.forEach(entity => {
     const properties = entity.properties;
     const id = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
@@ -1411,12 +1442,8 @@ function updateCesiumBoundaryStyles() {
       ?? properties?.BOUNDARY_NAME?.getValue?.()
       ?? properties?.BoundaryName?.getValue?.()
     );
-    const isMatch = showAllUnits || boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name);
-    const isSelected = !!selectedHunt && (
-      id === safe(getBoundaryId(selectedHunt))
-      || name === normalizeBoundaryKey(getUnitCode(selectedHunt))
-      || name === normalizeBoundaryKey(getUnitName(selectedHunt))
-    );
+    const isMatch = showAllUnits || matcher.matches(id, name);
+    const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
     const visible = showBoundaries && isMatch;
     entity.show = visible;
     const fillColor = Cesium.Color.fromCssColorString(isSelected ? '#ff8a3d' : '#3653b3').withAlpha(isSelected ? 0.0 : 0.32);
@@ -2113,16 +2140,14 @@ function openSelectedHuntPopup() {
     closeSelectedHuntPopup();
     return;
   }
-  const boundaryId = safe(getBoundaryId(selectedHunt));
-  const unitCode = normalizeBoundaryKey(getUnitCode(selectedHunt));
-  const unitName = normalizeBoundaryKey(getUnitName(selectedHunt));
+  const matcher = buildBoundaryMatcher([selectedHunt]);
   let popupPosition = null;
   let found = false;
 
   huntUnitsLayer.forEach(f => {
     const featureBoundaryId = safe(f.getProperty('BoundaryID'));
     const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (featureBoundaryId === boundaryId || featureName === unitCode || featureName === unitName) {
+    if (matcher.matches(featureBoundaryId, featureName)) {
       const bounds = new google.maps.LatLngBounds();
       f.getGeometry().forEachLatLng(ll => bounds.extend(ll));
       popupPosition = bounds.getCenter();
@@ -2869,14 +2894,12 @@ function resetMapView() {
 
 function getSelectedHuntCenter() {
   if (!selectedHunt || !huntUnitsLayer) return null;
-  const boundaryId = safe(getBoundaryId(selectedHunt));
-  const unitCode = normalizeBoundaryKey(getUnitCode(selectedHunt));
-  const unitName = normalizeBoundaryKey(getUnitName(selectedHunt));
+  const matcher = buildBoundaryMatcher([selectedHunt]);
   let center = null;
   huntUnitsLayer.forEach(f => {
     const id = safe(f.getProperty('BoundaryID'));
     const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (id === boundaryId || name === unitCode || name === unitName) {
+    if (matcher.matches(id, name)) {
       const bounds = new google.maps.LatLngBounds();
       f.getGeometry().forEachLatLng(ll => bounds.extend(ll));
       center = bounds.getCenter();
@@ -2972,14 +2995,13 @@ function styleBoundaryLayer() {
     const showBoundaries = shouldShowHuntBoundaries();
     const showAllUnits = shouldShowAllHuntUnits();
     const filtered = getDisplayHunts();
-    const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
-    const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
-    const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
+    const matcher = buildBoundaryMatcher(filtered);
+    const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
     huntUnitsLayer.setStyle(f => {
         const id = safe(f.getProperty('BoundaryID'));
         const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-        const isMatch = showAllUnits || boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name);
-        const isSelected = selectedHunt && (id === safe(getBoundaryId(selectedHunt)) || name === normalizeBoundaryKey(getUnitCode(selectedHunt)) || name === normalizeBoundaryKey(getUnitName(selectedHunt)));
+        const isMatch = showAllUnits || matcher.matches(id, name);
+        const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
         return {
           visible: showBoundaries && isMatch,
           strokeColor: isSelected ? '#c84f00' : '#3653b3',
@@ -3144,14 +3166,12 @@ function zoomToSelectedBoundary() {
   if (!huntUnitsLayer || !selectedHunt) return;
   const bounds = new google.maps.LatLngBounds();
   let found = false;
-  const boundaryId = safe(getBoundaryId(selectedHunt));
-  const unitCode = normalizeBoundaryKey(getUnitCode(selectedHunt));
-  const unitName = normalizeBoundaryKey(getUnitName(selectedHunt));
+  const matcher = buildBoundaryMatcher([selectedHunt]);
   
   huntUnitsLayer.forEach(f => {
     const featureBoundaryId = safe(f.getProperty('BoundaryID'));
     const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (featureBoundaryId === boundaryId || featureName === unitCode || featureName === unitName) {
+    if (matcher.matches(featureBoundaryId, featureName)) {
       f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
     }
   });
@@ -3162,15 +3182,13 @@ function zoomToDisplayHuntsBounds() {
   if (!huntUnitsLayer || !googleBaselineMap) return false;
   const filtered = getDisplayHunts();
   if (!filtered.length) return false;
-  const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
-  const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
-  const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
+  const matcher = buildBoundaryMatcher(filtered);
   const bounds = new google.maps.LatLngBounds();
   let found = false;
   huntUnitsLayer.forEach(f => {
     const id = safe(f.getProperty('BoundaryID'));
     const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name)) {
+    if (matcher.matches(id, name)) {
       f.getGeometry().forEachLatLng(ll => {
         bounds.extend(ll);
         found = true;
