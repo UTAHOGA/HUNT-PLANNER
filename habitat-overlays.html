@@ -155,6 +155,19 @@
       font-size: 13px;
       line-height: 1.45;
     }
+    .status {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fff8ef;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .status strong {
+      color: var(--accent);
+    }
     #map {
       width: 100%;
       min-height: 100vh;
@@ -213,11 +226,11 @@
         <section class="section">
           <h2>Habitat Layers</h2>
           <label class="toggle">
-            <input id="toggleMule" type="checkbox" checked />
+            <input id="toggleMule" type="checkbox" />
             <span>Mule Deer Habitat<small>Seasonal habitat polygons</small></span>
           </label>
           <label class="toggle">
-            <input id="toggleElk" type="checkbox" checked />
+            <input id="toggleElk" type="checkbox" />
             <span>Elk Habitat<small>Seasonal habitat polygons</small></span>
           </label>
           <label class="toggle">
@@ -225,7 +238,7 @@
             <span>Black Bear Habitat<small>Year-long crucial habitat</small></span>
           </label>
           <label class="toggle">
-            <input id="toggleStopovers" type="checkbox" checked />
+            <input id="toggleStopovers" type="checkbox" />
             <span>Migration Stopovers<small>Mule deer stopover polygons</small></span>
           </label>
         </section>
@@ -247,6 +260,7 @@
             Hunt boundaries stay fixed. Habitat layers are just draped on top so we can inspect where
             they sit relative to the DWR hunt-unit geometry.
           </div>
+          <div class="status" id="statusBox"><strong>Status:</strong> Loading hunt boundaries only to keep the viewer responsive.</div>
         </section>
       </div>
     </aside>
@@ -330,6 +344,13 @@
 
     const layers = {};
     const layerData = {};
+    const statusBox = document.getElementById('statusBox');
+
+    function setStatus(message, isError = false) {
+      statusBox.innerHTML = `<strong>${isError ? 'Layer issue:' : 'Status:'}</strong> ${message}`;
+      statusBox.style.borderColor = isError ? '#cb6316' : 'var(--line)';
+      statusBox.style.background = isError ? '#fff1e6' : '#fff8ef';
+    }
 
     function popupHtml(type, feature) {
       const p = feature.properties || {};
@@ -358,7 +379,11 @@
 
     async function loadLayer(type) {
       if (layers[type]) return layers[type];
+      setStatus(`Loading ${labels[type]}...`);
       const response = await fetch(sources[type]);
+      if (!response.ok) {
+        throw new Error(`${labels[type]} fetch failed with ${response.status}`);
+      }
       const geojson = await response.json();
       layerData[type] = geojson;
       layers[type] = L.geoJSON(geojson, {
@@ -367,11 +392,12 @@
           layer.bindPopup(popupHtml(type, feature));
         }
       });
+      setStatus(`${labels[type]} loaded.`);
       return layers[type];
     }
 
     async function ensureInitialLayers() {
-      const initial = ['hunts', 'mule', 'elk', 'stopovers'];
+      const initial = ['hunts'];
       for (const type of initial) {
         const layer = await loadLayer(type);
         layer.addTo(map);
@@ -379,11 +405,27 @@
     }
 
     async function toggleLayer(type, visible) {
-      const layer = await loadLayer(type);
-      if (visible) {
-        layer.addTo(map);
-      } else {
-        map.removeLayer(layer);
+      try {
+        const layer = await loadLayer(type);
+        if (visible) {
+          layer.addTo(map);
+          setStatus(`${labels[type]} displayed.`);
+        } else {
+          map.removeLayer(layer);
+          setStatus(`${labels[type]} hidden.`);
+        }
+      } catch (error) {
+        console.error(error);
+        const idMap = {
+          hunts: 'toggleHunts',
+          mule: 'toggleMule',
+          elk: 'toggleElk',
+          bear: 'toggleBear',
+          stopovers: 'toggleStopovers'
+        };
+        const toggle = document.getElementById(idMap[type]);
+        if (toggle) toggle.checked = false;
+        setStatus(`${labels[type]} failed to load. ${error.message}`, true);
       }
     }
 
@@ -431,7 +473,7 @@
       }
     }).catch(error => {
       console.error(error);
-      alert('One or more GeoJSON layers failed to load. Check the browser console for details.');
+      setStatus(`Initial layer load failed. ${error.message}`, true);
     });
   </script>
 </body>
