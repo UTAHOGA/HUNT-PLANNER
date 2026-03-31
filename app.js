@@ -309,6 +309,19 @@ function normalizeWeaponLabel(raw) {
   return value;
 }
 function getWeapon(h) { return normalizeWeaponLabel(firstNonEmpty(h.weapon, h.Weapon)); }
+function weaponMatchesFilter(hunt, selectedWeapon) {
+  if (!selectedWeapon || selectedWeapon === 'All') return true;
+  const huntWeapon = getWeapon(hunt);
+  if (huntWeapon === selectedWeapon) return true;
+  if (
+    hunt?.syntheticConservationPermit &&
+    selectedWeapon === 'Any Legal Weapon' &&
+    (huntWeapon === 'Multiseason' || huntWeapon === 'Restricted Multiseason')
+  ) {
+    return true;
+  }
+  return false;
+}
 function normalizeHuntTypeLabel(raw) {
   const value = safe(raw).trim();
   const lower = value.toLowerCase();
@@ -604,7 +617,7 @@ function getFilteredHunts(excludeKey = '') {
     const speciesOk = excludeKey === 'species' || species === 'All Species' || sDisplay === species;
     const sexOk = excludeKey === 'sex' || sex === 'All' || hSex === sex;
     const huntTypeOk = excludeKey === 'huntType' || huntType === 'All' || hHuntType === huntType;
-    const weaponOk = excludeKey === 'weapon' || weapon === 'All' || hWeapon === weapon;
+    const weaponOk = excludeKey === 'weapon' || weaponMatchesFilter(h, weapon);
     const huntCategoryOk = excludeKey === 'huntCategory' || huntCategory === 'All' || hHuntCategory === huntCategory;
     const unitOk = excludeKey === 'unit' || !unit || hUnit === unit;
     const conservationDisplayOk = huntType !== 'Conservation' || !!h?.syntheticConservationPermit;
