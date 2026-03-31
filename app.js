@@ -361,10 +361,20 @@ function indexConservationPermitAreas(list) {
   });
 }
 async function loadConservationPermitAreas() {
-  const list = await loadFirstNormalizedList(CONSERVATION_PERMIT_AREA_SOURCES, json => Array.isArray(json) ? json : [], []);
-  indexConservationPermitAreas(list);
+  try {
+    const list = await loadFirstNormalizedList(
+      CONSERVATION_PERMIT_AREA_SOURCES,
+      json => Array.isArray(json) ? json : [],
+      []
+    );
+    indexConservationPermitAreas(list);
+  } catch (error) {
+    console.error('Conservation permit area load failed; continuing without conservation register.', error);
+    indexConservationPermitAreas([]);
+  }
 }
 function isConservationPermitHunt(h) {
+  if (h?.syntheticConservationPermit) return true;
   const code = normalizeHuntCode(getHuntCode(h));
   const species = getSpeciesDisplay(h);
   const rawType = safe(firstNonEmpty(h.huntType, h.HuntType, h.type)).trim().toLowerCase();
@@ -393,12 +403,9 @@ function isConservationPermitHunt(h) {
   return false;
 }
 function getHuntType(h) {
+  if (h?.syntheticConservationPermit) return 'Conservation';
   const raw = firstNonEmpty(h.huntType, h.HuntType, h.type);
-  const normalized = normalizeHuntTypeLabel(raw);
-  if (isConservationPermitHunt(h)) {
-    return 'Conservation';
-  }
-  return normalized;
+  return normalizeHuntTypeLabel(raw);
 }
 function normalizeHuntCategoryLabel(raw) {
   const value = safe(raw).trim();
@@ -420,6 +427,7 @@ function normalizeHuntCategoryLabel(raw) {
   return value;
 }
 function getHuntCategory(h) {
+  if (h?.syntheticConservationPermit) return 'Conservation Permit';
   const raw = firstNonEmpty(h.huntCategory, h.HuntCategory, h.category);
   const normalized = normalizeHuntCategoryLabel(raw);
   const huntType = getHuntType(h);
@@ -454,6 +462,102 @@ function getHuntCategory(h) {
   }
 
   return normalized;
+}
+function getConservationPermitRepresentativeHunts(records, area) {
+  const species = safe(area?.species).trim();
+  const allowedRawTypes = new Set(
+    (Array.isArray(area?.allowedRawHuntTypes) ? area.allowedRawHuntTypes : [])
+      .map(v => safe(v).trim().toLowerCase())
+      .filter(Boolean)
+  );
+  const huntCodeSet = new Set(
+    (Array.isArray(area?.huntCodes) ? area.huntCodes : [])
+      .map(normalizeHuntCode)
+      .filter(Boolean)
+  );
+  const unitNameKeys = new Set(
+    (Array.isArray(area?.unitNames) ? area.unitNames : [])
+      .map(normalizeBoundaryKey)
+      .filter(Boolean)
+  );
+  const unitCodeKeys = new Set(
+    (Array.isArray(area?.unitCodes) ? area.unitCodes : [])
+      .map(normalizeBoundaryKey)
+      .filter(Boolean)
+  );
+
+  return records.filter(record => {
+    const recordSpecies = getSpeciesDisplay(record);
+    const speciesOk =
+      recordSpecies === species ||
+      (species === 'Deer' && recordSpecies === 'Deer') ||
+      (species === 'Deer' && safe(firstNonEmpty(record.species, record.Species)).trim() === 'Mule Deer');
+    if (!speciesOk) return false;
+
+    const rawType = safe(firstNonEmpty(record.huntType, record.HuntType, record.type)).trim().toLowerCase();
+    const code = normalizeHuntCode(getHuntCode(record));
+    const boundaryNames = getBoundaryNamesForHunt(record).map(normalizeBoundaryKey).filter(Boolean);
+    const unitCode = normalizeBoundaryKey(getUnitCode(record));
+
+    if (code && huntCodeSet.has(code)) return true;
+    if (allowedRawTypes.size && rawType && !allowedRawTypes.has(rawType)) return false;
+    if (unitCode && unitCodeKeys.has(unitCode)) return true;
+    return boundaryNames.some(name => unitNameKeys.has(name));
+  });
+}
+function buildSyntheticConservationPermitHunts(records) {
+  if (!Array.isArray(conservationPermitAreas) || !conservationPermitAreas.length) return [];
+
+  return conservationPermitAreas.map((area, index) => {
+    const matches = getConservationPermitRepresentativeHunts(records, area);
+    const representative = matches[0] || {};
+    const boundaryIds = [...new Set(matches.flatMap(record => {
+      const ids = [
+        getBoundaryId(record),
+        ...(Array.isArray(record?.boundaryIds) ? record.boundaryIds : []),
+        ...(Array.isArray(record?.officialBoundaryIds) ? record.officialBoundaryIds : [])
+      ];
+      return ids.map(id => safe(id).trim()).filter(Boolean);
+    }))];
+    const boundaryNames = [...new Set([
+      ...(Array.isArray(area?.unitNames) ? area.unitNames : []),
+      ...matches.flatMap(getBoundaryNamesForHunt)
+    ].map(v => safe(v).trim()).filter(Boolean))];
+    const unitName = firstNonEmpty(boundaryNames[0], area?.label, getUnitName(representative));
+    const species = firstNonEmpty(area?.species, getSpeciesDisplay(representative));
+    const unitCode = firstNonEmpty(
+      Array.isArray(area?.unitCodes) ? area.unitCodes[0] : '',
+      normalizeBoundaryKey(unitName),
+      `conservation-permit-${index + 1}`
+    );
+    const huntCode = firstNonEmpty(
+      Array.isArray(area?.huntCodes) ? area.huntCodes[0] : '',
+      `CP-${normalizeBoundaryKey(species)}-${normalizeBoundaryKey(area?.label || unitName)}`
+    ).toUpperCase();
+
+    return {
+      syntheticConservationPermit: true,
+      huntCode,
+      species,
+      sex: firstNonEmpty(representative.sex, representative.Sex),
+      huntType: 'Conservation',
+      huntCategory: 'Conservation Permit',
+      weapon: firstNonEmpty(representative.weapon, representative.Weapon, 'Any Legal Weapon'),
+      unitCode,
+      unitName,
+      boundaryId: boundaryIds.length === 1 ? boundaryIds[0] : '',
+      boundaryIds,
+      officialBoundaryIds: boundaryIds,
+      officialBoundaryNames: boundaryNames,
+      boundaryNames,
+      seasonLabel: 'Conservation Permit Area',
+      dates: 'See official conservation permit details',
+      title: firstNonEmpty(area?.label, `${species} Conservation Permit`),
+      source: firstNonEmpty(area?.source, 'UOGA conservation permit register'),
+      sourceHuntCodes: Array.isArray(area?.huntCodes) ? area.huntCodes.slice() : [],
+      sourceUnitCodes: Array.isArray(area?.unitCodes) ? area.unitCodes.slice() : []
+    };
+  }).filter(row => Array.isArray(row.boundaryIds) && row.boundaryIds.length);
 }
 function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
 function getBoundaryLink(h) { return firstNonEmpty(h.boundaryLink, h.boundaryURL, h.huntBoundaryLink); }
@@ -571,8 +675,9 @@ function getFilteredHunts(excludeKey = '') {
     const weaponOk = excludeKey === 'weapon' || weapon === 'All' || hWeapon === weapon;
     const huntCategoryOk = excludeKey === 'huntCategory' || huntCategory === 'All' || hHuntCategory === huntCategory;
     const unitOk = excludeKey === 'unit' || !unit || hUnit === unit;
+    const conservationDisplayOk = huntType !== 'Conservation' || !!h?.syntheticConservationPermit;
 
-    return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk;
+    return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk && conservationDisplayOk;
   });
 }
 
@@ -997,6 +1102,8 @@ async function loadHuntData() {
     safe,
     updateStatus
   });
+  const syntheticConservationHunts = buildSyntheticConservationPermitHunts(huntData);
+  huntData = [...huntData, ...syntheticConservationHunts];
   refreshSelectionMatrix();
   updateStatus(`Loaded ${huntData.length} hunts.`);
 }

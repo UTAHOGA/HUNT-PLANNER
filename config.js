@@ -10,13 +10,14 @@ window.UOGA_CONFIG = (() => {
   };
 
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
-  const HUNT_DATA_VERSION = '20260330-conservation-fix-3';
+  const HUNT_DATA_VERSION = '20260330-conservation-fix-5';
   const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
   const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
 
   const HUNT_BOUNDARY_SOURCES = [
-    `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
-    `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`
+    `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`
   ];
   const OUTFITTERS_DATA_SOURCES = [
     `./data/outfitters-public.json?v=${OUTFITTERS_DATA_VERSION}`,
