@@ -1,0 +1,380 @@
+[
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Kaiparowits East Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS1002"],
+    "unitCodes": ["kaiparowits-east"],
+    "unitNames": ["Kaiparowits, East"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Kaiparowits Escalante East/West Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS1003"],
+    "unitCodes": ["kaiparowits-escalante-east-west"],
+    "unitNames": ["Kaiparowits, Escalante East/West"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "San Rafael Dirty Devil Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS1004", "DS6615"],
+    "unitCodes": ["san-rafael-dirty-devil", "henry-mtns-la-sal-potash-south-cisco-san-juan-lockhart-san-juan-south-san-rafael-dirty-devil-conservation"],
+    "unitNames": ["San Rafael, Dirty Devil", "Henry Mtns/La Sal, Potash/South Cisco/San Juan, Lockhart/San Juan, South/San Rafael, Dirty Devil Conservation"],
+    "allowedRawHuntTypes": ["Conservation", "Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Kaiparowits West Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS1006"],
+    "unitCodes": ["kaiparowits-west"],
+    "unitNames": ["Kaiparowits, West"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "San Rafael South Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS1007", "DS6617"],
+    "unitCodes": ["san-rafael-south", "san-rafael-north-south-conservation"],
+    "unitNames": ["San Rafael, South", "San Rafael North/South Conservation"],
+    "allowedRawHuntTypes": ["Conservation", "Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Pine Valley Beaver Dam Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS6605"],
+    "unitCodes": ["pine-valley-beaver-dam"],
+    "unitNames": ["Pine Valley, Beaver Dam"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Zion Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS6613", "DS6614"],
+    "unitCodes": ["zion-conservation", "zion-late-conservation"],
+    "unitNames": ["Zion Conservation", "Zion (late) - Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Kaiparowits East Escalante West Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS6616"],
+    "unitCodes": ["kaiparowits-east-escalante-west-conservation"],
+    "unitNames": ["Kaiparowits, East/Escalante/West Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Desert Bighorn Sheep",
+    "label": "Statewide Bighorn Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["DS6618"],
+    "unitCodes": ["bighorn-sheep-statewide-conservation"],
+    "unitNames": ["Bighorn Sheep - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Rocky Mountain Bighorn Sheep",
+    "label": "Antelope Island Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["RS1000"],
+    "unitCodes": ["antelope-island-conservation"],
+    "unitNames": ["Antelope Island Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Rocky Mountain Bighorn Sheep",
+    "label": "Book Cliffs South Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["RS1001"],
+    "unitCodes": ["book-cliffs-south"],
+    "unitNames": ["Book Cliffs, South"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Rocky Mountain Bighorn Sheep",
+    "label": "Box Elder Newfoundland Mtn Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["RS1003"],
+    "unitCodes": ["box-elder-newfoundland-mtn"],
+    "unitNames": ["Box Elder, Newfoundland Mtn"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Rocky Mountain Bighorn Sheep",
+    "label": "Nine Mile Gray Canyon Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["RS1006"],
+    "unitCodes": ["nine-mile-gray-canyon"],
+    "unitNames": ["Nine Mile, Gray Canyon"],
+    "allowedRawHuntTypes": ["Conservation"]
+  },
+  {
+    "species": "Rocky Mountain Bighorn Sheep",
+    "label": "Statewide Rocky Bighorn Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["RS6718"],
+    "unitCodes": ["bighorn-sheep-statewide-conservation"],
+    "unitNames": ["Bighorn Sheep - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Bison",
+    "label": "Statewide Bison Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["BI6510"],
+    "unitCodes": ["bison-statewide-conservation"],
+    "unitNames": ["Bison - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Black Bear",
+    "label": "Statewide Black Bear Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["BR7319"],
+    "unitCodes": ["black-bear-conservation-statewide"],
+    "unitNames": ["Black Bear Conservation - Statewide"],
+    "allowedRawHuntTypes": ["Limited Entry"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Statewide Cougar Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG0018", "CG7513"],
+    "unitCodes": ["cougar-statewide-conservation"],
+    "unitNames": ["Cougar - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Box Elder Desert and Raft River Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG7508"],
+    "unitCodes": ["box-elder-desert-and-box-elder-raft-river-conservation"],
+    "unitNames": ["Box Elder, Desert and Box Elder, Raft River Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Manti Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG7509"],
+    "unitCodes": ["manti-conservation"],
+    "unitNames": ["Manti Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Nebo Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG7510"],
+    "unitCodes": ["nebo-and-nebo-west-face-conservation"],
+    "unitNames": ["Nebo and Nebo-West Face Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Chalk Creek East Canyon Morgan Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG7511"],
+    "unitCodes": ["chalk-creek-kamas-east-canyon-and-morgan-south-rich-conservation"],
+    "unitNames": ["Chalk Creek/Kamas, East Canyon, and Morgan-South Rich Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Oquirrh Stansbury and Tintic Vernon Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG7512"],
+    "unitCodes": ["oquirrh-stansbury-and-west-desert-tintic-vernon-conservation"],
+    "unitNames": ["Oquirrh-Stansbury and West Desert, Tintic-Vernon Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Cougar",
+    "label": "Wasatch Currant Creek Strawberry Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["CG7514"],
+    "unitCodes": ["wasatch-mtns-currant-creek-north-and-wasatch-mtns-west-strawberry-conservation"],
+    "unitNames": ["Wasatch Mtns, Currant Creek North and Wasatch Mtns,West-Strawberry Conservation"],
+    "allowedRawHuntTypes": ["Management"]
+  },
+  {
+    "species": "Deer",
+    "label": "Antelope Island Conservation/Expo",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["DB0009"],
+    "unitCodes": ["antelope-island-conservation-expo", "antelope-island-conservation"],
+    "unitNames": ["Antelope Island - Conservation/Expo", "Antelope Island Conservation", "Antelope Island"],
+    "allowedRawHuntTypes": ["Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "Book Cliffs Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["DB1056", "DB1075", "DB1076"],
+    "unitCodes": ["book-cliffs-north-and-south", "book-cliffs", "book-cliffs-north", "book-cliffs-south"],
+    "unitNames": ["Book Cliffs (North & South)", "Book Cliffs", "Book Cliffs, North", "Book Cliffs, South"],
+    "allowedRawHuntTypes": ["Limited Entry", "Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "Dolores Triangle Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["DB1118"],
+    "unitCodes": ["dolores-triangle"],
+    "unitNames": ["Dolores Triangle"],
+    "allowedRawHuntTypes": ["Limited Entry", "Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "Henry Mtns Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": [],
+    "unitCodes": ["henry-mtns"],
+    "unitNames": ["Henry Mtns"],
+    "allowedRawHuntTypes": ["Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "Paunsaugunt Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": [],
+    "unitCodes": ["paunsaugunt"],
+    "unitNames": ["Paunsaugunt"],
+    "allowedRawHuntTypes": ["Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "Diamond Mtn Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": [],
+    "unitCodes": ["diamond-mtn"],
+    "unitNames": ["Diamond Mtn"],
+    "allowedRawHuntTypes": ["Limited Entry", "Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "Fillmore Oak Creek LE Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": [],
+    "unitCodes": ["fillmore-oak-creek-le"],
+    "unitNames": ["Fillmore, Oak Creek LE"],
+    "allowedRawHuntTypes": ["Limited Entry", "Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "San Juan Elk Ridge Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": [],
+    "unitCodes": ["san-juan-elk-ridge"],
+    "unitNames": ["San Juan, Elk Ridge"],
+    "allowedRawHuntTypes": ["Limited Entry", "Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Deer",
+    "label": "West Desert Vernon Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": [],
+    "unitCodes": ["west-desert-vernon"],
+    "unitNames": ["West Desert, Vernon"],
+    "allowedRawHuntTypes": ["Limited Entry", "Premium Limited Entry", "Conservation"]
+  },
+  {
+    "species": "Moose",
+    "label": "Statewide Moose Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["MB6260"],
+    "unitCodes": ["moose-statewide-conservation"],
+    "unitNames": ["Moose - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Mountain Goat",
+    "label": "Statewide Mountain Goat Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["GO6816"],
+    "unitCodes": ["mountain-goat-statewide-conservation"],
+    "unitNames": ["Mountain Goat - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Once-in-a-Lifetime"]
+  },
+  {
+    "species": "Pronghorn",
+    "label": "Statewide Pronghorn Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["PB5057"],
+    "unitCodes": ["pronghorn-statewide-conservation"],
+    "unitNames": ["Pronghorn - Statewide Conservation"],
+    "allowedRawHuntTypes": ["Limited Entry"]
+  },
+  {
+    "species": "Turkey",
+    "label": "Statewide Turkey Conservation",
+    "source": "Canonical hunt conservation rows",
+    "huntCodes": ["TK1017"],
+    "unitCodes": ["turkey-statewide-conservation"],
+    "unitNames": ["Turkey - Statewide Conservation"],
+    "allowedRawHuntTypes": ["General"]
+  },
+  {
+    "species": "Elk",
+    "label": "La Sal Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["EA1180", "EA1258"],
+    "unitCodes": ["la-sal-conservation", "la-sal-expo"],
+    "unitNames": ["La Sal (Conservation)", "La Sal (Expo)", "La Sal"],
+    "allowedRawHuntTypes": ["Conservation", "General", "Antlerless"]
+  },
+  {
+    "species": "Elk",
+    "label": "Fishlake Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["EA1221", "EA1270"],
+    "unitCodes": ["fishlake-thousand-lake-expo", "fishlake-conservation"],
+    "unitNames": ["Fishlake/Thousand Lake (Expo)", "Fishlake (Conservation)", "Fishlake", "Fishlake/Thousand Lakes"],
+    "allowedRawHuntTypes": ["Conservation", "General", "Antlerless"]
+  },
+  {
+    "species": "Elk",
+    "label": "Manti Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["EA1220", "EA1271"],
+    "unitCodes": ["manti-expo", "manti-conservation"],
+    "unitNames": ["Manti (Expo)", "Manti (Conservation)", "Manti"],
+    "allowedRawHuntTypes": ["Conservation", "General", "Antlerless"]
+  },
+  {
+    "species": "Elk",
+    "label": "Cache Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["EA2041"],
+    "unitCodes": ["cache-conservation"],
+    "unitNames": ["Cache (Conservation)", "Cache"],
+    "allowedRawHuntTypes": ["Conservation", "General", "Antlerless"]
+  },
+  {
+    "species": "Elk",
+    "label": "Wasatch Mtns Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["EA2045"],
+    "unitCodes": ["wasatch-mtns-conservation"],
+    "unitNames": ["Wasatch Mtns (Conservation)", "Wasatch Mtns", "Wasatch Mtns, East", "Wasatch Mtns, West"],
+    "allowedRawHuntTypes": ["Conservation", "General", "Antlerless"]
+  },
+  {
+    "species": "Elk",
+    "label": "Box Elder Conservation",
+    "source": "Utah DWR conservation permit area list",
+    "huntCodes": ["EB3128", "EB3209"],
+    "unitCodes": ["box-elder-grouse-creek", "box-elder-pilot-mtn"],
+    "unitNames": ["Box Elder, Grouse Creek", "Box Elder, Pilot Mtn"],
+    "allowedRawHuntTypes": ["Conservation"]
+  }
+]
