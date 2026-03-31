@@ -316,7 +316,7 @@ function weaponMatchesFilter(hunt, selectedWeapon) {
   if (
     hunt?.syntheticConservationPermit &&
     selectedWeapon === 'Any Legal Weapon' &&
-    (huntWeapon === 'Multiseason' || huntWeapon === 'Restricted Multiseason')
+    (huntWeapon === 'Multiseason' || huntWeapon === 'Restricted Multiseason' || huntWeapon === "Hunter's Choice")
   ) {
     return true;
   }
