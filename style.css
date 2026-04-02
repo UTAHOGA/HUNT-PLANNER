@@ -73,6 +73,7 @@
       white-space:nowrap;
     }
     .utility-link:hover { background:var(--panel); border-color:var(--accent); }
+    .utility-link.active { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 18%, transparent); }
     .control-group { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); }
     .control-group label { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
     .toggle-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); flex-wrap: wrap; max-width: 100%; }
