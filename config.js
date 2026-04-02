@@ -13,6 +13,7 @@ window.UOGA_CONFIG = (() => {
   const HUNT_DATA_VERSION = '20260330-conservation-fix-8';
   const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
   const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
+  const HUNT_RESEARCH_DATA_VERSION = '20260402-hunt-research-2026-3';
 
   const HUNT_BOUNDARY_SOURCES = [
     `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
@@ -36,6 +37,10 @@ window.UOGA_CONFIG = (() => {
   const CONSERVATION_PERMIT_HUNT_TABLE_SOURCES = [
     `./data/conservation-permit-hunt-table-2025-27.json?v=${HUNT_DATA_VERSION}`,
     `${CLOUDFLARE_BASE}/conservation-permit-hunt-table-2025-27.json?v=${HUNT_DATA_VERSION}`
+  ];
+  const HUNT_RESEARCH_DATA_SOURCES = [
+    `${CLOUDFLARE_BASE}/hunt_research_2026.json?v=${HUNT_RESEARCH_DATA_VERSION}`,
+    `./processed_data/hunt_research_2026.json?v=${HUNT_RESEARCH_DATA_VERSION}`
   ];
 
   const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
@@ -151,11 +156,13 @@ window.UOGA_CONFIG = (() => {
     HUNT_DATA_VERSION,
     OUTFITTERS_DATA_VERSION,
     OUTFITTER_COVERAGE_VERSION,
+    HUNT_RESEARCH_DATA_VERSION,
     HUNT_BOUNDARY_SOURCES,
     OUTFITTERS_DATA_SOURCES,
     OUTFITTER_FEDERAL_COVERAGE_SOURCES,
     CONSERVATION_PERMIT_AREA_SOURCES,
     CONSERVATION_PERMIT_HUNT_TABLE_SOURCES,
+    HUNT_RESEARCH_DATA_SOURCES,
     LOGO_DNR,
     LOGO_DNR_ROOMY,
     LOGO_CWMU,
