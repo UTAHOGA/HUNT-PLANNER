@@ -1197,26 +1197,7 @@ function openSelectedUnitsChooser() {
 }
 
 function openSelectedHuntFloat() {
-  if (!selectedHuntFloat || !selectedHunt) {
-    closeSelectedHuntFloat();
-    return;
-  }
-  const compactFloat = isMobileViewport();
-  selectedHuntFloat.innerHTML = `
-    <div style="position:relative;width:100%;max-width:100%;">
-      <button type="button" data-close-selected-hunt-float aria-label="Close selected hunt" style="position:absolute;top:18px;right:20px;z-index:2;border:0;background:transparent;color:#5b3a24;padding:0;cursor:pointer;font-weight:900;font-size:24px;line-height:1;">X</button>
-      ${buildDnrPlate(selectedHunt, compactFloat, !compactFloat)}
-    </div>`;
-  selectedHuntFloat.classList.add('is-open');
-  selectedHuntFloat.setAttribute('aria-hidden', 'false');
-  selectedHuntFloat.scrollTop = 0;
-  selectedHuntFloat.querySelector('[data-close-selected-hunt-float]')?.addEventListener('click', () => {
-    closeSelectedHuntFloat(true);
-  });
-  selectedHuntFloat.querySelector('[data-inline-hunt-details]')?.addEventListener('click', event => {
-    event.preventDefault();
-    openInlineHuntDetails(selectedHunt);
-  });
+  closeSelectedHuntFloat();
 }
 
 function buildLandInfoCard({ logo, title, subtitle, detailText = '', noticeText = '', detailsLinkText = '', detailsLink = '', logoSize = 46, cardMinWidth = 270, cardMaxWidth = 320 }) {
@@ -1647,7 +1628,6 @@ function renderSelectedHunt() {
     openHuntResearch(getHuntCode(hunt));
   });
 
-  openSelectedHuntFloat();
 }
 
 function getMatchingOutfittersForHunt(hunt) {
@@ -2194,34 +2174,7 @@ function updatePrivateLayersSummary() {
 }
 
 function openSelectedHuntPopup() {
-  if (!googleBaselineMap || !huntUnitsLayer || !selectedHunt) {
-    closeSelectedHuntPopup();
-    return;
-  }
-  const matcher = buildBoundaryMatcher([selectedHunt]);
-  let popupPosition = null;
-  let found = false;
-
-  huntUnitsLayer.forEach(f => {
-    const featureBoundaryId = safe(f.getProperty('BoundaryID'));
-    const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(featureBoundaryId, featureName)) {
-      const bounds = new google.maps.LatLngBounds();
-      f.getGeometry().forEachLatLng(ll => bounds.extend(ll));
-      popupPosition = bounds.getCenter();
-      selectedBoundaryFeature = f;
-      found = true;
-    }
-  });
-
-  if (!found || !popupPosition) {
-    closeSelectedHuntPopup();
-    return;
-  }
-
-  closeSelectionInfoWindow();
   closeSelectedHuntPopup();
-  openSelectedHuntFloat();
 }
 
 function closeSelectedHuntPopup() {
@@ -3130,11 +3083,6 @@ function bindControls() {
   });
   streetViewBtn?.addEventListener('click', openStreetViewAtFocus);
   resetViewBtn?.addEventListener('click', resetMapView);
-  window.addEventListener('resize', () => {
-    if (selectedHunt && selectedHuntFloat?.classList.contains('is-open')) {
-      openSelectedHuntFloat();
-    }
-  });
   toggleDwrUnits?.addEventListener('change', () => {
     if (!toggleDwrUnits.checked) {
       closeSelectionInfoWindow();
