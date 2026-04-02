@@ -1,0 +1,572 @@
+{
+  "hunt_code": "DB1320",
+  "species": "Deer",
+  "hunt_name": "Deer Creek",
+  "hunt_type": "CWMU",
+  "weapon": "Any Legal Weapon",
+  "sex_type": "Male Only",
+  "access_type": "CWMU",
+  "permits_total": 6,
+  "hunters": 5,
+  "harvest": 2,
+  "percent_success": 40,
+  "avg_days": 3.3,
+  "satisfaction": 3.5,
+  "has_harvest": true,
+  "has_bonus_draw": true,
+  "has_antlerless_draw": false,
+  "draw_family": "bonus_draw",
+  "draw_presence_flag": "yes",
+  "score_family": "excluded_private",
+  "public_rank_eligible": "no",
+  "draw_difficulty_flag": "low",
+  "resident_point_signal": 0,
+  "nonresident_point_signal": 0,
+  "harvest_success_score": 40,
+  "harvest_pressure_score": 0.8333,
+  "harvest_efficiency_score": 0.4,
+  "scoring_notes": "CWMU access excluded from public ranking; success=40.0; pressure=hunters/permits=0.8333; efficiency=harvest/hunters=0.4; bonus resident signal=0 nonresident signal=0; score_family=excluded_private",
+  "draw_access_score": 3,
+  "verified_outfitter_count": 0,
+  "cpo_outfitter_count": 0,
+  "dwr_boundary_link": null,
+  "dwr_source_guide": null,
+  "dwr_unit_name": null,
+  "recommended_permits": null,
+  "bonus_draw": {
+    "resident": [
+      {
+        "point_level": 32,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 31,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 30,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 29,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 28,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 27,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 26,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 25,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 24,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 23,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 22,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 21,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 20,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 19,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 18,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 17,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 16,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 15,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 14,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 13,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 12,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 11,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 10,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 9,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 8,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 7,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 6,
+        "applicants": 1,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 5,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 4,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 3,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 2,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 1,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 0,
+        "applicants": 3,
+        "bonus_permits": 0,
+        "random_permits": 1,
+        "total_permits": 1,
+        "success_ratio_text": "1 in 3.0"
+      }
+    ],
+    "nonresident": [
+      {
+        "point_level": 32,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 31,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 30,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 29,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 28,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 27,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 26,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 25,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 24,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 23,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 22,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 21,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 20,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 19,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 18,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 17,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 16,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 15,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 14,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 13,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 12,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 11,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 10,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 9,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 8,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 7,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 6,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 5,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 4,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 3,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 2,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 1,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      },
+      {
+        "point_level": 0,
+        "applicants": 0,
+        "bonus_permits": 0,
+        "random_permits": 0,
+        "total_permits": 0,
+        "success_ratio_text": "N/A"
+      }
+    ]
+  },
+  "antlerless_draw": null,
+  "projected_bonus_draw": null
+}
