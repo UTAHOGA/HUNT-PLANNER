@@ -126,9 +126,12 @@ function isMobileViewport() {
 
 function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
   const code = String(huntCode || '').trim().toUpperCase();
+  const normalizedResidency = String(residency || '').trim().toLowerCase().replace(/[\s_-]+/g, '') === 'nonresident'
+    ? 'Nonresident'
+    : 'Resident';
 
   localStorage.setItem('selected_hunt_code', code);
-  localStorage.setItem('selected_hunt_research_residency', residency);
+  localStorage.setItem('selected_hunt_research_residency', normalizedResidency);
   localStorage.setItem('selected_hunt_research_points', String(points));
 
   window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
@@ -1580,7 +1583,8 @@ window.selectHuntByKey = (key) => {
     selectedHunt = h; 
     renderSelectedHunt(); 
     renderOutfitters();
-    openSelectedHuntPopup();
+    closeSelectedHuntPopup();
+    closeSelectedHuntFloat();
     renderMatchingHunts();
     styleBoundaryLayer(); 
     zoomToSelectedBoundary(); 
@@ -1608,6 +1612,15 @@ function renderSelectedHunt() {
   const species = escapeHtml(getSpeciesDisplay(hunt) || '');
   const weapon = escapeHtml(getWeapon(hunt) || '');
   const huntType = escapeHtml(getHuntType(hunt) || '');
+
+  window.UOGA_UI?.recordRecentHunt?.({
+    hunt_code: getHuntCode(hunt),
+    hunt_name: firstNonEmpty(hunt.hunt_name, getUnitName(hunt), getHuntTitle(hunt), 'Unknown Hunt'),
+    unit: getUnitName(hunt),
+    species: getSpeciesDisplay(hunt),
+    weapon: getWeapon(hunt),
+    updated_at: Date.now()
+  });
 
   panel.innerHTML = `
     <div class="selected-hunt-card">
@@ -3197,7 +3210,15 @@ function zoomToSelectedBoundary() {
       f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
     }
   });
-  if (found) googleBaselineMap.fitBounds(bounds);
+  if (found) {
+    googleBaselineMap.fitBounds(bounds);
+    google.maps.event.addListenerOnce(googleBaselineMap, 'bounds_changed', () => {
+      const maxZoom = 9;
+      if ((googleBaselineMap.getZoom?.() || 0) > maxZoom) {
+        googleBaselineMap.setZoom(maxZoom);
+      }
+    });
+  }
 }
 
 function zoomToDisplayHuntsBounds() {
@@ -3222,6 +3243,25 @@ function zoomToDisplayHuntsBounds() {
     return true;
   }
   return false;
+}
+
+function bootstrapPendingHuntSelection() {
+  const params = new URLSearchParams(window.location.search || '');
+  const pendingCode = safe(params.get('hunt_code') || localStorage.getItem('selected_hunt_code')).trim().toUpperCase();
+  if (!pendingCode) return;
+  if (searchInput) {
+    searchInput.value = pendingCode;
+  }
+  const match = huntData.find((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase() === pendingCode);
+  if (!match) return;
+  selectedHunt = match;
+  renderSelectedHunt();
+  renderOutfitters();
+  renderMatchingHunts();
+  styleBoundaryLayer();
+  if (huntUnitsLayer && googleBaselineMap) {
+    zoomToSelectedBoundary();
+  }
 }
 
 // --- BOOTSTRAP ---
@@ -3260,6 +3300,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   refreshSelectionMatrix();
   renderMatchingHunts();
+  bootstrapPendingHuntSelection();
   applyMapMode();
 });
 

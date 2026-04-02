@@ -3,799 +3,909 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>U.O.G.A. Hunt Research — Clean Design</title>
+  <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
+  <title>U.O.G.A. Hunt Research</title>
+  <link rel="stylesheet" href="./style.css?v=20260402-hunt-research-clean-1" />
   <style>
     :root {
-      --bg: #0f0c0a;
-      --panel: rgba(28, 22, 18, 0.94);
-      --panel-2: rgba(38, 29, 23, 0.96);
-      --line: rgba(150, 105, 70, 0.55);
-      --line-soft: rgba(255,255,255,0.08);
-      --text: #f7efe7;
-      --muted: #ccb19a;
-      --accent: #e26c2c;
-      --accent-dark: #aa4d16;
-      --good: #78d58b;
-      --warn: #f1c56b;
-      --bad: #f18b72;
-      --shadow: 0 18px 44px rgba(0,0,0,.32);
-      --radius: 22px;
-      --pill: 999px;
-      --font-display: "Arial Black", Impact, sans-serif;
-      --font-ui: "Segoe UI", Arial, sans-serif;
+      --research-bg: #0f0b09;
+      --research-panel: rgba(28, 21, 17, 0.92);
+      --research-panel-strong: rgba(35, 25, 19, 0.97);
+      --research-line: rgba(170, 124, 84, 0.52);
+      --research-line-soft: rgba(255, 255, 255, 0.08);
+      --research-text: #f7efe7;
+      --research-muted: #d2b9a4;
+      --research-accent: #e07429;
+      --research-accent-dark: #a94d1a;
+      --research-good: #7fd68e;
+      --research-warn: #f1c56a;
+      --research-bad: #f29c82;
+      --research-info: #8ec6ff;
+      --research-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      --research-radius: 22px;
+      --research-pill: 999px;
     }
 
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font-family: var(--font-ui);
-      color: var(--text);
+    .research-page {
+      min-height: 100vh;
+      color: var(--research-text);
       background:
-        linear-gradient(180deg, rgba(10,8,7,.78), rgba(10,8,7,.92)),
-        radial-gradient(circle at top left, rgba(226,108,44,.10), transparent 24%),
-        radial-gradient(circle at top right, rgba(255,255,255,.04), transparent 18%),
-        #100d0b;
+        linear-gradient(180deg, rgba(7, 6, 5, 0.7), rgba(7, 6, 5, 0.88)),
+        radial-gradient(circle at top left, rgba(224, 116, 41, 0.10), transparent 24%),
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.04), transparent 18%),
+        url('./assets/backgrounds/topo-black-white-line-001.jpg') left top / 1920px 1082px repeat,
+        #110d0b;
     }
 
-    a { color: inherit; }
+    .topbar,
+    .research-shell {
+      position: relative;
+      z-index: 1;
+    }
 
-    .shell {
-      width: min(1380px, calc(100vw - 28px));
+    .research-shell {
+      max-width: 1420px;
       margin: 0 auto;
-      padding: 18px 0 40px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 18px 20px 38px;
+      display: grid;
       gap: 18px;
-      flex-wrap: wrap;
-      padding: 16px 18px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-logo {
-      width: 82px;
-      height: 48px;
-      border-radius: 8px;
-      background: linear-gradient(180deg, #fff, #ddd);
-      display: grid;
-      place-items: center;
-      color: #111;
-      font-weight: 900;
-      font-size: 11px;
-    }
-
-    .brand-copy h1 {
-      margin: 0;
-      font-family: var(--font-display);
-      font-size: 30px;
-      line-height: .96;
-      text-transform: uppercase;
-    }
-
-    .brand-copy p {
-      margin: 6px 0 0;
-      color: var(--accent);
-      font-weight: 900;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      font-size: 12px;
-    }
-
-    .nav {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .nav a {
-      text-decoration: none;
-      padding: 10px 14px;
-      border-radius: var(--pill);
-      border: 1px solid var(--line);
-      background: var(--panel-2);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-    .nav a.active {
-      background: rgba(226,108,44,.16);
-      border-color: rgba(226,108,44,.7);
-    }
-
-    .hero {
-      margin-top: 18px;
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background:
-        linear-gradient(135deg, rgba(226,108,44,.14), rgba(226,108,44,0) 40%),
-        var(--panel);
-      box-shadow: var(--shadow);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      padding: 8px 12px;
-      border-radius: var(--pill);
-      border: 1px solid rgba(226,108,44,.4);
-      background: rgba(226,108,44,.10);
-      color: #ffd7bf;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .hero h2 {
-      margin: 14px 0 10px;
-      font-family: var(--font-display);
-      font-size: clamp(34px, 4.5vw, 64px);
-      line-height: .92;
-      color: #fff7ef;
-      max-width: 12ch;
-    }
-
-    .hero p {
-      margin: 0;
-      max-width: 58ch;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.65;
-    }
-
-    .hero-quote {
-      padding: 20px;
-      border-radius: 20px;
-      border: 1px solid rgba(226,108,44,.35);
-      background: linear-gradient(180deg, rgba(226,108,44,.12), rgba(226,108,44,.04));
-      display: grid;
-      gap: 10px;
-      align-content: start;
-    }
-
-    .hero-quote strong {
-      color: #fff7ef;
-      font-size: 28px;
-      line-height: 1.02;
-      font-family: var(--font-display);
-    }
-
-    .hero-quote span {
-      color: #f0c7a6;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-size: 11px;
-      font-weight: 900;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 10px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel-2);
-      color: var(--text);
-      font-weight: 900;
-      font-size: 12px;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .btn.primary {
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      border-color: transparent;
-    }
-
-    .layout {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.18fr) minmax(320px, .82fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .stack { display: grid; gap: 18px; }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: var(--shadow);
+    .research-card,
+    .result-card,
+    .side-card {
+      border: 1px solid var(--research-line);
+      border-radius: var(--research-radius);
+      background: linear-gradient(180deg, rgba(31, 24, 19, 0.95), rgba(18, 14, 11, 0.97));
+      box-shadow: var(--research-shadow);
       overflow: hidden;
+      backdrop-filter: blur(10px);
     }
 
     .card-head {
       padding: 16px 18px;
-      border-bottom: 1px solid var(--line-soft);
-      background: linear-gradient(180deg, rgba(226,108,44,.92), rgba(170,77,22,.98));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(224, 116, 41, 0.96), rgba(169, 77, 26, 0.98));
       color: #fff8f1;
     }
 
-    .card-head .kicker {
+    .card-head p {
       margin: 0 0 5px;
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: .09em;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      opacity: .9;
+      color: rgba(255, 248, 241, 0.88);
     }
 
-    .card-head h3 {
+    .card-head h2,
+    .card-head h3,
+    .report-title h2,
+    .report-title h3 {
       margin: 0;
       font-family: var(--font-display);
-      font-size: 26px;
-      line-height: .98;
+      line-height: 0.96;
     }
 
     .card-body {
       padding: 18px;
     }
 
-    .controls-grid {
+    .hero-grid,
+    .layout-grid,
+    .report-grid,
+    .table-grid,
+    .summary-grid,
+    .chip-grid,
+    .control-grid,
+    .helper-grid,
+    .quick-grid,
+    .basket-list {
       display: grid;
-      grid-template-columns: 1.15fr .8fr .8fr auto;
-      gap: 12px;
-      align-items: end;
-    }
-
-    .field {
-      display: grid;
-      gap: 7px;
-    }
-
-    .field label {
-      color: #e8d2c2;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .field input,
-    .field select {
-      width: 100%;
-      min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      font: inherit;
-      padding: 13px 14px;
-    }
-
-    .goal-grid {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 12px;
-    }
-
-    .goal {
-      border: 1px solid var(--line-soft);
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(255,255,255,.03);
-    }
-
-    .goal strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 15px;
-      color: #fff7ef;
-    }
-
-    .goal p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
-
-    .reality-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .metric {
-      border-radius: 18px;
-      border: 1px solid var(--line-soft);
-      background: rgba(255,255,255,.035);
-      padding: 16px;
-    }
-
-    .metric .label {
-      display: block;
-      margin-bottom: 6px;
-      color: #cca482;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .metric .value {
-      color: #fff7ef;
-      font-size: 19px;
-      font-weight: 900;
-      line-height: 1.2;
-    }
-
-    .metric .value.big {
-      font-family: var(--font-display);
-      font-size: 34px;
-      line-height: .95;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
       gap: 14px;
-      align-items: start;
     }
 
-    .summary-main,
-    .summary-side,
-    .formula-box,
-    .details-grid > div,
-    .pressure-box,
-    .backpack-item,
-    .raw-placeholder {
-      border: 1px solid var(--line-soft);
-      border-radius: 18px;
-      background: rgba(255,255,255,.03);
-      padding: 16px;
+    .hero-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: stretch;
     }
 
-    .summary-main h4,
-    .summary-side h4,
-    .formula-box h4,
-    .pressure-box h4,
-    .backpack h4,
-    .raw-placeholder h4 {
-      margin: 0 0 10px;
-      color: #fff7ef;
-      font-size: 16px;
-    }
-
-    .summary-main p,
-    .summary-side p,
-    .formula-box p,
-    .pressure-box p,
-    .raw-placeholder p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 14px;
-    }
-
-    .summary-main .headline {
-      color: #fffaf5;
-      font-family: var(--font-display);
-      font-size: clamp(26px, 3vw, 40px);
-      line-height: .98;
-      margin: 0 0 10px;
-    }
-
-    .trend {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 12px;
-      border-radius: var(--pill);
-      font-weight: 900;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      font-size: 11px;
-      margin-bottom: 12px;
-    }
-
-    .trend.yellow { background: rgba(241,197,107,.14); color: #ffe6a7; border: 1px solid rgba(241,197,107,.34); }
-    .trend.green { background: rgba(120,213,139,.14); color: #c6ffd1; border: 1px solid rgba(120,213,139,.34); }
-    .trend.red { background: rgba(241,139,114,.14); color: #ffd1c7; border: 1px solid rgba(241,139,114,.34); }
-
-    .formula-box code {
-      display: block;
-      white-space: pre-line;
-      font-family: Consolas, monospace;
-      color: #fff7ef;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .details-grid {
+    .hero-copy {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
       gap: 12px;
-      margin-top: 14px;
+      align-content: start;
     }
 
-    .details-grid .label {
-      display: block;
-      margin-bottom: 6px;
-      color: #cca482;
+    .hero-copy h2 {
+      margin: 0;
+      color: #fff8f1;
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 58px);
+      line-height: 0.92;
+      max-width: 12ch;
+    }
+
+    .hero-copy p,
+    .helper-card p,
+    .report-copy,
+    .empty-note,
+    .backpack-card p,
+    .note-box p,
+    .proof-note {
+      margin: 0;
+      color: var(--research-muted);
+      line-height: 1.64;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: var(--research-pill);
+      border: 1px solid rgba(224, 116, 41, 0.4);
+      background: rgba(224, 116, 41, 0.1);
+      color: #ffd8c2;
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: .08em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .details-grid .value {
-      color: #fff7ef;
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.35;
-    }
-
-    .backpack-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .backpack-item strong {
-      display: block;
-      margin-bottom: 5px;
-      color: #fff7ef;
-    }
-
-    .backpack-item p {
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .mini-row {
+    .hero-actions,
+    .control-actions,
+    .report-actions,
+    .backpack-actions {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
+    .research-btn,
+    .research-link,
     .mini-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 34px;
-      padding: 7px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: #fff7ef;
+      min-height: 46px;
+      padding: 11px 15px;
+      border-radius: 14px;
+      border: 1px solid rgba(170, 124, 84, 0.84);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff8f1;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .research-btn:hover,
+    .research-link:hover,
+    .mini-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(224, 116, 41, 0.14);
+      border-color: rgba(224, 116, 41, 0.92);
+    }
+
+    .research-btn.primary {
+      border-color: rgba(255, 219, 192, 0.72);
+      background: linear-gradient(180deg, rgba(227, 118, 42, 0.98), rgba(169, 77, 26, 0.98));
+    }
+
+    .helper-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .helper-card,
+    .chip,
+    .summary-card,
+    .quick-card,
+    .note-box,
+    .empty-note,
+    .backpack-card,
+    .report-table-card,
+    .report-info-card {
+      border: 1px solid var(--research-line-soft);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 15px;
+    }
+
+    .helper-card .label,
+    .chip .label,
+    .summary-card .label,
+    .quick-card .label,
+    .backpack-card .label,
+    .note-box .label {
+      display: block;
+      margin-bottom: 6px;
+      color: #ddb089;
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: .05em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .raw-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+    .helper-card strong,
+    .summary-card .value,
+    .quick-card .value,
+    .chip .value,
+    .backpack-card strong {
+      color: #fff8f1;
     }
 
-    .footer-note {
-      margin-top: 18px;
-      padding: 18px 20px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      color: var(--muted);
-      line-height: 1.65;
+    .layout-grid {
+      grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+      align-items: start;
+    }
+
+    .main-stack,
+    .side-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .control-grid {
+      grid-template-columns: 1.2fr 0.9fr 0.8fr auto;
+      align-items: end;
+    }
+
+    .control-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .control-field label {
+      color: #ebd4c3;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .control-field input,
+    .control-field select {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(170, 124, 84, 0.78);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff8f1;
+      font: inherit;
+    }
+
+    .status-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 14px;
+    }
+
+    .status-box {
+      border-radius: 16px;
+      border: 1px solid var(--research-line-soft);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 14px;
+      color: var(--research-muted);
+      line-height: 1.6;
+    }
+
+    .result-card .card-body {
+      display: grid;
+      gap: 16px;
+    }
+
+    .report-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .report-title p {
+      margin: 0 0 5px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ddb190;
+    }
+
+    .report-title h2 {
+      color: #fff8f1;
+      font-size: clamp(28px, 3vw, 42px);
+    }
+
+    .report-title .report-copy {
+      max-width: 66ch;
+    }
+
+    .chip-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .chip .value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 0.94;
+    }
+
+    .chip .subvalue {
+      margin-top: 6px;
+      color: var(--research-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .likelihood-guaranteed { color: var(--research-good); }
+    .likelihood-live { color: var(--research-warn); }
+    .likelihood-longshot { color: var(--research-bad); }
+    .likelihood-unknown { color: var(--research-info); }
+
+    .summary-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .summary-card .value {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .report-grid {
+      grid-template-columns: 1.06fr 0.94fr;
+      align-items: start;
+    }
+
+    .report-table-head,
+    .report-info-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--research-line-soft);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .report-table-head h3,
+    .report-info-head h3 {
+      margin: 0;
+      color: #fff8f1;
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 0.98;
+    }
+
+    .report-table-head p,
+    .report-info-head p {
+      margin: 4px 0 0;
+      color: var(--research-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .report-table-wrap {
+      overflow: auto;
+    }
+
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    .report-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 11px 10px;
+      text-align: left;
+      background: rgba(29, 23, 19, 0.98);
+      color: #ead7c8;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .report-table tbody td {
+      padding: 11px 10px;
+      border-top: 1px solid rgba(170, 124, 84, 0.24);
+      color: #f6ede6;
+      font-size: 13px;
+      line-height: 1.45;
+      vertical-align: top;
+    }
+
+    .report-table tbody tr:nth-child(odd) {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .report-table tbody tr.is-user-row {
+      background: rgba(120, 211, 255, 0.12);
+      box-shadow: inset 3px 0 0 #78cbff;
+    }
+
+    .report-table tbody tr.is-cutoff-row {
+      background: rgba(246, 210, 120, 0.08);
+    }
+
+    .report-table tbody tr.is-user-row.is-cutoff-row {
+      background: linear-gradient(90deg, rgba(120, 211, 255, 0.16), rgba(246, 210, 120, 0.12));
+    }
+
+    .quick-grid,
+    .proof-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 14px;
+    }
+
+    .quick-card .value.big {
+      font-family: var(--font-display);
+      font-size: 30px;
+      line-height: 0.94;
+    }
+
+    .table-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .backpack-list {
+      grid-template-columns: 1fr;
+    }
+
+    .backpack-card h4 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.32;
+    }
+
+    .backpack-card p + p {
+      margin-top: 6px;
+    }
+
+    .proof-note {
       font-size: 14px;
     }
 
-    @media (max-width: 1180px) {
+    [hidden] {
+      display: none !important;
+    }
+
+    @media print {
+      .topbar,
+      .hero-card,
+      .controls-card,
+      .side-stack,
+      .report-actions {
+        display: none !important;
+      }
+
+      .research-page {
+        background: #fff;
+        color: #111;
+      }
+
+      .research-shell {
+        max-width: none;
+        padding: 0;
+      }
+
+      .result-card,
+      .report-table-card,
+      .report-info-card,
+      .summary-card,
+      .chip,
+      .quick-card,
+      .note-box {
+        box-shadow: none;
+        border-color: #999;
+        background: #fff;
+      }
+
+      .report-table thead th,
+      .report-table tbody td,
+      .card-head,
+      .report-table-head,
+      .report-info-head {
+        color: #111;
+        background: #fff;
+      }
+    }
+
+    @media (max-width: 1220px) {
       .hero-grid,
-      .layout,
-      .summary,
-      .raw-grid,
-      .goal-grid,
-      .reality-grid,
-      .details-grid,
-      .controls-grid {
+      .layout-grid,
+      .report-grid,
+      .table-grid,
+      .chip-grid,
+      .summary-grid,
+      .helper-grid,
+      .quick-grid,
+      .proof-grid,
+      .control-grid,
+      .status-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 760px) {
-      .shell { width: min(100vw - 18px, 1380px); }
-      .topbar, .hero, .card-body, .card-head, .footer-note { padding-left: 16px; padding-right: 16px; }
-      .brand-copy h1 { font-size: 24px; }
-      .hero h2 { max-width: none; }
-      .btn { width: 100%; }
-      .hero-actions { flex-direction: column; }
+    @media (max-width: 768px) {
+      .research-shell {
+        padding: 14px 14px 28px;
+      }
+
+      .hero-copy h2 {
+        max-width: none;
+        font-size: clamp(28px, 8vw, 40px);
+      }
+
+      .chip .value,
+      .quick-card .value.big {
+        font-size: 24px;
+      }
+
+      .hero-actions,
+      .report-actions,
+      .backpack-actions {
+        flex-direction: column;
+      }
+
+      .research-btn,
+      .research-link {
+        width: 100%;
+      }
     }
   </style>
 </head>
-<body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-logo">U.O.G.A.</div>
-        <div class="brand-copy">
-          <h1>Hunt Research</h1>
-          <p>Can you draw this hunt?</p>
+<body class="theme-dark research-page">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo-lockup">
+        <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
+          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
+        </a>
+        <div>
+          <h1>U.O.G.A. Hunt Research</h1>
+          <p>Can You Draw This Hunt?</p>
         </div>
       </div>
-      <nav class="nav">
-        <a href="#">Hunt Planner</a>
-        <a href="#" class="active">Hunt Research</a>
-        <a href="#">Outfitter Verification</a>
+    </div>
+    <div class="controls">
+      <nav class="utility-nav" aria-label="Site sections">
+        <a class="utility-link" href="./index.html">Hunt Planner</a>
+        <a class="utility-link active" href="./hunt-research.html" aria-current="page">Hunt Research</a>
+        <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <span class="eyebrow">Result-first design</span>
-          <h2>Enter your points. Get a real answer.</h2>
-          <p>
-            This page is built around one job: take a selected hunt, compare your points to actual draw pressure, and tell you what is real now — not after ten screens of clutter.
-          </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#controls">Run Hunt Research</a>
-            <a class="btn" href="#backpack">Open Hunt Backpack</a>
+  <main class="research-shell">
+    <section class="research-card hero-card">
+      <div class="card-body">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Result-first research</span>
+            <h2>Bring your saved hunt in, set residency and points, and get a real answer fast.</h2>
+            <p>This page is built to answer the draw question first. We keep the method honest, keep the proof nearby, and keep the Hunt Pack close so a hunter can move through saved hunts without rebuilding the search all over again.</p>
+            <div class="hero-actions">
+              <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
+              <button class="research-btn" type="button" onclick="document.getElementById('basketList').scrollIntoView({ behavior: 'smooth', block: 'start' })">Open Hunt Pack</button>
+            </div>
+          </div>
+
+          <div class="note-box">
+            <span class="label">Why this is different</span>
+            <p>Utah does not use one simple draw formula, so this page does not pretend otherwise. Bonus draws, preference draws, and no-draw hunts stay in their own lanes, and the result is built from the actual hunt selected, not a generic shortcut.</p>
           </div>
         </div>
-        <div class="hero-quote">
-          <span>Public-facing positioning</span>
-          <strong>Utah doesn’t use simple odds, so this page doesn’t either.</strong>
-          <p>This layout separates Draw Pressure from Draw Reality so the hunter sees the answer fast and the proof stays close by.</p>
+
+        <div class="helper-grid" style="margin-top:14px;">
+          <div class="helper-card">
+            <span class="label">What the engine does</span>
+            <p>It removes last year's successful permittees from the applicant pool, rolls remaining applicants forward, applies current permit numbers, and then runs the selected hunt through the correct Utah draw method.</p>
+          </div>
+          <div class="helper-card">
+            <span class="label">Why that matters</span>
+            <p>You are not just seeing generic chances at your point level. You are seeing the current hunt re-read against the hunters most likely to be competing directly with you for that same permit.</p>
+          </div>
+          <div class="helper-card">
+            <span class="label">Guaranteed line explained</span>
+            <p><strong>Minimum Bonus Points for 100% Initial Draw</strong> means the lowest point line that fully clears the max-point allocation before the random side begins.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <div class="layout">
-      <div class="stack">
-        <section class="card" id="controls">
+    <div class="layout-grid">
+      <div class="main-stack">
+        <section class="research-card controls-card">
           <div class="card-head">
-            <p class="kicker">Hunter Inputs</p>
-            <h3>Select the Hunt. Set the Goal. Run the Answer.</h3>
+            <p>Hunter Inputs</p>
+            <h2>Load the hunt and run the read</h2>
           </div>
           <div class="card-body">
-            <div class="controls-grid">
-              <div class="field">
-                <label>Hunt Code</label>
-                <input type="text" value="DB1019" />
+            <div class="control-grid">
+              <div class="control-field">
+                <label for="huntCodeInput">Hunt Code</label>
+                <input id="huntCodeInput" type="text" placeholder="DB1019" />
               </div>
-              <div class="field">
-                <label>Residency</label>
-                <select>
-                  <option>Resident</option>
-                  <option>Nonresident</option>
+              <div class="control-field">
+                <label for="residencySelect">Residency</label>
+                <select id="residencySelect">
+                  <option value="Resident">Resident</option>
+                  <option value="Nonresident">Nonresident</option>
                 </select>
               </div>
-              <div class="field">
-                <label>Your Points</label>
-                <input type="number" value="16" />
+              <div class="control-field">
+                <label for="pointsInput">Current Points</label>
+                <input id="pointsInput" type="number" min="0" max="32" step="1" value="12" />
               </div>
-              <button class="btn primary">Run</button>
+              <div class="control-actions">
+                <button id="runResearchButton" class="research-btn primary" type="button">Run Report</button>
+                <button id="clearFiltersButton" class="research-btn" type="button">Clear</button>
+                <button id="addToBasketButton" class="research-btn" type="button">Save Hunt</button>
+              </div>
             </div>
 
-            <div class="goal-grid">
-              <div class="goal">
-                <strong>Draw Fast</strong>
-                <p>Best for hunters who care more about getting a tag soon than holding out for a premium unit.</p>
-              </div>
-              <div class="goal">
-                <strong>Balanced Strategy</strong>
-                <p>Best for hunters trying to stay realistic while still pursuing a quality hunt.</p>
-              </div>
-              <div class="goal">
-                <strong>Chase the Max</strong>
-                <p>Best for hunters who want the premium track and are willing to wait for the guaranteed side.</p>
-              </div>
+            <div class="status-grid">
+              <div id="filterReadout" class="status-box">Waiting for the Hunt Research bundle to load.</div>
+              <div id="plannerReadout" class="status-box">If a hunt was selected on Hunt Planner, this page will try to pick it up and make it available inside your Hunt Pack.</div>
             </div>
           </div>
         </section>
 
-        <section class="card">
+        <section class="result-card">
           <div class="card-head">
-            <p class="kicker">Draw Reality</p>
-            <h3>Selected Hunt Result</h3>
+            <p>Draw Reality</p>
+            <h2>Selected Hunt Result</h2>
           </div>
           <div class="card-body">
-            <div class="reality-grid">
-              <div class="metric">
-                <span class="label">Guaranteed At</span>
-                <span class="value big">18</span>
-              </div>
-              <div class="metric">
-                <span class="label">Your Points</span>
-                <span class="value big">16</span>
-              </div>
-              <div class="metric">
-                <span class="label">Status</span>
-                <span class="value">2 pts short of guaranteed</span>
-              </div>
-              <div class="metric">
-                <span class="label">Draw Odds</span>
-                <span class="value big">11.4%</span>
-              </div>
+            <div id="detailEmpty" class="empty-note">
+              <strong style="display:block;margin-bottom:8px;color:#fff8f1;font-size:16px;">No hunt selected yet</strong>
+              Load a hunt from the Hunt Pack, use the Hunt Planner handoff, or type a hunt code directly. Once a hunt is selected, the page will show the draw answer first and the supporting proof directly underneath it.
             </div>
 
-            <div class="summary">
-              <div class="summary-main">
-                <div class="trend yellow">Yellow Light — May Draw in 5–10 Years</div>
-                <div class="headline">You are not guaranteed. Your real chance is coming from the remaining pool.</div>
-                <p>
-                  This hunt is still alive, but it is under pressure. Hunters above you are still consuming guaranteed-side permits faster than you gain points. That does not mean you are out. It means this hunt is no longer a clean guaranteed-track play right now.
-                </p>
-
-                <div class="details-grid">
-                  <div>
-                    <span class="label">Species / Weapon</span>
-                    <span class="value">Limited Entry Deer / Rifle</span>
-                  </div>
-                  <div>
-                    <span class="label">Current Permit Read</span>
-                    <span class="value">33 Resident / 4 Nonresident</span>
-                  </div>
-                  <div>
-                    <span class="label">Goal Fit</span>
-                    <span class="value">Better for Balanced than Draw Fast</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="summary-side">
-                <div class="formula-box">
-                  <h4>Formula</h4>
-                  <code>Gap = Guaranteed Points − Your Points
-
-ΔGap = (Next Year Guaranteed Points − Current Guaranteed Points) − 1
-
-ΔGap &gt; 0 → Falling Behind
-ΔGap = 0 → Holding Ground
-ΔGap &lt; 0 → Catching Up</code>
-                  <p style="margin-top:10px;">Meaning: if the guaranteed requirement stays on trend, you will never catch max points.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-head">
-            <p class="kicker">Draw Pressure</p>
-            <h3>Why the Hunt Looks Like This</h3>
-          </div>
-          <div class="card-body">
-            <div class="pressure-box">
-              <h4>Pressure Read</h4>
-              <p>
-                Draw Pressure is the point-level stack above and around the hunter. This is the data layer: how many applicants are ahead of you, how many sit at your point level, and how much permit volume is already consumed before the draw reaches you.
-              </p>
-              <div class="details-grid" style="margin-top:14px;">
+            <div id="detailContent" hidden>
+              <div class="report-title">
                 <div>
-                  <span class="label">Applicants Above You</span>
-                  <span class="value">41</span>
+                  <p>Selected Hunt Research Report</p>
+                  <h2 id="detailTitle">Choose a hunt</h2>
+                  <div id="detailSubtitle" class="report-copy"></div>
                 </div>
-                <div>
-                  <span class="label">Applicants At Your Level</span>
-                  <span class="value">19</span>
-                </div>
-                <div>
-                  <span class="label">Remaining Pool Basis</span>
-                  <span class="value">After higher-point applicants</span>
+                <div class="report-actions">
+                  <button id="printReportButton" class="research-btn" type="button">Print Report</button>
+                  <button id="downloadReportButton" class="research-btn" type="button">Download Report</button>
+                  <a id="openPlannerLink" class="research-link" href="./index.html">Open Planner</a>
+                  <a id="openDwrLink" class="research-link" href="#" target="_blank" rel="noopener noreferrer">Open DWR Hunt</a>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
 
-        <section class="card">
-          <div class="card-head">
-            <p class="kicker">Raw Support</p>
-            <h3>Keep the Proof Close, Not in the Way</h3>
-          </div>
-          <div class="card-body">
-            <div class="raw-grid">
-              <div class="raw-placeholder">
-                <h4>2025 Actual Draw Snapshot</h4>
-                <p>Point-level applicants, permits, and draws from the actual prior draw table go here. Keep this collapsed or lower on the page so it supports the answer without burying it.</p>
+              <div class="chip-grid">
+                <div class="chip">
+                  <span class="label">Projected Draw Chance</span>
+                  <div id="selectedOutlook" class="value likelihood-unknown">Waiting</div>
+                  <div class="subvalue" id="detailSelectedResult">No result loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Draw Type</span>
+                  <div id="selectedDrawFamily" class="value">Not loaded</div>
+                  <div class="subvalue" id="detailMethod">Method not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Current Permit Read</span>
+                  <div id="selectedPermitRead" class="value">Not loaded</div>
+                  <div class="subvalue" id="detailPermitSource">Permit source not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Point Read</span>
+                  <div id="selectedCutoffRead" class="value">Not loaded</div>
+                  <div class="subvalue" id="detailGoalFit">Research read not loaded</div>
+                </div>
               </div>
-              <div class="raw-placeholder">
-                <h4>2026 Projected Table</h4>
-                <p>Projected queue movement and remaining-pool read go here. This is where you prove the trend label, not where you make the hunter work for the basic answer.</p>
+
+              <div class="summary-grid">
+                <div class="summary-card">
+                  <span class="label">Species / Weapon</span>
+                  <span id="detailSpeciesWeapon" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Access Type</span>
+                  <span id="detailAccessType" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Harvest Success / Harvest</span>
+                  <span id="detailHarvest" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Pressure / Efficiency</span>
+                  <span id="detailPressure" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Initial Guaranteed Read</span>
+                  <span id="detailGuaranteedLane" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Remaining Draw Read</span>
+                  <span id="detailRandomLane" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Minimum Bonus Point Line</span>
+                  <span id="detailCutoff" class="value">-</span>
+                </div>
+                <div class="summary-card">
+                  <span class="label">Verified / C.P.O.</span>
+                  <span id="detailOutfitters" class="value">-</span>
+                </div>
+              </div>
+
+              <div class="report-grid">
+                <section class="report-table-card">
+                  <div class="report-table-head">
+                    <h3 id="detailHeadline">Why this result appears</h3>
+                    <p id="detailExplanation">Waiting for a selected hunt.</p>
+                  </div>
+                  <div class="report-table-wrap">
+                    <table class="report-table">
+                      <thead>
+                        <tr>
+                          <th>Field</th>
+                          <th>Report Value</th>
+                        </tr>
+                      </thead>
+                      <tbody id="reportSummaryTableBody"></tbody>
+                    </table>
+                  </div>
+                </section>
+
+                <section class="report-info-card">
+                  <div class="report-info-head">
+                    <h3>Quick read</h3>
+                    <p>These are the pieces most hunters want first before they dig into the supporting rows.</p>
+                  </div>
+                  <div class="quick-grid">
+                    <div class="quick-card">
+                      <span class="label">Pack Size</span>
+                      <span id="basketCount" class="value big">0</span>
+                    </div>
+                    <div class="quick-card">
+                      <span class="label">Selected Hunt Code</span>
+                      <span id="selectedHuntCodeRead" class="value">Not loaded</span>
+                    </div>
+                    <div class="quick-card">
+                      <span class="label" id="detailGuaranteedLaneLabel">Minimum Bonus Points for 100% Initial Draw</span>
+                      <span id="detailGuaranteedLaneShort" class="value">-</span>
+                    </div>
+                    <div class="quick-card">
+                      <span class="label" id="detailRandomLaneLabel">Random Draw Chance After Max-Point Draw</span>
+                      <span id="detailRandomLaneShort" class="value">-</span>
+                    </div>
+                    <div class="quick-card">
+                      <span class="label" id="detailCutoffLabel">Guaranteed Bonus Point Line / Pressure</span>
+                      <span id="detailCutoffShort" class="value">-</span>
+                    </div>
+                    <div class="quick-card">
+                      <span class="label">Save This Hunt</span>
+                      <button id="detailBasketButton" class="research-btn" type="button">Save Hunt to Pack</button>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <section class="report-info-card">
+                <div class="report-info-head">
+                  <h3>How the Hunt Research engine works</h3>
+                  <p>Simple explanation first. The proof sits below it.</p>
+                </div>
+                <div class="proof-grid">
+                  <div class="note-box">
+                    <span class="label">Implemented algorithm</span>
+                    <p>We factor in last year's successful permittees and remove them from the hunt application pool. Then we normalize current permit numbers and the current max-point structure for the same hunt before we run the selected point level against the updated field.</p>
+                  </div>
+                  <div class="note-box">
+                    <span class="label">Why the model is stronger</span>
+                    <p>You do not just get a generic answer for “X points.” You get a current-year read built from last year's actual hunt results and today's permit structure, which gives a better picture of the hunters most likely to be competing directly with you.</p>
+                  </div>
+                </div>
+              </section>
+
+              <div class="table-grid">
+                <section class="report-table-card">
+                  <div class="report-table-head">
+                    <h3>2025 Actual Draw Snapshot</h3>
+                    <p>Your selected point row is highlighted in blue. If a cutoff row is attached, it is highlighted in amber.</p>
+                  </div>
+                  <div id="rawTableEmpty" class="empty-note" style="margin:14px;">No 2025 source draw rows are attached for this hunt and residency.</div>
+                  <div id="rawTableWrap" class="report-table-wrap" hidden>
+                    <table class="report-table">
+                      <thead>
+                        <tr>
+                          <th>Point</th>
+                          <th>Applicants</th>
+                          <th id="rawColA">Permit A</th>
+                          <th id="rawColB">Permit B</th>
+                          <th id="rawColC">Permit C</th>
+                          <th>Row Odds</th>
+                        </tr>
+                      </thead>
+                      <tbody id="rawTableBody"></tbody>
+                    </table>
+                  </div>
+                </section>
+
+                <section class="report-table-card">
+                  <div class="report-table-head">
+                    <h3>2026 Projected Draw Snapshot</h3>
+                    <p>These projected rows keep the current permit read and the same hunt's carry-forward pool tied together so the hunter can see what changed this year.</p>
+                  </div>
+                  <div id="projectedTableEmpty" class="empty-note" style="margin:14px;">No 2026 projected rows are attached for this hunt and residency.</div>
+                  <div id="projectedTableWrap" class="report-table-wrap" hidden>
+                    <table class="report-table">
+                      <thead>
+                        <tr>
+                          <th>Point</th>
+                          <th>Carryover</th>
+                          <th>Guaranteed %</th>
+                          <th>Random %</th>
+                          <th>Total %</th>
+                          <th>Cutoff</th>
+                        </tr>
+                      </thead>
+                      <tbody id="projectedTableBody"></tbody>
+                    </table>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
         </section>
       </div>
 
-      <aside class="stack" id="backpack">
-        <section class="card backpack">
+      <aside class="side-stack">
+        <section class="side-card">
           <div class="card-head">
-            <p class="kicker">Hunt Backpack</p>
+            <p>Hunt Pack</p>
             <h3>Recent Hunts</h3>
           </div>
           <div class="card-body">
-            <div class="backpack-list">
-              <div class="backpack-item">
-                <strong>DB1019 — Fillmore, Oak Creek</strong>
-                <p>LE Deer • Rifle • Current focus hunt</p>
-                <div class="mini-row">
-                  <span class="mini-btn">Load</span>
-                  <span class="mini-btn">Compare</span>
-                </div>
-              </div>
-              <div class="backpack-item">
-                <strong>DB1017 — Book Cliffs, North</strong>
-                <p>LE Deer • Rifle • Backup option</p>
-                <div class="mini-row">
-                  <span class="mini-btn">Load</span>
-                  <span class="mini-btn">Compare</span>
-                </div>
-              </div>
-              <div class="backpack-item">
-                <strong>MB6006 — North Slope Moose</strong>
-                <p>OIL • Resident view</p>
-                <div class="mini-row">
-                  <span class="mini-btn">Load</span>
-                  <span class="mini-btn">Compare</span>
-                </div>
-              </div>
+            <p class="proof-note" style="margin-bottom:12px;">Hunts carried over from Hunt Planner or saved on this page stay here so the hunter can load the next unit without starting over.</p>
+            <div class="backpack-actions" style="margin-bottom:12px;">
+              <button id="clearBasketButton" class="mini-btn" type="button">Clear Pack</button>
             </div>
+            <div id="basketList" class="basket-list"></div>
           </div>
         </section>
 
-        <section class="card">
+        <section class="side-card">
           <div class="card-head">
-            <p class="kicker">Design Rules</p>
-            <h3>What This Layout Fixes</h3>
+            <p>Plain-English guide</p>
+            <h3>What this page answers first</h3>
           </div>
           <div class="card-body">
-            <div class="backpack-item">
-              <strong>One primary path</strong>
-              <p>Enter hunt. Enter points. Read the answer.</p>
-            </div>
-            <div class="backpack-item">
-              <strong>Result first</strong>
-              <p>The hunter sees Draw Reality before tables, proof, or explanation blocks.</p>
-            </div>
-            <div class="backpack-item">
-              <strong>Proof stays nearby</strong>
-              <p>Draw Pressure and Formula remain visible, but they do not overpower the result.</p>
+            <div class="backpack-list">
+              <div class="backpack-card">
+                <strong>Can I realistically draw this hunt?</strong>
+                <p>The page leads with the projected draw answer and the current permit read instead of hiding the result behind too many extra filters.</p>
+              </div>
+              <div class="backpack-card">
+                <strong>Where do my points sit?</strong>
+                <p>The page shows whether you are inside the initial guaranteed side, below it, or relying on the remaining draw after max-point permits are taken.</p>
+              </div>
+              <div class="backpack-card">
+                <strong>What changed this year?</strong>
+                <p>Last year's actual draw table stays visible lower on the page, next to the current-year projection, so the proof stays close without getting in the hunter's way.</p>
+              </div>
             </div>
           </div>
         </section>
       </aside>
     </div>
+  </main>
 
-    <section class="footer-note">
-      This is a clean design direction, not a finished engine. It gives you the right structure: Draw Pressure as the proof layer, Draw Reality as the answer layer, and the hunter’s goal close to the inputs so the recommendation can actually mean something.
-    </section>
-  </div>
+  <script src="./config.js?v=20260402-hunt-research-clean-1"></script>
+  <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
+  <script src="./hunt-research.js?v=20260402-hunt-research-clean-1"></script>
 </body>
 </html>

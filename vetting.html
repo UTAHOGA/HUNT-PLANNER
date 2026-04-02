@@ -20,8 +20,10 @@
       --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     }
+
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; }
+
     body {
       background:
         linear-gradient(180deg, rgba(17, 15, 13, 0.86), rgba(17, 15, 13, 0.92)),
@@ -29,12 +31,15 @@
       color: var(--text);
       font-family: var(--font-ui);
     }
+
     a { color: #7cbcf7; }
+
     .shell {
       width: min(1200px, calc(100vw - 28px));
       margin: 0 auto;
       padding: 20px 0 40px;
     }
+
     .topbar {
       display: flex;
       align-items: center;
@@ -48,11 +53,13 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
+
     .brand {
       display: flex;
       align-items: center;
       gap: 16px;
     }
+
     .brand img {
       height: 72px;
       width: auto;
@@ -60,6 +67,7 @@
       border-radius: 6px;
       padding: 2px;
     }
+
     .brand-copy h1 {
       margin: 0;
       font-family: var(--font-display);
@@ -67,20 +75,23 @@
       line-height: .98;
       text-transform: uppercase;
     }
+
     .brand-copy p {
       margin: 6px 0 0;
       color: var(--accent);
-      font-size: 24px;
+      font-size: 22px;
       font-family: var(--font-display);
       line-height: 1.08;
       text-transform: none;
     }
+
     .nav {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
+
     .nav a {
       display: inline-flex;
       align-items: center;
@@ -96,10 +107,13 @@
       text-transform: uppercase;
       font-size: 12px;
     }
-    .nav a.active, .nav a:hover {
+
+    .nav a.active,
+    .nav a:hover {
       border-color: var(--accent);
       background: rgba(255, 102, 0, 0.16);
     }
+
     .nav-icon-link {
       display: inline-flex;
       align-items: center;
@@ -111,6 +125,7 @@
       text-decoration: none;
       cursor: pointer;
     }
+
     .nav-icon-link img {
       display: block;
       width: auto;
@@ -120,43 +135,47 @@
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
       transition: transform 0.14s ease, box-shadow 0.14s ease;
     }
+
     .nav-icon-link:hover img,
     .nav-icon-link:focus-visible img {
       transform: translateY(-1px);
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
     }
+
     .hero {
       margin-top: 18px;
-      padding: 28px;
+      padding: 30px 28px;
       border: 1px solid var(--line);
       border-radius: 22px;
       background:
-        linear-gradient(135deg, rgba(255, 102, 0, 0.12), rgba(255, 102, 0, 0) 42%),
+        linear-gradient(135deg, rgba(255, 102, 0, 0.14), rgba(255, 102, 0, 0) 44%),
         var(--panel-strong);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
+
     .hero h2 {
       margin: 0;
-      max-width: 1040px;
+      max-width: 980px;
       font-family: var(--font-display);
-      font-size: clamp(32px, 4.6vw, 54px);
-      line-height: 1.04;
+      font-size: clamp(30px, 4.5vw, 52px);
+      line-height: 1.06;
       color: var(--accent);
       text-align: center;
       margin-left: auto;
       margin-right: auto;
+      text-transform: none;
     }
-    .hero p {
-      margin: 16px 0 0;
-      max-width: 900px;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.6;
-      margin-left: auto;
-      margin-right: auto;
+
+    .hero-sub {
+      margin: 14px auto 0;
+      max-width: 760px;
       text-align: center;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.5;
     }
+
     .hero-actions {
       display: flex;
       gap: 12px;
@@ -164,6 +183,7 @@
       margin-top: 22px;
       justify-content: center;
     }
+
     .hero-actions a {
       display: inline-flex;
       align-items: center;
@@ -180,48 +200,31 @@
       font-size: 12px;
       background: var(--panel2);
     }
+
     .hero-actions a.primary {
       border-color: transparent;
       color: #fff6ed;
       background: linear-gradient(180deg, var(--accent), var(--accent-dark));
     }
+
     .hero-actions a:hover {
       border-color: var(--accent);
     }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
-      margin-top: 22px;
-    }
-    .hero-card {
-      padding: 18px;
-      border: 1px solid var(--line-soft);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-    .hero-card h3 {
-      margin: 0 0 10px;
-      font-family: var(--font-display);
-      font-size: 22px;
-      color: var(--text);
-    }
-    .hero-card p {
-      margin: 0;
-      font-size: 15px;
-    }
+
     .status-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 18px;
+      justify-content: center;
     }
+
     .status-chip {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 36px;
-      padding: 8px 12px;
+      min-height: 38px;
+      padding: 8px 14px;
       border-radius: 999px;
       border: 1px solid rgba(255, 102, 0, 0.28);
       background: rgba(255, 102, 0, 0.12);
@@ -231,12 +234,14 @@
       letter-spacing: .05em;
       text-transform: uppercase;
     }
+
     .layout {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: 18px;
       margin-top: 18px;
     }
+
     .card {
       padding: 22px;
       border: 1px solid var(--line);
@@ -245,12 +250,7 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-    .card h3 {
-      margin: 0 0 12px;
-      font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1;
-    }
+
     .card h4 {
       margin: 0 0 8px;
       color: var(--accent);
@@ -259,29 +259,46 @@
       letter-spacing: .1em;
       text-transform: uppercase;
     }
-    .card p, .card li {
+
+    .card h3 {
+      margin: 0 0 14px;
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.05;
+    }
+
+    .card p,
+    .card li {
       color: var(--muted);
       line-height: 1.6;
+      font-size: 15px;
     }
+
     .card ul {
       margin: 0;
       padding-left: 18px;
     }
-    .span-7 { grid-column: span 7; }
+
+    .span-4 { grid-column: span 4; }
     .span-5 { grid-column: span 5; }
     .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
     .span-12 { grid-column: span 12; }
+
     .definition-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
     }
+
     .definition {
       padding: 18px;
       border: 1px solid var(--line-soft);
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.03);
     }
+
     .definition strong {
       display: block;
       margin-bottom: 10px;
@@ -289,43 +306,26 @@
       font-size: 18px;
       letter-spacing: .02em;
     }
-    .steps {
-      display: grid;
-      gap: 12px;
-    }
-    .step {
-      display: grid;
-      grid-template-columns: 44px 1fr;
-      gap: 14px;
-      align-items: start;
-      padding: 14px 0;
-      border-top: 1px solid var(--line-soft);
-    }
-    .step:first-child { border-top: 0; padding-top: 0; }
-    .step-index {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #fff6ed;
-      font-family: var(--font-display);
-      font-size: 18px;
-    }
+
     .callout {
       padding: 18px 20px;
       border-radius: 18px;
       border: 1px solid rgba(255, 102, 0, 0.32);
       background: rgba(255, 102, 0, 0.12);
     }
-    .callout p {
+
+    .callout p,
+    .callout li {
       margin: 0;
       color: var(--text);
-      font-size: 15px;
       line-height: 1.6;
     }
+
+    .callout ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
     .footer-note {
       margin-top: 18px;
       padding: 20px 22px;
@@ -333,22 +333,63 @@
       border-radius: 18px;
       background: var(--panel);
       box-shadow: var(--shadow);
+    }
+
+    .footer-note h3 {
+      margin: 0 0 10px;
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 1.05;
+    }
+
+    .footer-note ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .footer-note li {
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.6;
     }
+
     @media (max-width: 980px) {
-      .hero-grid, .definition-grid { grid-template-columns: 1fr; }
-      .span-7, .span-5, .span-6 { grid-column: span 12; }
+      .definition-grid { grid-template-columns: 1fr; }
+      .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
     }
+
     @media (max-width: 760px) {
-      .shell { width: min(100vw - 20px, 1200px); padding-top: 14px; }
-      .topbar, .hero, .card, .footer-note { padding: 18px; }
-      .brand { align-items: flex-start; }
-      .brand img { height: 58px; }
-      .brand-copy h1 { font-size: 26px; }
-      .brand-copy p { font-size: 20px; }
-      .hero-actions { flex-direction: column; }
-      .hero-actions a { width: 100%; }
+      .shell {
+        width: min(100vw - 20px, 1200px);
+        padding-top: 14px;
+      }
+
+      .topbar, .hero, .card, .footer-note {
+        padding: 18px;
+      }
+
+      .brand {
+        align-items: flex-start;
+      }
+
+      .brand img {
+        height: 58px;
+      }
+
+      .brand-copy h1 {
+        font-size: 26px;
+      }
+
+      .brand-copy p {
+        font-size: 18px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions a {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -358,10 +399,11 @@
       <div class="brand">
         <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. logo">
         <div class="brand-copy">
-          <h1>U.O.G.A. Standard Operating Procedures</h1>
-          <p>(S.O.P.s) for Vetted and Certified Professional Outfitters (C.P.O.s)</p>
+          <h1>U.O.G.A. Outfitter Verification</h1>
+          <p>Professional Standards. Trusted Standing. Clear Public Signal.</p>
         </div>
       </div>
+
       <nav class="nav">
         <a href="./index.html">Hunt Planner</a>
         <a href="./hunt-research.html">Hunt Research</a>
@@ -378,186 +420,173 @@
     </header>
 
     <section class="hero">
-      <h2>Professional validation should create stronger public trust, clearer operator distinction, and visible value for both outfitters and their clients.</h2>
-      <p>
-        U.O.G.A. exists to strengthen trust, professionalism, and long-term credibility in the outfitting industry.
-        Public designation is intended to create real value for both hunters and operators by identifying outfitters
-        who have met a stronger standard for public presentation, professional standing, and review readiness.
-      </p>
+      <h2>A U.O.G.A. Verified Outfitter = Professional standards met. A higher standard of trust in the field.</h2>
+      <p class="hero-sub">Verified identity. Reviewed operations. Clear standing.</p>
+
+      <div class="status-chips">
+        <span class="status-chip">Verified</span>
+        <span class="status-chip">Vetted</span>
+        <span class="status-chip">C.P.O.</span>
+      </div>
+
       <div class="hero-actions">
         <a class="primary" href="./index.html">Return to Hunt Planner</a>
         <a href="./hunt-research.html">Open Hunt Research</a>
       </div>
-      <div class="hero-grid">
-        <div class="hero-card">
-          <h3>Published Designations</h3>
-          <p>
-            Only reviewed outfitters are publicly designated. That gives clients a clearer signal of professionalism,
-            and it gives operators a stronger public platform tied to standards, trust, and industry reputation.
-          </p>
-          <div class="status-chips">
-            <span class="status-chip">Vetted</span>
-            <span class="status-chip">C.P.O.</span>
-          </div>
-        </div>
-        <div class="hero-card">
-          <h3>Mission-Aligned, Not Empty Marketing</h3>
-          <p>
-            U.O.G.A. intends these designations to mean something. A published designation should communicate that an
-            outfitter is part of a stronger, more trustworthy resource built around professionalism, clarity, and
-            credible public-facing standards.
-          </p>
-        </div>
-      </div>
     </section>
 
     <section class="layout">
-      <article class="card span-7">
-        <h4>Designation Definitions</h4>
-        <h3>Two public levels, one internal hold state.</h3>
+      <article class="card span-12">
+        <h4>At a Glance</h4>
+        <h3>What this page is really saying</h3>
+        <ul>
+          <li>Only reviewed outfitters are publicly designated</li>
+          <li>Designation is meant to create a real trust signal</li>
+          <li>Not every outfitter will qualify for public listing</li>
+          <li>Higher designation requires stronger standing</li>
+        </ul>
+      </article>
+
+      <article class="card span-12">
+        <h4>Designation Levels</h4>
+        <h3>Two public levels. One hold state.</h3>
         <div class="definition-grid">
           <div class="definition">
             <strong>Vetted</strong>
-            <p>
-              U.O.G.A.'s baseline public review designation. It indicates that U.O.G.A. reviewed the outfitter's
-              submitted business and operating information and compared it, where possible, with available public,
-              government, and other relevant source data.
-            </p>
+            <ul>
+              <li>Baseline public review designation</li>
+              <li>Identity and business profile checked</li>
+              <li>Available source data compared</li>
+              <li>Suitable for trusted public listing</li>
+            </ul>
           </div>
+
           <div class="definition">
             <strong>Certified Professional Outfitter (C.P.O.)</strong>
-            <p>
-              U.O.G.A.'s <em>Professional Operator</em> designation for outfitters who meet or exceed U.O.G.A.'s
-              higher qualification criteria, informed by national licensing and professional competency benchmarks.
-            </p>
+            <ul>
+              <li>Higher internal professional designation</li>
+              <li>All Vetted standards already satisfied</li>
+              <li>Stronger overall readiness and standing</li>
+              <li>Reserved for higher-confidence operators</li>
+            </ul>
           </div>
-        </div>
-        <div class="callout" style="margin-top:16px;">
-          <p>
-            Records that remain incomplete, unresolved, or unreviewed are treated internally as unpublished and
-            unverified. They are not publicly displayed with a designation.
-          </p>
+
+          <div class="definition">
+            <strong>Unpublished / Hold</strong>
+            <ul>
+              <li>Incomplete record</li>
+              <li>Unresolved conflict</li>
+              <li>Not review-ready</li>
+              <li>Not publicly designated</li>
+            </ul>
+          </div>
         </div>
       </article>
 
       <article class="card span-5">
         <h4>Why It Exists</h4>
-        <h3>Value-added, mission-driven, and built to raise the bar.</h3>
-        <p>
-          U.O.G.A. wants public designation to create meaningful value in the market. For operators, that means a
-          stronger public trust signal, more credible differentiation, and better alignment with the mission and values
-          of the organization. For clients, it means greater confidence that a listed outfitter reflects a more
-          serious level of professionalism, readiness, and business credibility than a name gathered from a raw list.
-        </p>
+        <h3>Clearer distinction. Better trust.</h3>
         <ul>
-          <li>Stronger public confidence in the U.O.G.A. resource</li>
-          <li>More meaningful professional distinction for outfitters</li>
-          <li>Clearer market signal for quality, readiness, and standing</li>
-          <li>A higher and more aspirational benchmark through C.P.O.</li>
+          <li>Filters out weak or unreliable listings</li>
+          <li>Creates professional distinction for outfitters</li>
+          <li>Gives hunters a stronger public trust signal</li>
+          <li>Raises the standard beyond a raw list of names</li>
+        </ul>
+      </article>
+
+      <article class="card span-7">
+        <h4>Verified Means</h4>
+        <h3>Baseline trust for public publication</h3>
+        <ul>
+          <li>Business identity is sufficiently confirmed</li>
+          <li>Contact information is usable for listing</li>
+          <li>Operating relevance is clear enough to publish</li>
+          <li>Available source data is reasonably consistent</li>
+          <li>No major unresolved conflict remains</li>
         </ul>
       </article>
 
       <article class="card span-6">
-        <h4>Vetted Criteria</h4>
-        <h3>Baseline standard for trusted public publication</h3>
+        <h4>Vetted Standard</h4>
+        <h3>Baseline public review</h3>
         <ul>
-          <li>Business identity information is sufficiently complete</li>
-          <li>Contact information is current enough to support listing</li>
-          <li>Utah registration or licensure information is identified where applicable</li>
-          <li>Services, operating relevance, and authority claims are clearly described</li>
-          <li>Submitted information is reasonably consistent with available source data where such data exists</li>
-          <li>No unresolved major identity or operating-information conflict remains</li>
-          <li>The outfitter is suitable for publication as a trusted resource</li>
+          <li>Identity and business information reviewed</li>
+          <li>Contact information current enough to list</li>
+          <li>Registration or licensure identified where applicable</li>
+          <li>Services and authority claims are clear</li>
+          <li>No major inconsistency blocks publication</li>
         </ul>
       </article>
 
       <article class="card span-6">
-        <h4>C.P.O. Criteria</h4>
-        <h3>Higher professional designation for stronger operator standing</h3>
+        <h4>C.P.O. Standard</h4>
+        <h3>Higher professional standing</h3>
         <ul>
-          <li>All Vetted requirements are already satisfied</li>
-          <li>Business and operating profile is more complete and reliable</li>
-          <li>Professionalism, preparedness, responsiveness, and readiness are stronger</li>
-          <li>Licensing, registration, and standing are stronger where applicable</li>
-          <li>Current insurance and business-operating information are stronger where applicable</li>
-          <li>No unresolved material concern exists that would undermine a higher designation</li>
-          <li>The outfitter meets or exceeds U.O.G.A.'s internal professional standard</li>
+          <li>All Vetted requirements already met</li>
+          <li>Stronger business completeness and reliability</li>
+          <li>Stronger responsiveness, preparedness, and readiness</li>
+          <li>Cleaner regulatory and operating standing where applicable</li>
+          <li>No material concern that undercuts higher designation</li>
         </ul>
       </article>
 
       <article class="card span-7">
         <h4>How Review Works</h4>
-        <h3>Structured review grounded in available sources and professional judgment.</h3>
-        <div class="steps">
-          <div class="step">
-            <div class="step-index">1</div>
-            <div>
-              <strong>Outfitter submission</strong>
-              <p>Business identity, contact information, services, operating areas, and authority claims are collected.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-index">2</div>
-            <div>
-              <strong>Source comparison</strong>
-              <p>Where possible, U.O.G.A. compares submitted information with available public, government, and other relevant source data.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-index">3</div>
-            <div>
-              <strong>Review for consistency</strong>
-              <p>Identity, clarity, responsiveness, operational coherence, and overall record quality are evaluated.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-index">4</div>
-            <div>
-              <strong>Publication decision</strong>
-              <p>The outfitter is either held back from publication, designated as Vetted, or designated as C.P.O.</p>
-            </div>
-          </div>
-        </div>
+        <h3>Simple process. Clear outcome.</h3>
+        <ul>
+          <li>Outfitter submits business and operating information</li>
+          <li>U.O.G.A. compares it against available sources</li>
+          <li>Record is reviewed for clarity, consistency, and standing</li>
+          <li>Result: Vetted, C.P.O., or not published</li>
+        </ul>
       </article>
 
       <article class="card span-5">
-        <h4>What U.O.G.A. May Review</h4>
-        <h3>Sources that help support professional validation</h3>
+        <h4>What Gets Reviewed</h4>
+        <h3>Sources used in the process</h3>
         <ul>
           <li>Submitted outfitter information</li>
           <li>Public business presence and contact data</li>
           <li>Website and social-business identity</li>
           <li>Government-source information where available</li>
-          <li>Federal or state permit-reference information where available</li>
-          <li>Professional completeness and responsiveness</li>
+          <li>Federal and state permit-reference information where available</li>
         </ul>
-        <div class="callout" id="dwr-registration-floor" style="margin-top:16px;">
-          <p>
-            <strong>Utah DWR registration matters.</strong> Where public-land compensated operation requires Utah DWR
-            registration, that status forms part of the baseline regulatory floor considered in U.O.G.A.'s review.
-            U.O.G.A. does not replace DWR authority, but public designation should reflect whether that floor has been
-            clearly addressed.
-          </p>
+      </article>
+
+      <article class="card span-12" id="dwr-registration-floor">
+        <h4>Regulatory Floor</h4>
+        <h3>Utah DWR registration matters</h3>
+        <div class="callout">
+          <ul>
+            <li>Where Utah DWR registration is required, that status matters in review</li>
+            <li>U.O.G.A. does not replace DWR authority</li>
+            <li>Public designation should reflect whether that baseline has been addressed</li>
+          </ul>
         </div>
       </article>
 
       <article class="card span-12">
         <h4>Important Limitation</h4>
-        <h3>What a designation does not replace</h3>
-        <p>
-          U.O.G.A. designations are informational and reflect U.O.G.A.'s review process only. They do not constitute a
-          legal determination, permit grant, land-access guarantee, or agency authorization. Final authority remains
-          with the applicable agency, landowner, CWMU, permitting entity, or governing authority.
-        </p>
+        <h3>What designation does not mean</h3>
+        <ul>
+          <li>Not a license</li>
+          <li>Not a permit grant</li>
+          <li>Not a land-access guarantee</li>
+          <li>Not an agency authorization</li>
+          <li>Not a legal determination</li>
+        </ul>
       </article>
     </section>
 
     <section class="footer-note">
-      U.O.G.A. may require updated information, periodic re-review, or removal of a designation if information becomes
-      materially incomplete, inconsistent, outdated, or unreliable. The purpose of this system is to maintain a public
-      resource that reflects the mission, values, and professional expectations of U.O.G.A. while keeping its role and
-      limitations clear.
+      <h3>Ongoing review still applies</h3>
+      <ul>
+        <li>Designation may require updated information</li>
+        <li>U.O.G.A. may re-review records over time</li>
+        <li>Designation may be removed if information becomes incomplete, inconsistent, outdated, or unreliable</li>
+      </ul>
     </section>
   </div>
+  <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
 </body>
 </html>
