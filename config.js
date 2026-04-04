@@ -13,7 +13,7 @@ window.UOGA_CONFIG = (() => {
   const HUNT_DATA_VERSION = '20260404-selection-matrix-fix-1';
   const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
   const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
-  const HUNT_RESEARCH_DATA_VERSION = '20260404-selection-matrix-fix-1';
+  const HUNT_RESEARCH_DATA_VERSION = '20260404-max-pool-fill-fix-1';
 
   const HUNT_BOUNDARY_SOURCES = [
     `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
