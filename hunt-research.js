@@ -46,6 +46,7 @@
     addToBasketButton: document.getElementById('addToBasketButton'),
     selectedOutlook: document.getElementById('selectedOutlook'),
     selectedHuntCodeRead: document.getElementById('selectedHuntCodeRead'),
+    selectedHarvestSuccess: document.getElementById('selectedHarvestSuccess'),
     selectedResidentPermits: document.getElementById('selectedResidentPermits'),
     selectedNonresidentPermits: document.getElementById('selectedNonresidentPermits'),
     detailTitle: document.getElementById('detailTitle'),
@@ -440,24 +441,37 @@
       : 'Planner handoff ready.';
   }
 
-  function renderSummary(meta, row, filters, coverageMessage) {
+  function getHarvestSuccessDisplay(meta, referenceRow) {
+    if (referenceRow?.harvest_success_percent_2025 !== undefined && referenceRow?.harvest_success_percent_2025 !== null && String(referenceRow.harvest_success_percent_2025).trim() !== '') {
+      return `${referenceRow.harvest_success_percent_2025}%`;
+    }
+    if (meta?.success_percent !== undefined && meta?.success_percent !== null && String(meta.success_percent).trim() !== '') {
+      return `${meta.success_percent}%`;
+    }
+    return 'Not loaded';
+  }
+
+  function renderSummary(meta, row, filters, coverageMessage, referenceRow) {
     if (!row) {
-      renderOutlookLight('red');
-      els.summaryGuaranteed.textContent = 'Guaranteed At: Not available';
-      els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
-        els.summaryStatus.textContent = `Point Status: ${coverageMessage || 'No modeled row available.'}`;
+        renderOutlookLight('red');
+        els.summaryGuaranteed.textContent = 'Guaranteed At: Not available';
+        els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
+          els.summaryStatus.textContent = `Point Status: ${coverageMessage || 'No modeled row available.'}`;
       els.summaryOdds.textContent = 'Estimated Draw Odds: Not available';
       renderTrendLight('red');
         if (els.summaryTrendText) els.summaryTrendText.textContent = 'Not available';
       els.summaryRecommendation.textContent = coverageMessage || 'Recommendation not available.';
-      if (els.selectedResidentPermits) {
-        els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
+        if (els.selectedResidentPermits) {
+          els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
+        }
+        if (els.selectedNonresidentPermits) {
+          els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
+        }
+        if (els.selectedHarvestSuccess) {
+          els.selectedHarvestSuccess.textContent = getHarvestSuccessDisplay(meta, referenceRow);
+        }
+        return;
       }
-      if (els.selectedNonresidentPermits) {
-        els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
-      }
-      return;
-    }
 
     const displayedOdds = getDisplayedOdds(row);
     renderOutlookLight(getOutlookSignal(meta, row));
@@ -476,9 +490,12 @@
     }
     if (els.selectedResidentPermits) {
       els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
-    }
+      }
     if (els.selectedNonresidentPermits) {
       els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
+      }
+    if (els.selectedHarvestSuccess) {
+      els.selectedHarvestSuccess.textContent = getHarvestSuccessDisplay(meta, referenceRow);
     }
   }
 
@@ -641,7 +658,7 @@
         }
       }
 
-    renderSummary(meta, engineRow, filters, coverageMessage);
+      renderSummary(meta, engineRow, filters, coverageMessage, referenceRow);
     renderLadder(meta, filters.huntCode, filters.residency, filters.points);
 
     state.selectedMeta = meta;

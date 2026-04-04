@@ -1011,26 +1011,13 @@
               </div>
 
               <div class="chip-grid">
-                <div class="chip signal-chip">
-                  <span class="label">Draw Prediction</span>
-                  <div class="signal-inline">
-                    <div class="signal-inline-main">
-                      <div id="selectedOutlook" class="outlook-light-strip" aria-label="Draw outlook light">
-                        <span class="outlook-light red"></span>
-                        <span class="outlook-light yellow"></span>
-                        <span class="outlook-light green"></span>
-                      </div>
-                    </div>
-                    <ul class="signal-list">
-                      <li><strong>Green:</strong> Inside the draw line.</li>
-                      <li><strong>Yellow:</strong> Still live, but below the line.</li>
-                      <li><strong>Red:</strong> Poor draw setup at this point level.</li>
-                    </ul>
-                  </div>
-                </div>
                 <div class="chip">
                   <span class="label">Selected Hunt Code</span>
                   <div id="selectedHuntCodeRead" class="value">Not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Harvest Success</span>
+                  <div id="selectedHarvestSuccess" class="value">Not loaded</div>
                 </div>
                 <div class="chip">
                   <span class="label">Res Permits</span>
@@ -1058,6 +1045,23 @@
                 <div class="summary-card">
                   <span class="label">Estimated Draw Odds</span>
                   <span id="summaryOdds" class="value">Estimated Draw Odds: Not available</span>
+                </div>
+                <div class="summary-card signal-card">
+                  <span class="label">Draw Prediction</span>
+                  <div class="signal-inline">
+                    <div class="signal-inline-main">
+                      <div id="selectedOutlook" class="outlook-light-strip" aria-label="Draw outlook light">
+                        <span class="outlook-light red"></span>
+                        <span class="outlook-light yellow"></span>
+                        <span class="outlook-light green"></span>
+                      </div>
+                    </div>
+                    <ul class="signal-list">
+                      <li><strong>Green:</strong> Inside the draw line.</li>
+                      <li><strong>Yellow:</strong> Still live, but below the line.</li>
+                      <li><strong>Red:</strong> Poor draw setup at this point level.</li>
+                    </ul>
+                  </div>
                 </div>
                 <div class="summary-card signal-card">
                   <span class="label">Point Creep Trend</span>
