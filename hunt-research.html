@@ -33,7 +33,7 @@
         linear-gradient(180deg, rgba(7, 6, 5, 0.7), rgba(7, 6, 5, 0.88)),
         radial-gradient(circle at top left, rgba(224, 116, 41, 0.10), transparent 24%),
         radial-gradient(circle at top right, rgba(255, 255, 255, 0.04), transparent 18%),
-        url('./assets/backgrounds/topo-black-white-line-001.jpg') left top / 1920px 1082px repeat,
+        url('./assets/logos/backgrounds/topo-black-white-line-001.jpg') left top / 720px auto repeat,
         #110d0b;
     }
 
@@ -398,9 +398,9 @@
       max-width: 66ch;
     }
 
-    .chip-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+      .chip-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
 
     .chip .value {
       font-family: var(--font-display);
@@ -408,12 +408,49 @@
       line-height: 0.94;
     }
 
-    .chip .subvalue {
-      margin-top: 6px;
-      color: var(--research-muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
+      .chip .subvalue {
+        margin-top: 6px;
+        color: var(--research-muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .outlook-light-strip {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 38px;
+      }
+
+      .outlook-light {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.12);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.28);
+        opacity: 0.32;
+      }
+
+      .outlook-light.is-active {
+        opacity: 1;
+        transform: scale(1.06);
+      }
+
+      .outlook-light.red.is-active {
+        background: #e15759;
+        box-shadow: 0 0 0 4px rgba(225,87,89,0.16), 0 0 18px rgba(225,87,89,0.42);
+      }
+
+      .outlook-light.yellow.is-active {
+        background: #f4c542;
+        box-shadow: 0 0 0 4px rgba(244,197,66,0.16), 0 0 18px rgba(244,197,66,0.42);
+      }
+
+      .outlook-light.green.is-active {
+        background: #52b36a;
+        box-shadow: 0 0 0 4px rgba(82,179,106,0.16), 0 0 18px rgba(82,179,106,0.42);
+      }
 
     .likelihood-guaranteed { color: var(--research-good); }
     .likelihood-live { color: var(--research-warn); }
@@ -790,11 +827,23 @@
               <div class="chip-grid">
                 <div class="chip">
                   <span class="label">Draw Outlook</span>
-                  <div id="selectedOutlook" class="value likelihood-unknown">Waiting</div>
+                  <div id="selectedOutlook" class="outlook-light-strip" aria-label="Draw outlook light">
+                    <span class="outlook-light red"></span>
+                    <span class="outlook-light yellow"></span>
+                    <span class="outlook-light green"></span>
+                  </div>
                 </div>
                 <div class="chip">
                   <span class="label">Selected Hunt Code</span>
                   <div id="selectedHuntCodeRead" class="value">Not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Res Permits</span>
+                  <div id="selectedResidentPermits" class="value">Not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Non-Res Permits</span>
+                  <div id="selectedNonresidentPermits" class="value">Not loaded</div>
                 </div>
               </div>
 

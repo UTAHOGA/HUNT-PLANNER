@@ -11,7 +11,7 @@
       --shadow: 0 10px 28px rgba(58, 37, 18, 0.16);
       --font-display: Georgia, "Times New Roman", serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-      --bg-image: none;
+      --bg-image: url('./assets/logos/backgrounds/topo-black-white-line-001.jpg');
     }
 
     /* --- DARK MODE (U.O.G.A. WEBSITE MATCH) VARIABLES --- */
@@ -26,14 +26,14 @@
       --accent-dark: #cc5200;
       --shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
       --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
-      --bg-image: url('https://static.wixstatic.com/media/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg/v1/fill/w_1519,h_220,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg');
+      --bg-image: url('./assets/logos/backgrounds/topo-black-white-line-001.jpg');
     }
 
     * { box-sizing: border-box; }
     html, body {
       height: 100%; margin: 0; color: var(--text); font-family: var(--font-ui);
       background-color: var(--bg); background-image: var(--bg-image);
-      background-size: cover; background-attachment: fixed; background-position: center;
+      background-size: 720px auto; background-repeat: repeat; background-attachment: fixed; background-position: left top;
       transition: background-color 0.3s, color 0.3s;
     }
     body { display: grid; grid-template-rows: auto 1fr; min-height: 100dvh; }

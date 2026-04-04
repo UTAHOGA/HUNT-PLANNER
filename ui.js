@@ -158,7 +158,7 @@ window.UOGA_UI = (() => {
       const emptyTitle = sectionType === 'saved' ? 'No saved hunts yet' : 'No recent hunts yet';
       const emptyCopy = sectionType === 'saved'
         ? 'Save a hunt from Hunt Research to keep a field-ready short list for clients.'
-        : 'Open hunts in Planner or Hunt Research and they will start appearing in your Hunt Pack.';
+        : 'Open hunts in Planner or Hunt Research and they will start appearing in your Hunt Backpack.';
       return `
         <div class="uoga-backpack-empty">
           <strong>${emptyTitle}</strong>
@@ -234,10 +234,14 @@ window.UOGA_UI = (() => {
       <div class="uoga-backpack-hero">
         <div>
           <p class="uoga-backpack-hero-kicker">Field-ready shortlist</p>
-          <h3>Hunt Pack</h3>
+          <h3>Hunt Backpack</h3>
         </div>
-        <div class="uoga-backpack-hero-media">
-          <img src="./assets/hunt-pack.png" alt="Hunt Pack" class="uoga-backpack-hero-image">
+        <div class="uoga-backpack-hero-media" aria-hidden="true">
+          <div class="uoga-backpack-hero-badge">
+            <span class="uoga-backpack-hero-badge-kicker">U.O.G.A.</span>
+            <span class="uoga-backpack-hero-badge-title">Hunt Backpack</span>
+            
+          </div>
         </div>
         <p>Keep a short list in motion across Planner, Hunt Research, and verification without losing your place.</p>
       </div>
@@ -301,10 +305,11 @@ window.UOGA_UI = (() => {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 48px;
-        height: 34px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.14);
+        min-width: 176px;
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
         background:
           radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
           linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
@@ -312,12 +317,17 @@ window.UOGA_UI = (() => {
         overflow: hidden;
       }
       .uoga-backpack-mark {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: center center;
-        opacity: 0.96;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        line-height: 1;
+        white-space: nowrap;
+        opacity: 0.98;
       }
       .uoga-backpack-labels { display: grid; gap: 2px; text-align: left; }
       .uoga-backpack-title {
@@ -334,14 +344,16 @@ window.UOGA_UI = (() => {
         line-height: 1;
       }
       .uoga-backpack-badge {
-        min-width: 24px;
-        padding: 4px 7px;
+        min-width: 28px;
+        padding: 5px 8px;
         border-radius: 999px;
-        background: color-mix(in srgb, var(--accent) 22%, transparent);
-        color: var(--text);
+        background: color-mix(in srgb, var(--accent) 18%, transparent);
+        border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+        color: var(--accent);
         font-size: 12px;
         font-weight: 900;
         line-height: 1;
+        text-align: center;
       }
       .uoga-backpack-panel {
         position: absolute;
@@ -394,6 +406,36 @@ window.UOGA_UI = (() => {
         background:
           radial-gradient(circle at top left, rgba(255,255,255,0.16), transparent 34%),
           linear-gradient(180deg, rgba(51, 39, 31, 0.94), rgba(25, 19, 15, 0.98));
+      }
+      .uoga-backpack-hero-badge {
+        display: grid;
+        place-items: center;
+        gap: 6px;
+        width: 100%;
+        min-height: 118px;
+        padding: 16px;
+        text-align: center;
+      }
+      .uoga-backpack-hero-badge-kicker {
+        color: rgba(255,255,255,0.72);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      .uoga-backpack-hero-badge-title {
+        color: var(--accent);
+        font-size: 28px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .uoga-backpack-hero-badge-subtitle {
+        color: rgba(255,255,255,0.78);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
       }
       .uoga-backpack-hero-image {
         display: block;
@@ -560,12 +602,8 @@ window.UOGA_UI = (() => {
     trayShell.className = 'uoga-backpack-shell';
     trayShell.innerHTML = `
       <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
-        <span class="uoga-backpack-mark-wrap">
-          <img src="./assets/hunt-pack.png" alt="Hunt Pack" class="uoga-backpack-mark">
-        </span>
-        <span class="uoga-backpack-labels">
-          <span class="uoga-backpack-title">Hunt Pack</span>
-          <span class="uoga-backpack-subtitle">Recent + packed hunts</span>
+        <span class="uoga-backpack-mark-wrap" aria-hidden="true">
+          <span class="uoga-backpack-mark">Hunt Backpack</span>
         </span>
         <span class="uoga-backpack-badge" hidden>0</span>
       </button>
