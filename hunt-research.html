@@ -30,11 +30,9 @@
       min-height: 100vh;
       color: var(--research-text);
       background:
-        linear-gradient(180deg, rgba(7, 6, 5, 0.7), rgba(7, 6, 5, 0.88)),
-        radial-gradient(circle at top left, rgba(224, 116, 41, 0.10), transparent 24%),
-        radial-gradient(circle at top right, rgba(255, 255, 255, 0.04), transparent 18%),
-        url('./assets/backgrounds/topo-black-white-line-001.jpg') left top / 1920px 1082px repeat,
-        #110d0b;
+          linear-gradient(180deg, rgba(10, 8, 7, 0.78), rgba(10, 8, 7, 0.86)),
+          url('./assets/logos/backgrounds/topo-black-with-hills.jpg') center top / 100% auto repeat-y,
+          #110d0b;
     }
 
     .topbar,
@@ -125,7 +123,8 @@
       font-family: var(--font-display);
       font-size: clamp(21px, 2vw, 24px);
       line-height: 1.08;
-      max-width: 26ch;
+      max-width: none;
+      white-space: nowrap;
     }
 
     .hero-copy p,
@@ -141,18 +140,25 @@
     }
 
     .eyebrow {
-      display: inline-flex;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: var(--research-pill);
-      border: 1px solid rgba(224, 116, 41, 0.4);
-      background: rgba(224, 116, 41, 0.1);
-      color: #ffd8c2;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: fit-content;
+          min-height: 44px;
+          padding: 12px 24px;
+          border-radius: var(--research-pill);
+          border: 1px solid rgba(224, 116, 41, 0.4);
+          background: rgba(224, 116, 41, 0.1);
+          color: #fff8f1;
+          font-family: var(--font-display);
+          font-size: 16px;
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: 0.04em;
+          text-transform: none;
+          text-align: center;
+        justify-self: center;
+      }
 
     .hero-actions,
     .control-actions,
@@ -195,11 +201,22 @@
       transform: translateY(-1px);
       background: rgba(224, 116, 41, 0.14);
       border-color: rgba(224, 116, 41, 0.92);
+      box-shadow: 0 0 0 2px rgba(224, 116, 41, 0.16);
     }
 
     .research-btn.primary {
-      border-color: rgba(255, 219, 192, 0.72);
-      background: linear-gradient(180deg, rgba(227, 118, 42, 0.98), rgba(169, 77, 26, 0.98));
+      border-color: #d1ab83;
+      background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
+      color: #2f1d12;
+      box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
+    }
+
+    .research-btn.primary:hover {
+      border-color: rgba(224, 116, 41, 0.98);
+      background: linear-gradient(180deg, rgba(233, 126, 52, 0.98), rgba(194, 95, 35, 0.98));
+      color: #2f1d12;
+      box-shadow: 0 0 0 2px rgba(224, 116, 41, 0.18), 0 12px 28px rgba(82, 44, 20, 0.30);
+      transform: translateY(-2px);
     }
 
     .helper-grid {
@@ -251,6 +268,20 @@
       padding: 15px;
     }
 
+    .chip,
+    .summary-card,
+    .quick-card,
+    .note-box {
+      text-align: center;
+    }
+
+    .note-box {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      min-height: 88px;
+    }
+
     .helper-card .label,
     .chip .label,
     .summary-card .label,
@@ -263,6 +294,69 @@
       font-size: 16px;
       font-weight: 900;
       line-height: 1.15;
+      text-align: center;
+    }
+
+    .signal-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--research-muted);
+      line-height: 1.55;
+      display: grid;
+      gap: 6px;
+    }
+
+    .signal-list li::marker {
+      color: #ddb089;
+    }
+
+    .signal-list strong {
+      color: #fff8f1;
+    }
+
+    .signal-list strong.signal-word-green {
+      color: #7fd68e !important;
+    }
+
+    .signal-list strong.signal-word-yellow {
+      color: #f1c56a !important;
+    }
+
+    .signal-list strong.signal-word-red {
+      color: #ff6767 !important;
+    }
+
+    .chip.signal-chip,
+    .summary-card.signal-card {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .signal-inline {
+      display: grid;
+      grid-template-columns: minmax(120px, 160px) minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .signal-inline-main {
+      display: grid;
+      gap: 8px;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .signal-inline .signal-list {
+      padding-left: 16px;
+      gap: 4px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .summary-card.signal-card {
+      grid-column: span 2;
     }
 
     .helper-card ul {
@@ -351,6 +445,11 @@
       font: inherit;
     }
 
+    .control-field select option {
+        color: #2b1c12;
+        background: #fff3e7;
+      }
+
     .status-grid {
       display: grid;
       gap: 12px;
@@ -381,26 +480,28 @@
     }
 
     .report-title p {
-      margin: 0 0 5px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #ddb190;
-    }
+        margin: 0 0 5px;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ddb190;
+      }
 
     .report-title h2 {
-      color: #fff8f1;
-      font-size: clamp(28px, 3vw, 42px);
-    }
+        color: #fff8f1;
+        font-size: clamp(24px, 2.5vw, 34px);
+      }
 
     .report-title .report-copy {
-      max-width: 66ch;
-    }
+        max-width: 66ch;
+        font-size: 15px;
+        color: #f0d9c4;
+      }
 
-    .chip-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+      .chip-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
 
     .chip .value {
       font-family: var(--font-display);
@@ -408,12 +509,49 @@
       line-height: 0.94;
     }
 
-    .chip .subvalue {
-      margin-top: 6px;
-      color: var(--research-muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
+      .chip .subvalue {
+        margin-top: 6px;
+        color: var(--research-muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .outlook-light-strip {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 38px;
+      }
+
+      .outlook-light {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.12);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.28);
+        opacity: 0.32;
+      }
+
+      .outlook-light.is-active {
+        opacity: 1;
+        transform: scale(1.06);
+      }
+
+      .outlook-light.red.is-active {
+        background: #e15759;
+        box-shadow: 0 0 0 4px rgba(225,87,89,0.16), 0 0 18px rgba(225,87,89,0.42);
+      }
+
+      .outlook-light.yellow.is-active {
+        background: #f4c542;
+        box-shadow: 0 0 0 4px rgba(244,197,66,0.16), 0 0 18px rgba(244,197,66,0.42);
+      }
+
+      .outlook-light.green.is-active {
+        background: #52b36a;
+        box-shadow: 0 0 0 4px rgba(82,179,106,0.16), 0 0 18px rgba(82,179,106,0.42);
+      }
 
     .likelihood-guaranteed { color: var(--research-good); }
     .likelihood-live { color: var(--research-warn); }
@@ -497,25 +635,53 @@
     }
 
     .report-table tbody tr.is-user-row {
-      background: rgba(120, 211, 255, 0.12);
-      box-shadow: inset 3px 0 0 #78cbff;
-    }
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: inset 3px 0 0 #f4c542;
+        color: #2f1d12;
+      }
 
     .report-table tbody tr.is-cutoff-row {
       background: rgba(246, 210, 120, 0.08);
     }
 
     .report-table tbody tr.is-user-row.is-cutoff-row {
-      background: linear-gradient(90deg, rgba(120, 211, 255, 0.16), rgba(246, 210, 120, 0.12));
-    }
+        background: rgba(255, 255, 255, 0.98);
+      }
 
     .report-table tbody tr.is-guaranteed-row {
-      background: rgba(127, 214, 142, 0.08);
-    }
+          background:
+            linear-gradient(90deg, rgba(224, 116, 41, 0.18) 0, rgba(224, 116, 41, 0.08) 28px, rgba(255, 248, 241, 0.96) 28px, rgba(255, 248, 241, 0.96) 100%);
+          color: #2f1d12;
+          box-shadow: inset 0 0 0 1px rgba(224, 116, 41, 0.38);
+        }
+
+    .report-table tbody tr.is-user-row {
+          background:
+            linear-gradient(90deg, rgba(255, 214, 64, 0.16) 0, rgba(255, 214, 64, 0.08) 28px, rgba(255, 252, 233, 0.94) 28px, rgba(255, 252, 233, 0.94) 100%);
+          color: #2f2414;
+          box-shadow: inset 0 0 0 1px rgba(255, 214, 64, 0.26);
+        }
 
     .report-table tbody tr.is-user-row.is-guaranteed-row {
-      background: linear-gradient(90deg, rgba(120, 211, 255, 0.16), rgba(127, 214, 142, 0.12));
-    }
+          background:
+            linear-gradient(90deg, rgba(255, 214, 64, 0.22) 0, rgba(255, 214, 64, 0.10) 18px, rgba(224, 116, 41, 0.16) 18px, rgba(255, 248, 241, 0.98) 38px, rgba(255, 248, 241, 0.98) 100%);
+          color: #2f1d12;
+          box-shadow: inset 0 0 0 1px rgba(224, 116, 41, 0.40);
+        }
+
+    .report-table tbody tr.is-guaranteed-row td,
+    .report-table tbody tr.is-user-row td,
+    .report-table tbody tr.is-user-row.is-guaranteed-row td {
+          color: inherit;
+          font-weight: 600;
+        }
+
+    .report-table tbody tr.is-guaranteed-row td:first-child,
+    .report-table tbody tr.is-user-row td:first-child,
+    .report-table tbody tr.is-user-row.is-guaranteed-row td:first-child {
+          color: #23150d;
+          font-weight: 700;
+        }
 
     .marker-stack {
       display: flex;
@@ -539,10 +705,10 @@
     }
 
     .marker-pill.user {
-      border-color: rgba(120, 211, 255, 0.7);
-      background: rgba(120, 211, 255, 0.14);
-      color: #dff6ff;
-    }
+        border-color: rgba(244, 197, 66, 0.95);
+        background: rgba(255, 249, 222, 0.98);
+        color: #a06c00;
+      }
 
     .marker-pill.cutoff {
       border-color: rgba(246, 210, 120, 0.7);
@@ -551,10 +717,104 @@
     }
 
     .marker-pill.guaranteed {
-      border-color: rgba(127, 214, 142, 0.7);
-      background: rgba(127, 214, 142, 0.14);
-      color: #d8ffe0;
-    }
+          border-color: rgba(224, 116, 41, 0.96);
+          background: rgba(255, 246, 240, 0.98);
+          color: #e07429;
+          box-shadow: 0 0 0 1px rgba(224, 116, 41, 0.22);
+        }
+
+    .marker-pill.user {
+          border-color: rgba(255, 214, 64, 0.95);
+          background: rgba(47, 29, 18, 0.94);
+          color: #ffd640;
+          box-shadow: 0 0 0 1px rgba(255, 214, 64, 0.18);
+        }
+
+    .marker-pill.sources {
+        border-color: rgba(224, 116, 41, 0.92);
+        background: transparent;
+        color: #e07429;
+        cursor: pointer;
+      }
+
+    .marker-pill.sources:hover {
+        background: rgba(224, 116, 41, 0.12);
+      }
+
+    .source-modal[hidden] {
+        display: none;
+      }
+
+    .source-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: rgba(12, 8, 6, 0.76);
+      }
+
+    .source-modal-card {
+        width: min(700px, 100%);
+        padding: 24px;
+        border-radius: 22px;
+        border: 1px solid rgba(170, 124, 84, 0.42);
+        background: linear-gradient(180deg, rgba(39, 27, 21, 0.98), rgba(21, 15, 12, 0.98));
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+      }
+
+    .source-modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+    .source-modal-head h3 {
+        margin: 0;
+        color: #fff3e7;
+        font-size: 1.3rem;
+      }
+
+    .source-modal-head p {
+        margin: 6px 0 0;
+        color: rgba(255, 243, 231, 0.72);
+      }
+
+    .source-close {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid rgba(170, 124, 84, 0.42);
+        background: rgba(255,255,255,0.06);
+        color: #fff8f1;
+        cursor: pointer;
+      }
+
+    .source-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+      }
+
+    .source-box {
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(170, 124, 84, 0.28);
+        background: rgba(255,255,255,0.04);
+      }
+
+    .source-box .label {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+    .source-box .value {
+        color: #fff3e7;
+        font-weight: 700;
+      }
 
     .quick-grid,
     .proof-grid {
@@ -661,6 +921,7 @@
       .hero-copy h2 {
         max-width: none;
         font-size: clamp(14px, 4.5vw, 16px);
+        white-space: normal;
       }
 
       .chip .value,
@@ -707,20 +968,20 @@
     <section class="research-card hero-card">
       <div class="card-body">
         <div class="hero-grid">
-          <div class="hero-copy">
-            <span class="eyebrow">Production engine read</span>
-            <h2>Enter a hunt code, set residency and points, and get the answer in seconds.</h2>
-            <p>One summary, one ladder, one recommendation.</p>
-            <div class="hero-actions">
-              <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
-              <button class="research-btn" type="button" onclick="document.getElementById('basketList').scrollIntoView({ behavior: 'smooth', block: 'start' })">Open Hunt Pack</button>
+            <div class="hero-copy">
+              <span class="eyebrow">U.O.G.A. Hunt Prediction Engine</span>
+              <h2>Enter hunt code, residency, and points.</h2>
+              <p>See the line, your odds, and whether the hunt is realistically in reach.</p>
+              <div class="hero-actions">
+                <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
+                <button class="research-btn" type="button" onclick="document.getElementById('basketList').scrollIntoView({ behavior: 'smooth', block: 'start' })">Open Hunt Backpack</button>
+              </div>
             </div>
-          </div>
 
-          <div class="note-box">
-            <span class="label">What this page shows</span>
-            <p>Guaranteed line, your point position, remaining-pool odds, and whether the hunt is realistically catchable.</p>
-          </div>
+            <div class="note-box">
+              <span class="label">What this page shows</span>
+              <p>Where your point level sits against the draw guaranteed line, what your modeled draw odds look like, and how point creep directly affects you.</p>
+            </div>
         </div>
       </div>
     </section>
@@ -730,7 +991,7 @@
         <section class="research-card controls-card">
           <div class="card-head">
             <p>Hunter Inputs</p>
-            <h2>Choose a hunt and get the answer</h2>
+            <h2>Choose a hunt</h2>
           </div>
           <div class="card-body">
             <div class="control-grid">
@@ -757,8 +1018,8 @@
             </div>
 
             <div class="status-grid">
-              <div id="filterReadout" class="status-box">Waiting for the Hunt Research bundle to load.</div>
-              <div id="plannerReadout" class="status-box">If a hunt was selected on Hunt Planner, this page will try to pick it up and make it available inside your Hunt Pack.</div>
+              <div id="filterReadout" class="status-box">Loading hunt research data.</div>
+              <div id="plannerReadout" class="status-box">Selected hunts from Hunt Planner appear in your Hunt Backpack.</div>
             </div>
           </div>
         </section>
@@ -771,7 +1032,7 @@
           <div class="card-body">
               <div id="detailEmpty" class="empty-note">
                 <strong style="display:block;margin-bottom:8px;color:#fff8f1;font-size:16px;">No hunt selected yet</strong>
-              Load a hunt from the Hunt Pack, use the Hunt Planner handoff, or type a hunt code directly. Once a hunt is selected, the page will show the summary first, then one point ladder and one short recommendation.
+              Load a hunt from Hunt Backpack or enter a hunt code.
             </div>
 
             <div id="detailContent" hidden>
@@ -789,66 +1050,102 @@
 
               <div class="chip-grid">
                 <div class="chip">
-                  <span class="label">Draw Outlook</span>
-                  <div id="selectedOutlook" class="value likelihood-unknown">Waiting</div>
-                </div>
-                <div class="chip">
                   <span class="label">Selected Hunt Code</span>
                   <div id="selectedHuntCodeRead" class="value">Not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Harvest Success</span>
+                  <div id="selectedHarvestSuccess" class="value">Not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Res Permits</span>
+                  <div id="selectedResidentPermits" class="value">Not loaded</div>
+                </div>
+                <div class="chip">
+                  <span class="label">Non-Res Permits</span>
+                  <div id="selectedNonresidentPermits" class="value">Not loaded</div>
                 </div>
               </div>
 
               <div class="summary-grid">
                 <div class="summary-card">
-                  <span class="label">Guaranteed At</span>
-                  <span id="summaryGuaranteed" class="value">Guaranteed At: Not available</span>
+                  <span class="label">Guaranteed To Draw Line</span>
+                  <span id="summaryGuaranteed" class="value">Not available</span>
                 </div>
                 <div class="summary-card">
                   <span class="label">Your Points</span>
-                  <span id="summaryPoints" class="value">Your Points: Not available</span>
+                  <span id="summaryPoints" class="value">Not available</span>
                 </div>
                 <div class="summary-card">
-                  <span class="label">Status</span>
-                  <span id="summaryStatus" class="value">Status: Not available</span>
+                  <span class="label">Point Status</span>
+                  <span id="summaryStatus" class="value">Not available</span>
                 </div>
                 <div class="summary-card">
                   <span class="label">Estimated Draw Odds</span>
-                  <span id="summaryOdds" class="value">Estimated Draw Odds: Not available</span>
+                  <span id="summaryOdds" class="value">Not available</span>
                 </div>
-                <div class="summary-card">
-                  <span class="label">Trend</span>
-                  <span id="summaryTrend" class="value">Trend: Not available</span>
+                <div class="summary-card signal-card">
+                  <span class="label">Draw Prediction</span>
+                  <div class="signal-inline">
+                    <div class="signal-inline-main">
+                      <div id="selectedOutlook" class="outlook-light-strip" aria-label="Draw outlook light">
+                        <span class="outlook-light red"></span>
+                        <span class="outlook-light yellow"></span>
+                        <span class="outlook-light green"></span>
+                      </div>
+                    </div>
+                    <ul class="signal-list">
+                      <li><strong class="signal-word-green">Green:</strong> Guaranteed draw.</li>
+                      <li><strong class="signal-word-yellow">Yellow:</strong> Live on the split draw line.</li>
+                      <li><strong class="signal-word-red">Red:</strong> Random pool draw only.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="summary-card signal-card">
+                  <span class="label">Point Creep Trend</span>
+                  <div class="signal-inline">
+                    <div class="signal-inline-main">
+                      <div id="summaryTrend" class="outlook-light-strip" aria-label="Trend light">
+                        <span class="outlook-light red"></span>
+                        <span class="outlook-light yellow"></span>
+                        <span class="outlook-light green"></span>
+                      </div>
+                      <span id="summaryTrendText" class="subvalue">Not available</span>
+                    </div>
+                    <ul class="signal-list">
+                      <li><strong class="signal-word-green">Green:</strong> You are catching up.</li>
+                      <li><strong class="signal-word-yellow">Yellow:</strong> The line is holding pace.</li>
+                      <li><strong class="signal-word-red">Red:</strong> Point creep is outrunning you.</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
               <section class="report-info-card">
                 <div class="report-info-head">
                   <h3>Recommendation</h3>
-                  <p>One short call on whether this hunt is realistically catchable.</p>
                 </div>
-                <div class="proof-grid" style="grid-template-columns:1fr;">
-                  <div class="note-box">
-                    <span class="label">Short recommendation</span>
-                    <p id="summaryRecommendation">Recommendation not available.</p>
-                  </div>
+                <div style="padding:14px;">
+                  <p id="summaryRecommendation" class="proof-note">Recommendation not available.</p>
                 </div>
               </section>
 
               <section class="report-table-card">
                 <div class="report-table-head">
                   <h3>Point ladder</h3>
-                  <p>Blue = you. Green = guaranteed.</p>
+                  <p>Yellow = you. Orange = guaranteed.</p>
                 </div>
-                <div id="ladderTableEmpty" class="empty-note" style="margin:14px;">No modeled ladder rows are attached for this hunt and residency yet.</div>
+                <div id="ladderTableEmpty" class="empty-note" style="margin:14px;">No ladder rows for this hunt and residency yet.</div>
                 <div id="ladderTableWrap" class="report-table-wrap" hidden>
                   <table class="report-table">
                     <thead>
-                      <tr>
-                        <th>Point</th>
-                        <th>2025 Actual Odds</th>
-                        <th>2026 Projected Odds</th>
-                        <th>Markers</th>
-                      </tr>
+                        <tr id="ladderHeaderRow">
+                          <th>Point</th>
+                          <th>2025 Actual Odds</th>
+                          <th id="ladderPrimaryHeader">2026 Max Pool</th>
+                          <th id="ladderSecondaryHeader">2026 Random Draw</th>
+                          <th>Markers</th>
+                        </tr>
                     </thead>
                     <tbody id="ladderTableBody"></tbody>
                   </table>
@@ -862,13 +1159,13 @@
       <aside class="side-stack">
         <section class="side-card">
           <div class="card-head">
-            <p>Hunt Pack</p>
+            <p>Hunt Backpack</p>
             <h3>Recent Hunts</h3>
           </div>
           <div class="card-body">
-            <p class="proof-note" style="margin-bottom:12px;">Hunts carried over from Hunt Planner or saved on this page stay here so the hunter can load the next unit without starting over.</p>
+            <p class="proof-note" style="margin-bottom:12px;">Saved hunts stay here for quick reload.</p>
             <div class="backpack-actions" style="margin-bottom:12px;">
-              <button id="clearBasketButton" class="mini-btn" type="button">Clear Pack</button>
+              <button id="clearBasketButton" class="mini-btn" type="button">Clear Hunt Backpack</button>
             </div>
             <div id="basketList" class="basket-list"></div>
           </div>
@@ -877,6 +1174,19 @@
       </aside>
     </div>
   </main>
+
+  <div id="sourceModal" class="source-modal" hidden>
+    <div class="source-modal-card" role="dialog" aria-modal="true" aria-labelledby="sourceModalTitle">
+      <div class="source-modal-head">
+        <div>
+          <h3 id="sourceModalTitle">DWR Source Snapshot</h3>
+          <p id="sourceModalSubtitle">Source details for this hunt row.</p>
+        </div>
+        <button id="sourceModalClose" class="source-close" type="button" aria-label="Close sources">X</button>
+      </div>
+      <div id="sourceModalGrid" class="source-grid"></div>
+    </div>
+  </div>
 
   <script src="./config.js?v=20260402-hunt-research-clean-1"></script>
   <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>

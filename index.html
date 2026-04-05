@@ -4,8 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
-  <title>U.O.G.A. Hunt Planner | VETTED OUTFITTERS</title>
-  <link rel="stylesheet" href="./style.css?v=20260330-conservation-fix-8" />
+  <title>U.O.G.A. Hunt Planner | VERIFIED OUTFITTERS</title>
+  <link rel="stylesheet" href="./style.css.hero {
+  text-align: center;
+  padding: 20px 10px 10px;
+}
+
+.hero h1 {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.hero p {
+  opacity: 0.75;
+}
+
+.quick-start {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.qs-step {
+  background: rgba(255,255,255,0.05);
+  padding: 6px 10px;
+  border-radius: 8px;
+} />
  </head>
 <body class="theme-dark">
   <header class="topbar">
@@ -16,11 +43,25 @@
         </a>
         <div>
           <h1>U.O.G.A. Hunt Planner</h1>
-          <p>Vetted Outfitters</p>
+          <p>Verified Outfitters</p>
         </div>
       </div>
     </div>
     <div class="controls">
+<!-- MAP CONTROLS -->
+<div class="control-group">
+  <label for="mapTypeSelect">Map</label>
+  ...
+</div>
+
+<!-- LAND LAYERS -->
+<div class="toggle-row">
+  ...
+</div>
+
+<!-- VIEW OPTIONS -->
+<button id="streetViewBtn" ...>
+<button id="resetViewBtn" ...>
       <nav class="utility-nav" aria-label="Site sections">
         <a class="utility-link active" href="./index.html" aria-current="page">Hunt Planner</a>
         <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
@@ -68,10 +109,21 @@
     </div>
   </header>
 
+<section class="hero">
+  <h1>Plan Your Hunt Like a Professional</h1>
+  <p>Then map it, analyze it, and hunt it right.</p>
+</section>
+
+<section class="quick-start">
+  <div class="qs-step">1. Select a hunt unit or filter</div>
+  <div class="qs-step">2. Choose a hunt</div>
+  <div class="qs-step">3. Analyze draw odds</div>
+  <div class="qs-step">4. Match with outfitters</div>
+</section>
   <main class="layout">
     <aside class="sidebar">
       <section class="panel">
-        <h2>Find a Hunt</h2>
+        <h2>Build Your Hunt</h2>
         <div class="panel-body">
           <div class="field">
             <label for="searchInput">Search by hunt number</label>
@@ -105,23 +157,25 @@
             <button id="applyFiltersBtn" type="button">Apply Filters</button>
             <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
           </div>
-          <div id="status" class="status">Loading native Google map…</div>
+          <div id="status" class="status">Loading map...</div>
         </div>
       </section>
 
       <section class="panel">
-        <h2>Matching Hunts</h2>
+        <h2>Available Hunts</h2>
         <div class="panel-body">
-          <div id="matchingHunts" class="hunt-list">
-            <div class="empty-note">Use the filters above or click a hunt unit on the map to load matching hunts.</div>
+          <div id="availablehunts" class="hunt-list">
+            <div class="empty-note">Use filters or click a unit to load hunts.</div>
           </div>
         </div>
       </section>
 
       <section class="panel">
-        <h2>Selected Hunt</h2>
+        <h2>Hunt Analysis</h2>
         <div class="panel-body" id="selectedHuntPanel">
-          <div class="empty-note">No hunt selected yet.</div>
+          <div class="empty-note"><div class="empty-note">
+  Select a hunt to see draw odds, trends, and outfitter matches.
+</div>.</div>
         </div>
       </section>
     </aside>
@@ -141,14 +195,23 @@
           <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
         </div>
         <div id="mapChooserBody" class="map-chooser-body">
-          <div class="map-chooser-empty">Click a hunt boundary to load matching hunts.</div>
+          <div class="map-chooser-empty">Click a boundary to load hunts.</div>
         </div>
       </div>
+
+<section class="panel">
+  <h2>Saved Hunts</h2>
+  <div class="panel-body">
+    <div id="huntBasket" class="hunt-list">
+      <div class="empty-note">Save hunts to compare them here.</div>
+    </div>
+  </div>
+</section>
 
       <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
       <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
         <div class="globe-basemap-title">Globe Basemap</div>
-        <p class="globe-basemap-note">Switch between imagery, topo, dark, and street-style globe backgrounds.</p>
+        <p class="globe-basemap-note">Switch globe backgrounds.</p>
         <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
           <option value="osm">OpenStreetMap</option>
           <option value="esriImagery">Esri World Imagery</option>
@@ -179,14 +242,15 @@
     <aside class="rightbar">
       <div class="rightbar-header">
         <h2 class="rightbar-header-title">U.O.G.A.</h2>
-        <p class="rightbar-header-subtitle">Vetted Outfitters</p>
+        <p class="rightbar-header-subtitle">Verified Outfitters</p>
       </div>
       <section class="panel">
         <h2>Outfitters</h2>
         <div class="panel-body">
-          <p class="helper" style="margin-bottom:12px;">Qualified verified outfitters are matched neutrally by species, hunt unit, and service fit. <a href="./vetting.html">See how outfitter verification and referrals work</a>.</p>
+          <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="./vetting.html">See how verification works</a>.</p>
           <div id="outfitterResults" class="outfitter-list">
-            <div class="empty-note">Select a hunt to load matching vetted outfitters.</div>
+            <div class="empty-note">Outfitters will appear here based on hunt unit and species match.
+</div>
           </div>
         </div>
       </section>
