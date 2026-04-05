@@ -72,7 +72,11 @@ def group_rows(rows: list[dict[str, str]]) -> dict[tuple[str, str], list[dict[st
 
 def use_round_up_bonus_split(row: dict[str, str]) -> bool:
     hunt_code = str(row.get("hunt_code", "")).strip().upper()
-    return hunt_code.startswith("DB") and str(row.get("residency", "")).strip() == "Nonresident"
+    return (
+        hunt_code.startswith("DB")
+        and str(row.get("residency", "")).strip() == "Nonresident"
+        and uses_bonus_pool_model(row)
+    )
 
 
 def uses_bonus_pool_model(row: dict[str, str]) -> bool:

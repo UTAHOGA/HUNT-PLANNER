@@ -306,8 +306,18 @@ def load_permit_rows() -> dict[tuple[str, str], dict[str, object]]:
     return permit_map
 
 
-def use_round_up_bonus_split(hunt_code: str, residency: str) -> bool:
-    return str(hunt_code or "").strip().upper().startswith("DB") and str(residency or "").strip() == "Nonresident"
+def use_round_up_bonus_split(
+    hunt_code: str,
+    residency: str,
+    historical_bonus_pairs: set[tuple[str, str]],
+) -> bool:
+    normalized_code = str(hunt_code or "").strip().upper()
+    normalized_residency = str(residency or "").strip()
+    return (
+        normalized_code.startswith("DB")
+        and normalized_residency == "Nonresident"
+        and (normalized_code, normalized_residency) in historical_bonus_pairs
+    )
 
 
 def uses_bonus_pool_model(
@@ -379,7 +389,7 @@ def build_projected_rows() -> tuple[list[dict[str, object]], list[dict[str, obje
             continue
 
         carryover_pool, total_2025_applicants, total_2025_winners = build_carryover_pool(point_rows)
-        round_up_bonus = use_round_up_bonus_split(hunt_code, residency)
+        round_up_bonus = use_round_up_bonus_split(hunt_code, residency, historical_bonus_pairs)
         uses_bonus_model = uses_bonus_pool_model(
             hunt_code,
             residency,
