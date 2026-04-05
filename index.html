@@ -5,34 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Hunt Planner | VERIFIED OUTFITTERS</title>
-  <link rel="stylesheet" href="./style.css.hero {
-  text-align: center;
-  padding: 20px 10px 10px;
-}
-
-.hero h1 {
-  font-size: 28px;
-  font-weight: 900;
-}
-
-.hero p {
-  opacity: 0.75;
-}
-
-.quick-start {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  padding: 10px;
-  font-size: 13px;
-  opacity: 0.8;
-}
-
-.qs-step {
-  background: rgba(255,255,255,0.05);
-  padding: 6px 10px;
-  border-radius: 8px;
-} />
+  <link rel="stylesheet" href="./style.css?v=20260330-conservation-fix-8" />
  </head>
 <body class="theme-dark">
   <header class="topbar">
@@ -48,215 +21,207 @@
       </div>
     </div>
     <div class="controls">
-<!-- MAP CONTROLS -->
-<div class="control-group">
-  <label for="mapTypeSelect">Map</label>
-  ...
-</div>
-
-<!-- LAND LAYERS -->
-<div class="toggle-row">
-  ...
-</div>
-
-<!-- VIEW OPTIONS -->
-<button id="streetViewBtn" ...>
-<button id="resetViewBtn" ...>
       <nav class="utility-nav" aria-label="Site sections">
         <a class="utility-link active" href="./index.html" aria-current="page">Hunt Planner</a>
         <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
         <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
       </nav>
       <button id="themeToggleBtn" type="button" class="secondary">Light Mode</button>
-      <div class="control-group">
-        <label for="mapTypeSelect">Map</label>
-        <select id="mapTypeSelect">
-          <option value="terrain" selected>Terrain</option>
-          <option value="roadmap">Roadmap</option>
-          <option value="hybrid">Hybrid</option>
-          <option value="satellite">Satellite</option>
-          <option value="globe">Globe</option>
-        </select>
+      <div class="topbar-map-controls-cluster" aria-label="Map controls, land layers, and view options">
+        <div class="topbar-tool-group" aria-label="Map controls">
+          <span class="topbar-tool-group-label">Map controls</span>
+          <div class="topbar-tool-group-body">
+            <div class="control-group">
+              <label for="mapTypeSelect">Map</label>
+              <select id="mapTypeSelect">
+                <option value="terrain" selected>Terrain</option>
+                <option value="roadmap">Roadmap</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="satellite">Satellite</option>
+                <option value="globe">Globe</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="topbar-tool-group" aria-label="Land layers">
+          <span class="topbar-tool-group-label">Land layers</span>
+          <div class="topbar-tool-group-body">
+            <div class="toggle-row">
+              <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+              <details class="toggle-menu">
+                <summary id="federalLayersSummary">Federal</summary>
+                <div class="toggle-menu-panel">
+                  <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+                  <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+                  <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+                </div>
+              </details>
+              <details class="toggle-menu">
+                <summary id="stateLayersSummary">State</summary>
+                <div class="toggle-menu-panel">
+                  <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+                  <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+                  <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+                </div>
+              </details>
+              <details class="toggle-menu">
+                <summary id="privateLayersSummary">Private</summary>
+                <div class="toggle-menu-panel">
+                  <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+                  <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+        <div class="topbar-tool-group" aria-label="View options">
+          <span class="topbar-tool-group-label">View options</span>
+          <div class="topbar-tool-group-body topbar-tool-group-body--buttons">
+            <button id="streetViewBtn" type="button" class="secondary">Street View</button>
+            <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
+          </div>
+        </div>
       </div>
-      <div class="toggle-row">
-        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
-        <details class="toggle-menu">
-          <summary id="federalLayersSummary">Federal</summary>
-          <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
-            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
-            <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
-          </div>
-        </details>
-        <details class="toggle-menu">
-          <summary id="stateLayersSummary">State</summary>
-          <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
-            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
-            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
-          </div>
-        </details>
-        <details class="toggle-menu">
-          <summary id="privateLayersSummary">Private</summary>
-          <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
-            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
-          </div>
-        </details>
-      </div>
-      <button id="streetViewBtn" type="button" class="secondary">Street View</button>
-      <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
     </div>
   </header>
-
-<section class="hero">
-  <h1>Plan Your Hunt Like a Professional</h1>
-  <p>Then map it, analyze it, and hunt it right.</p>
-</section>
-
-<section class="quick-start">
-  <div class="qs-step">1. Select a hunt unit or filter</div>
-  <div class="qs-step">2. Choose a hunt</div>
-  <div class="qs-step">3. Analyze draw odds</div>
-  <div class="qs-step">4. Match with outfitters</div>
-</section>
-  <main class="layout">
-    <aside class="sidebar">
-      <section class="panel">
-        <h2>Build Your Hunt</h2>
-        <div class="panel-body">
-          <div class="field">
-            <label for="searchInput">Search by hunt number</label>
-            <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
-          </div>
-          <div class="field">
-            <label for="speciesFilter">Species</label>
-            <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
-          </div>
-          <div class="field">
-            <label for="sexFilter">Sex</label>
-            <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
-          </div>
-          <div class="field">
-            <label for="huntTypeFilter">Hunt Type</label>
-            <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
-          </div>
-          <div class="field">
-            <label for="huntCategoryFilter">Hunt Class</label>
-            <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
-          </div>
-          <div class="field">
-            <label for="weaponFilter">Weapon Type</label>
-            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
-          </div>
-          <div class="field">
-            <label for="unitFilter">DWR Hunt Units</label>
-            <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
-          </div>
-          <div class="filter-actions">
-            <button id="applyFiltersBtn" type="button">Apply Filters</button>
-            <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
-          </div>
-          <div id="status" class="status">Loading map...</div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h2>Available Hunts</h2>
-        <div class="panel-body">
-          <div id="availablehunts" class="hunt-list">
-            <div class="empty-note">Use filters or click a unit to load hunts.</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h2>Hunt Analysis</h2>
-        <div class="panel-body" id="selectedHuntPanel">
-          <div class="empty-note"><div class="empty-note">
-  Select a hunt to see draw odds, trends, and outfitter matches.
-</div>.</div>
-        </div>
-      </section>
-    </aside>
-
-    <section class="map-wrap">
-      <div class="map-stage">
-        <div id="map" aria-label="Google DWR mirror map"></div>
-        <div id="globeMap" aria-label="Cesium globe view"></div>
-      </div>
-
-      <div id="mapChooser" class="map-chooser" aria-hidden="true">
-        <div class="map-chooser-head">
-          <div>
-            <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
-            <h3 id="mapChooserTitle" class="map-chooser-title">Matching Hunts</h3>
-          </div>
-          <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
-        </div>
-        <div id="mapChooserBody" class="map-chooser-body">
-          <div class="map-chooser-empty">Click a boundary to load hunts.</div>
-        </div>
-      </div>
-
-<section class="panel">
-  <h2>Saved Hunts</h2>
-  <div class="panel-body">
-    <div id="huntBasket" class="hunt-list">
-      <div class="empty-note">Save hunts to compare them here.</div>
-    </div>
-  </div>
-</section>
-
-      <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
-      <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
-        <div class="globe-basemap-title">Globe Basemap</div>
-        <p class="globe-basemap-note">Switch globe backgrounds.</p>
-        <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
-          <option value="osm">OpenStreetMap</option>
-          <option value="esriImagery">Esri World Imagery</option>
-          <option value="esriTopo">Esri World Topo</option>
-          <option value="esriStreet">Esri World Street</option>
-          <option value="esriNatGeo">Esri NatGeo</option>
-          <option value="usgsImagery">USGS Imagery</option>
-          <option value="usgsTopo">USGS Topo</option>
-          <option value="openTopo">OpenTopoMap</option>
-          <option value="cartoLight">Carto Light</option>
-          <option value="cartoDark">Carto Dark</option>
-        </select>
-        <div id="globeBasemapGrid" class="globe-basemap-grid">
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriStreet">Esri Street</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriNatGeo">Esri NatGeo</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="openTopo">OpenTopoMap</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="osm">OpenStreetMap</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoLight">Carto Light</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoDark">Carto Dark</button>
-        </div>
-      </div>
+  <div class="planner-body">
+    <section class="hero">
+      <h1>Plan Your Hunt Like a Professional</h1>
+      <p>Then map it, analyze it, and hunt it right.</p>
     </section>
-
-    <aside class="rightbar">
-      <div class="rightbar-header">
-        <h2 class="rightbar-header-title">U.O.G.A.</h2>
-        <p class="rightbar-header-subtitle">Verified Outfitters</p>
-      </div>
-      <section class="panel">
-        <h2>Outfitters</h2>
-        <div class="panel-body">
-          <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="./vetting.html">See how verification works</a>.</p>
-          <div id="outfitterResults" class="outfitter-list">
-            <div class="empty-note">Outfitters will appear here based on hunt unit and species match.
-</div>
+    <section class="quick-start">
+      <div class="qs-step">1. Select a hunt unit or filter</div>
+      <div class="qs-step">2. Choose a hunt</div>
+      <div class="qs-step">3. Analyze draw odds</div>
+      <div class="qs-step">4. Match with outfitters</div>
+    </section>
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Build Your Hunt</h2>
+          <div class="panel-body">
+            <div class="field">
+              <label for="searchInput">Search by hunt number</label>
+              <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
+            </div>
+            <div class="field">
+              <label for="speciesFilter">Species</label>
+              <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
+            </div>
+            <div class="field">
+              <label for="sexFilter">Sex</label>
+              <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="huntTypeFilter">Hunt Type</label>
+              <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="huntCategoryFilter">Hunt Class</label>
+              <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="weaponFilter">Weapon Type</label>
+              <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="unitFilter">DWR Hunt Units</label>
+              <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
+            </div>
+            <div class="filter-actions">
+              <button id="applyFiltersBtn" type="button">Apply Filters</button>
+              <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
+            </div>
+            <div id="status" class="status">Loading map...</div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>Available Hunts</h2>
+          <div class="panel-body">
+            <div id="matchingHunts" class="hunt-list">
+              <div class="empty-note">Use filters or click a unit to load hunts.</div>
+            </div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>Hunt Analysis</h2>
+          <div class="panel-body" id="selectedHuntPanel">
+            <div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>Saved Hunts</h2>
+          <div class="panel-body">
+            <div id="huntBasket" class="hunt-list">
+              <div class="empty-note">Save hunts to compare them here.</div>
+            </div>
+          </div>
+        </section>
+      </aside>
+      <section class="map-wrap">
+        <div class="map-stage">
+          <div id="map" aria-label="Google DWR mirror map"></div>
+          <div id="globeMap" aria-label="Cesium globe view"></div>
+        </div>
+        <div id="mapChooser" class="map-chooser" aria-hidden="true">
+          <div class="map-chooser-head">
+            <div>
+              <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
+              <h3 id="mapChooserTitle" class="map-chooser-title">Available Hunts</h3>
+            </div>
+            <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
+          </div>
+          <div id="mapChooserBody" class="map-chooser-body">
+            <div class="map-chooser-empty">Click a boundary to load hunts.</div>
+          </div>
+        </div>
+        <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
+        <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
+          <div class="globe-basemap-title">Globe Basemap</div>
+          <p class="globe-basemap-note">Switch globe backgrounds.</p>
+          <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
+            <option value="osm">OpenStreetMap</option>
+            <option value="esriImagery">Esri World Imagery</option>
+            <option value="esriTopo">Esri World Topo</option>
+            <option value="esriStreet">Esri World Street</option>
+            <option value="esriNatGeo">Esri NatGeo</option>
+            <option value="usgsImagery">USGS Imagery</option>
+            <option value="usgsTopo">USGS Topo</option>
+            <option value="openTopo">OpenTopoMap</option>
+            <option value="cartoLight">Carto Light</option>
+            <option value="cartoDark">Carto Dark</option>
+          </select>
+          <div id="globeBasemapGrid" class="globe-basemap-grid">
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriStreet">Esri Street</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriNatGeo">Esri NatGeo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="openTopo">OpenTopoMap</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="osm">OpenStreetMap</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoLight">Carto Light</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoDark">Carto Dark</button>
           </div>
         </div>
       </section>
-    </aside>
-  </main>
-
+      <aside class="rightbar">
+        <div class="rightbar-header">
+          <h2 class="rightbar-header-title">U.O.G.A.</h2>
+          <p class="rightbar-header-subtitle">Verified Outfitters</p>
+        </div>
+        <section class="panel">
+          <h2>Outfitters</h2>
+          <div class="panel-body">
+            <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="./vetting.html">See how verification works</a>.</p>
+            <div id="outfitterResults" class="outfitter-list">
+              <div class="empty-note">Outfitters will appear here based on hunt unit and species match.</div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
   <section id="huntDetailsSection" class="hunt-details-section" hidden>
     <div class="hunt-details-head">
       <div>
@@ -274,7 +239,6 @@
       <iframe id="huntDetailsFrame" class="hunt-details-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </section>
-
   <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
   <script src="./config.js?v=20260404-selection-matrix-fix-1"></script>
@@ -283,4 +247,3 @@
   <script src="app.js?v=20260404-selection-matrix-fix-1"></script>
 </body>
 </html>
-
