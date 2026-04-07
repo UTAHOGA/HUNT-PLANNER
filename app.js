@@ -78,7 +78,7 @@ let huntData = [], huntBoundaryGeoJson = null, outfitters = [], outfitterFederal
 let huntUnitsLayer = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null;
 
 // Misc UI / load state
-let activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
 let conservationPermitAreas = [];
 let conservationPermitHuntTable = [];
