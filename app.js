@@ -2777,8 +2777,31 @@ async function ensureUtahOutlineLayer() {
   return utahOutlineLayer;
 }
 
-function ensureCesiumViewer() {
-  if (cesiumViewer || typeof Cesium === 'undefined') return;
+const CESIUM_CDN_BASE = 'https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium';
+let cesiumLoadPromise = null;
+function loadCesiumScripts() {
+  if (cesiumLoadPromise) return cesiumLoadPromise;
+  cesiumLoadPromise = new Promise((resolve, reject) => {
+    if (typeof Cesium !== 'undefined') { resolve(); return; }
+    if (!document.querySelector('link[href*="Cesium/Widgets/widgets.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `${CESIUM_CDN_BASE}/Widgets/widgets.css`;
+      document.head.appendChild(link);
+    }
+    const script = document.createElement('script');
+    script.src = `${CESIUM_CDN_BASE}/Cesium.js`;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Cesium.js'));
+    document.head.appendChild(script);
+  });
+  return cesiumLoadPromise;
+}
+
+async function ensureCesiumViewer() {
+  if (cesiumViewer) return;
+  await loadCesiumScripts();
+  if (cesiumViewer) return;
   const container = document.getElementById('globeMap');
   if (!container) return;
   cesiumViewer = new Cesium.Viewer(container, {
@@ -2830,13 +2853,13 @@ function ensureCesiumViewer() {
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
-function fallbackToGlobeMode(reason = 'Google map unavailable.') {
+async function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   if (mapTypeSelect) {
     mapTypeSelect.value = 'globe';
   }
-  ensureCesiumViewer();
+  await ensureCesiumViewer();
   mapWrap.classList.add('is-globe-mode');
   setTimeout(() => {
     if (cesiumViewer) {
@@ -2847,7 +2870,7 @@ function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   updateStatus(reason);
 }
 
-function applyMapMode() {
+async function applyMapMode() {
   const value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
@@ -2856,7 +2879,7 @@ function applyMapMode() {
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
     updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
-    ensureCesiumViewer();
+    await ensureCesiumViewer();
     mapWrap.classList.add('is-globe-mode');
     setTimeout(() => {
       if (cesiumViewer) {
