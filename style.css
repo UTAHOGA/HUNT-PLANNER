@@ -14,8 +14,10 @@
       --selected-outline: #d1ab83;
       --selected-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
       --shadow: 0 10px 28px rgba(58, 37, 18, 0.16);
-      --font-display: Georgia, "Times New Roman", serif;
+      --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --panel-strong: rgba(255, 250, 243, 0.99);
+      --line-soft: rgba(30, 15, 5, 0.10);
       --bg-image: url('./assets/logos/backgrounds/topo-black-with-hills.jpg');
     }
 
@@ -23,8 +25,10 @@
     body.theme-dark {
       --bg: #141414;
       --panel: rgba(35, 30, 26, 0.88);
+      --panel-strong: rgba(28, 24, 20, 0.96);
       --panel2: #2b231d;
       --line: #5c412d;
+      --line-soft: rgba(244, 239, 228, 0.12);
       --text: #f4efe4;
       --muted: #a89483;
       --accent: #ff6600;
@@ -366,7 +370,7 @@
     body.theme-dark .hunt-basket-actions a {
       color: #7cbcf7;
     }
-    .hunt-card, .map-chooser-card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 12px; display: grid; gap: 6px; cursor: pointer; transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease; }
+    .hunt-card, .map-chooser-card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 12px; display: grid; gap: 6px; cursor: pointer; transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease; font: inherit; width: 100%; text-align: left; }
     .outfitter-card { border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.04)), var(--panel); padding: 14px; display: grid; gap: 10px; box-shadow: 0 10px 24px rgba(0,0,0,0.14); }
     .hunt-card:hover, .map-chooser-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
     .hunt-card.is-selected {
@@ -391,6 +395,14 @@
     .hunt-card-actions { margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; }
     .hunt-research-ring { border: 2px solid rgba(255, 126, 40, 0.9) !important; box-shadow: 0 0 0 2px rgba(255, 126, 40, 0.18), 0 8px 18px rgba(0,0,0,0.18); }
     .hunt-research-ring:hover { border-color: #ff8a3d !important; box-shadow: 0 0 0 3px rgba(255, 126, 40, 0.20), 0 10px 22px rgba(0,0,0,0.22); }
+    button.hunt-card { background: var(--panel); color: var(--text); box-shadow: none; }
+    button.hunt-card:hover { background: var(--panel); }
+    a.hunt-research-ring {
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 999px; padding: 10px 14px;
+      background: var(--panel2); color: var(--text);
+      text-decoration: none; font: inherit; font-weight: 700; cursor: pointer;
+    }
     
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 14px; }
     .detail-grid strong { display: block; margin-bottom: 3px; color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -781,4 +793,141 @@
         padding: 8px 8px;
         font-size: 11px;
       }
+    }
+
+    /* ============================================================
+       VETTING PAGE  (.vetting-page on <body>)
+       ============================================================ */
+
+    /* Body layout override — vetting uses a .shell wrapper, not grid rows */
+    .vetting-page {
+      display: block;
+      background:
+        linear-gradient(180deg, rgba(17, 15, 13, 0.82), rgba(17, 15, 13, 0.90)),
+        var(--bg-image) center top / 100% auto repeat-y;
+    }
+    .vetting-page a { color: #7cbcf7; }
+
+    .shell {
+      width: min(1200px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    /* Topbar — card style with border-radius (overrides planner's flush bar) */
+    .vetting-page .topbar {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+    }
+
+    /* Brand — vetting uses a direct img child, not .brand-logo-lockup */
+    .vetting-page .brand { display: flex; align-items: center; gap: 16px; }
+    .vetting-page .brand img { height: 72px; width: auto; background: #fff; border-radius: 6px; padding: 2px; }
+    .brand-copy h1 { margin: 0; font-family: var(--font-display); font-size: 32px; line-height: .98; text-transform: uppercase; }
+    .brand-copy p { margin: 6px 0 0; color: var(--accent); font-size: 22px; font-family: var(--font-display); line-height: 1.08; text-transform: none; }
+
+    /* Nav pills */
+    .vetting-page .nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .vetting-page .nav a {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 16px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--panel2); color: var(--text);
+      text-decoration: none; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; font-size: 12px;
+    }
+    .vetting-page .nav a.active,
+    .vetting-page .nav a:hover { border-color: var(--accent); background: rgba(255, 102, 0, 0.16); }
+    .nav-icon-link { display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; box-shadow: none; text-decoration: none; cursor: pointer; }
+    .nav-icon-link img { display: block; width: auto; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22); transition: transform 0.14s ease, box-shadow 0.14s ease; }
+    .nav-icon-link:hover img,
+    .nav-icon-link:focus-visible img { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28); }
+
+    /* Hero — full-bleed card style (overrides planner's thin header band) */
+    .vetting-page .hero {
+      margin-top: 18px; padding: 30px 28px;
+      border: 1px solid var(--line); border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255, 102, 0, 0.14), rgba(255, 102, 0, 0) 44%), var(--panel-strong);
+      box-shadow: var(--shadow); backdrop-filter: blur(10px);
+      text-align: left;
+    }
+    .vetting-page .hero h2 {
+      margin: 0 auto; max-width: 980px;
+      font-family: var(--font-display); font-size: clamp(30px, 4.5vw, 52px);
+      line-height: 1.06; color: var(--accent); text-align: center; text-transform: none;
+    }
+    .hero-sub { margin: 14px auto 0; max-width: 760px; text-align: center; color: var(--muted); font-size: 17px; line-height: 1.5; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; justify-content: center; }
+    .hero-actions a {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; padding: 10px 16px; border-radius: 999px;
+      border: 1px solid var(--line); color: var(--text); text-decoration: none;
+      font-weight: 800; letter-spacing: .04em; text-transform: uppercase; font-size: 12px;
+      background: var(--panel2);
+    }
+    .hero-actions a.primary { border-color: transparent; color: #fff6ed; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); }
+    .hero-actions a:hover { border-color: var(--accent); }
+
+    /* Status chips */
+    .status-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; justify-content: center; }
+    .status-chip {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 38px; padding: 8px 14px; border-radius: 999px;
+      border: 1px solid rgba(255, 102, 0, 0.28); background: rgba(255, 102, 0, 0.12);
+      color: var(--text); font-size: 12px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase;
+    }
+
+    /* 12-column content grid (overrides planner's 3-col fixed layout) */
+    .vetting-page .layout {
+      display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 18px;
+    }
+    .span-4  { grid-column: span 4; }
+    .span-5  { grid-column: span 5; }
+    .span-6  { grid-column: span 6; }
+    .span-7  { grid-column: span 7; }
+    .span-8  { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    /* Info cards */
+    .card { padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(10px); }
+    .card h4 { margin: 0 0 8px; color: var(--accent); font-size: 13px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+    .card h3 { margin: 0 0 14px; font-family: var(--font-display); font-size: 28px; line-height: 1.05; }
+    .card p,
+    .card li { color: var(--muted); line-height: 1.6; font-size: 15px; }
+    .card ul { margin: 0; padding-left: 18px; }
+
+    /* Definition grid inside cards */
+    .definition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .definition { padding: 18px; border: 1px solid var(--line-soft); border-radius: 16px; background: rgba(255, 255, 255, 0.03); }
+    .definition strong { display: block; margin-bottom: 10px; color: var(--text); font-size: 18px; letter-spacing: .02em; }
+
+    /* Callout blocks */
+    .callout { padding: 18px 20px; border-radius: 18px; border: 1px solid rgba(255, 102, 0, 0.32); background: rgba(255, 102, 0, 0.12); }
+    .callout p,
+    .callout li { margin: 0; color: var(--text); line-height: 1.6; }
+    .callout ul { margin: 0; padding-left: 18px; }
+
+    /* Footer note */
+    .footer-note { margin-top: 18px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); }
+    .footer-note h3 { margin: 0 0 10px; font-family: var(--font-display); font-size: 24px; line-height: 1.05; }
+    .footer-note ul { margin: 0; padding-left: 18px; }
+    .footer-note li { color: var(--muted); line-height: 1.6; }
+
+    /* Responsive — vetting page */
+    @media (max-width: 980px) {
+      .definition-grid { grid-template-columns: 1fr; }
+      .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+    }
+
+    @media (max-width: 760px) {
+      .shell { padding-top: 14px; }
+      .vetting-page .topbar,
+      .vetting-page .hero,
+      .card,
+      .footer-note { padding: 18px; }
+      .vetting-page .brand { align-items: flex-start; }
+      .vetting-page .brand img { height: 58px; }
+      .brand-copy h1 { font-size: 26px; }
+      .brand-copy p { font-size: 18px; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions a { width: 100%; }
     }

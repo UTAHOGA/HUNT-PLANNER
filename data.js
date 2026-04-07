@@ -8,7 +8,11 @@ window.UOGA_DATA = (() => {
   }
 
   async function fetchGeoJson(url) {
-    return fetchJson(url);
+    const data = await fetchJson(url);
+    if (!data || data.type !== 'FeatureCollection') {
+      throw new Error(`Expected GeoJSON FeatureCollection from ${url}`);
+    }
+    return data;
   }
 
   async function fetchFirstGeoJson(urls) {

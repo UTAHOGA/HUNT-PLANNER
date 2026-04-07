@@ -62,7 +62,23 @@ const {
   loadFirstNormalizedList
 } = window.UOGA_DATA;
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+// Map engine instances
+let googleBaselineMap = null, cesiumViewer = null, googleApiReady = false;
+
+// Cesium data sources
+let cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null;
+
+// Hover / selection state
+let huntHoverFeature = null, selectedBoundaryFeature = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null;
+
+// Data caches
+let huntData = [], huntBoundaryGeoJson = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [];
+
+// Map layers
+let huntUnitsLayer = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null;
+
+// Misc UI / load state
+let activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
 let conservationPermitAreas = [];
 let conservationPermitHuntTable = [];
@@ -1090,7 +1106,7 @@ function buildMatchingHuntCard(h, selectedKey) {
   const code = escapeHtml(getHuntCode(h) || '');
   const codeAttr = escapeHtml(getHuntCode(h) || '');
   return `
-    <div class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}" role="button" tabindex="0">
+    <button type="button" class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}">
       <div class="hunt-card-head">
         <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR" class="hunt-card-logo">
         <div>
@@ -1099,11 +1115,11 @@ function buildMatchingHuntCard(h, selectedKey) {
         </div>
       </div>
       <div class="hunt-card-actions">
-        <button type="button" class="secondary hunt-research-ring" data-hunt-research-code="${codeAttr}">
+        <a class="secondary hunt-research-ring" href="./hunt-research.html?hunt_code=${codeAttr}" data-hunt-research-code="${codeAttr}">
           Hunt Research
-        </button>
+        </a>
       </div>
-    </div>`;
+    </button>`;
 }
 
 function renderMatchingHunts() {
