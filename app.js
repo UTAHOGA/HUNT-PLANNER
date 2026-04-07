@@ -62,7 +62,23 @@ const {
   loadFirstNormalizedList
 } = window.UOGA_DATA;
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+// Map engine instances
+let googleBaselineMap = null, cesiumViewer = null, googleApiReady = false;
+
+// Cesium data sources
+let cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null;
+
+// Hover / selection state
+let huntHoverFeature = null, selectedBoundaryFeature = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null;
+
+// Data caches
+let huntData = [], huntBoundaryGeoJson = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [];
+
+// Map layers
+let huntUnitsLayer = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null;
+
+// Misc UI / load state
+let currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
 let conservationPermitAreas = [];
 let conservationPermitHuntTable = [];
@@ -110,7 +126,7 @@ const searchInput = document.getElementById('searchInput'),
   selectedHuntFloat = document.getElementById('selectedHuntFloat');
 
 // --- UTILITIES ---
-function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+const escapeHtml = window.UOGA_UI.escapeHtml;
 function safe(v) { return String(v ?? ''); }
 function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
@@ -1090,7 +1106,7 @@ function buildMatchingHuntCard(h, selectedKey) {
   const code = escapeHtml(getHuntCode(h) || '');
   const codeAttr = escapeHtml(getHuntCode(h) || '');
   return `
-    <div class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}" role="button" tabindex="0">
+    <button type="button" class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}">
       <div class="hunt-card-head">
         <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR" class="hunt-card-logo">
         <div>
@@ -1099,11 +1115,11 @@ function buildMatchingHuntCard(h, selectedKey) {
         </div>
       </div>
       <div class="hunt-card-actions">
-        <button type="button" class="secondary hunt-research-ring" data-hunt-research-code="${codeAttr}">
+        <a class="secondary hunt-research-ring" href="./hunt-research.html?hunt_code=${codeAttr}" data-hunt-research-code="${codeAttr}">
           Hunt Research
-        </button>
+        </a>
       </div>
-    </div>`;
+    </button>`;
 }
 
 function renderMatchingHunts() {
@@ -1244,7 +1260,6 @@ function openSelectedHuntFloat() {
             Hunt Research
           </button>
         </div>
-        <div class="selected-unit-placard-note">Built to stay just off the left rail so the map area still breathes.</div>
       </div>
     </section>`;
   selectedHuntFloat.classList.add('is-open');
@@ -1587,7 +1602,7 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
             <div><strong>Weapon:</strong> ${weapon}</div>
             <div><strong>Dates:</strong> ${dates}</div>
           </div>
-          ${boundaryLink ? `<button type="button" data-inline-hunt-details style="margin-top:4px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:18px;font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
+          ${boundaryLink ? `<button type="button" data-inline-hunt-details data-hunt-key="${escapeHtml(getHuntRecordKey(hunt))}" data-boundary-link="${escapeHtml(boundaryLink)}" style="margin-top:4px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:18px;font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
         </div>
       </div>`;
   }
@@ -1608,7 +1623,7 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
           <div><strong>Weapon:</strong> ${weapon}</div>
           <div><strong>Dates:</strong> ${dates}</div>
         </div>
-        ${boundaryLink ? `<button type="button" data-inline-hunt-details style="margin-top:2px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:${linkSize};font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
+        ${boundaryLink ? `<button type="button" data-inline-hunt-details data-hunt-key="${escapeHtml(getHuntRecordKey(hunt))}" data-boundary-link="${escapeHtml(boundaryLink)}" style="margin-top:2px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:${linkSize};font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
       </div>
     </div>`;
 }
@@ -2228,10 +2243,6 @@ function updatePrivateLayersSummary() {
   privateLayersSummary.innerHTML = count ? `Private <span class="toggle-menu-count">(${count})</span>` : 'Private';
 }
 
-function openSelectedHuntPopup() {
-  closeSelectedHuntPopup();
-}
-
 function closeSelectedHuntPopup() {
   if (!mapChooser) return;
   mapChooser.classList.remove('is-open');
@@ -2253,29 +2264,6 @@ function getFeatureMatches(feature) {
     const hUnitName = normalizeBoundaryKey(getUnitName(h));
     return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
   });
-}
-
-function buildPopupCardForHunt(hunt) {
-  return buildDnrPlate(hunt, true);
-}
-
-function buildPopupListForMatches(matches) {
-  return `
-    <div style="display:grid;gap:10px;min-width:320px;max-width:380px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
-        <div>
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">DWR Hunt Unit</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Matching Hunts</div>
-        </div>
-      </div>
-      ${matches.slice(0, 8).map(h => `
-        <button type="button" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" style="text-align:left;border:1px solid #d6c1ae;border-radius:10px;background:#fffdf8;padding:10px;cursor:pointer;color:#2b1c12;">
-          <div style="font-weight:900;">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
-          <div style="font-size:12px;color:#6b5646;">${escapeHtml(getSpeciesDisplay(h))} | ${escapeHtml(getNormalizedSex(h))} | ${escapeHtml(getWeapon(h))}</div>
-        </button>
-      `).join('')}
-    </div>`;
 }
 
 function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {
@@ -2777,8 +2765,31 @@ async function ensureUtahOutlineLayer() {
   return utahOutlineLayer;
 }
 
-function ensureCesiumViewer() {
-  if (cesiumViewer || typeof Cesium === 'undefined') return;
+const CESIUM_CDN_BASE = 'https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium';
+let cesiumLoadPromise = null;
+function loadCesiumScripts() {
+  if (cesiumLoadPromise) return cesiumLoadPromise;
+  cesiumLoadPromise = new Promise((resolve, reject) => {
+    if (typeof Cesium !== 'undefined') { resolve(); return; }
+    if (!document.querySelector('link[href*="Cesium/Widgets/widgets.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `${CESIUM_CDN_BASE}/Widgets/widgets.css`;
+      document.head.appendChild(link);
+    }
+    const script = document.createElement('script');
+    script.src = `${CESIUM_CDN_BASE}/Cesium.js`;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Cesium.js'));
+    document.head.appendChild(script);
+  });
+  return cesiumLoadPromise;
+}
+
+async function ensureCesiumViewer() {
+  if (cesiumViewer) return;
+  await loadCesiumScripts();
+  if (cesiumViewer) return;
   const container = document.getElementById('globeMap');
   if (!container) return;
   cesiumViewer = new Cesium.Viewer(container, {
@@ -2830,13 +2841,13 @@ function ensureCesiumViewer() {
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
-function fallbackToGlobeMode(reason = 'Google map unavailable.') {
+async function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   if (mapTypeSelect) {
     mapTypeSelect.value = 'globe';
   }
-  ensureCesiumViewer();
+  await ensureCesiumViewer();
   mapWrap.classList.add('is-globe-mode');
   setTimeout(() => {
     if (cesiumViewer) {
@@ -2847,7 +2858,7 @@ function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   updateStatus(reason);
 }
 
-function applyMapMode() {
+async function applyMapMode() {
   const value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
@@ -2856,7 +2867,7 @@ function applyMapMode() {
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
     updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
-    ensureCesiumViewer();
+    await ensureCesiumViewer();
     mapWrap.classList.add('is-globe-mode');
     setTimeout(() => {
       if (cesiumViewer) {
@@ -3116,6 +3127,13 @@ function bindControls() {
   });
   document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
   document.getElementById('closeHuntDetailsBtn')?.addEventListener('click', closeInlineHuntDetails);
+  document.addEventListener('click', event => {
+    const btn = event.target.closest('[data-inline-hunt-details]');
+    if (!btn) return;
+    const key = btn.getAttribute('data-hunt-key');
+    const hunt = (key ? huntData.find(h => getHuntRecordKey(h) === key) : null) || selectedHunt;
+    openInlineHuntDetails(hunt);
+  });
   mapTypeSelect?.addEventListener('change', applyMapMode);
   globeBasemapSelect?.addEventListener('change', () => {
     currentGlobeBasemap = safe(globeBasemapSelect.value || 'osm');

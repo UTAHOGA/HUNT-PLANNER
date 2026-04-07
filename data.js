@@ -2,13 +2,17 @@ window.UOGA_DATA = (() => {
   let officialBoundaryLookupPromise = null;
 
   async function fetchJson(url) {
-    const resp = await fetch(url, { cache: 'no-store' });
+    const resp = await fetch(url);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     return resp.json();
   }
 
   async function fetchGeoJson(url) {
-    return fetchJson(url);
+    const data = await fetchJson(url);
+    if (!data || data.type !== 'FeatureCollection') {
+      throw new Error(`Expected GeoJSON FeatureCollection from ${url}`);
+    }
+    return data;
   }
 
   async function fetchFirstGeoJson(urls) {

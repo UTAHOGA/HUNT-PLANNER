@@ -739,6 +739,7 @@ window.UOGA_UI = (() => {
     BASKET_KEY,
     RECENTS_KEY,
     SELECTED_HUNT_KEY,
+    escapeHtml,
     initShell,
     initThemeToggle,
     initBackpackTray,

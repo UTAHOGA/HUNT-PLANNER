@@ -59,9 +59,9 @@ window.UOGA_CONFIG = (() => {
     `${CLOUDFLARE_BASE}/hunt_unit_reference_linked.csv?v=${HUNT_RESEARCH_DATA_VERSION}`
   ];
 
-  const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
+  const LOGO_DNR = './assets/logos/dnr.jpg';
   const LOGO_DWR_SELECTOR = './assets/logos/DWR-LOGO.png';
-  const LOGO_DNR_ROOMY = 'https://static.wixstatic.com/media/43f827_28020dbfc9b9434c91dc6d92d9a07cd4~mv2.png';
+  const LOGO_DNR_ROOMY = './assets/logos/dnr-roomy.png';
   const LOGO_CWMU = './assets/logos/DWR-CWMU-LOGO.png';
   const LOGO_DWR_WMA = './assets/logos/DWR-WMA.LOGO.png';
   const LOGO_USFS = './assets/logos/usfs.png';

@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Plan your Utah hunt with the U.O.G.A. Hunt Planner — explore hunting units, draw odds, verified outfitters, and public-land layers on an interactive map." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.uoga.org/" />
+  <meta property="og:title" content="U.O.G.A. Hunt Planner | VERIFIED OUTFITTERS" />
+  <meta property="og:description" content="Plan your Utah hunt with the U.O.G.A. Hunt Planner — explore hunting units, draw odds, verified outfitters, and public-land layers on an interactive map." />
+  <meta property="og:image" content="https://tools.uoga.org/assets/logos/favicon.ico.png" />
+  <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Hunt Planner | VERIFIED OUTFITTERS</title>
   <link rel="stylesheet" href="./style.css?v=20260330-conservation-fix-8" />
@@ -12,7 +19,7 @@
     <div class="brand">
       <div class="brand-logo-lockup">
         <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
-          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
+          <img src="./assets/logos/uoga-logo.jpg" alt="U.O.G.A. Logo">
         </a>
         <div>
           <h1>U.O.G.A. Hunt Planner</h1>
@@ -207,12 +214,10 @@
         Official details are loaded below so visitors can stay on U.O.G.A. If the DWR page blocks embedding, use
         <a id="huntDetailsFallbackLink" href="#" target="_blank" rel="noopener noreferrer">this fallback link</a>.
       </p>
-      <iframe id="huntDetailsFrame" class="hunt-details-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe id="huntDetailsFrame" class="hunt-details-frame" title="Utah DWR Hunt Details" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </section>
 
-  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
   <script src="./config.js?v=20260404-selection-matrix-fix-1"></script>
   <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
