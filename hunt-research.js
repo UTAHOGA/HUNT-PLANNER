@@ -93,13 +93,7 @@
     return `${groupKey(huntCode, residency)}__${String(points ?? '')}`;
   }
 
-  function escapeHtml(value) {
-    return String(value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  const escapeHtml = window.UOGA_UI.escapeHtml;
 
   function num(value) {
     if (value === null || value === undefined || value === '') return null;

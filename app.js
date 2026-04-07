@@ -110,7 +110,7 @@ const searchInput = document.getElementById('searchInput'),
   selectedHuntFloat = document.getElementById('selectedHuntFloat');
 
 // --- UTILITIES ---
-function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+const escapeHtml = window.UOGA_UI.escapeHtml;
 function safe(v) { return String(v ?? ''); }
 function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
