@@ -1603,7 +1603,7 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
             <div><strong>Weapon:</strong> ${weapon}</div>
             <div><strong>Dates:</strong> ${dates}</div>
           </div>
-          ${boundaryLink ? `<button type="button" data-inline-hunt-details style="margin-top:4px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:18px;font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
+          ${boundaryLink ? `<button type="button" data-inline-hunt-details data-hunt-key="${escapeHtml(getHuntRecordKey(hunt))}" data-boundary-link="${escapeHtml(boundaryLink)}" style="margin-top:4px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:18px;font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
         </div>
       </div>`;
   }
@@ -1624,7 +1624,7 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
           <div><strong>Weapon:</strong> ${weapon}</div>
           <div><strong>Dates:</strong> ${dates}</div>
         </div>
-        ${boundaryLink ? `<button type="button" data-inline-hunt-details style="margin-top:2px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:${linkSize};font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
+        ${boundaryLink ? `<button type="button" data-inline-hunt-details data-hunt-key="${escapeHtml(getHuntRecordKey(hunt))}" data-boundary-link="${escapeHtml(boundaryLink)}" style="margin-top:2px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:${linkSize};font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
       </div>
     </div>`;
 }
@@ -3155,6 +3155,13 @@ function bindControls() {
   });
   document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
   document.getElementById('closeHuntDetailsBtn')?.addEventListener('click', closeInlineHuntDetails);
+  document.addEventListener('click', event => {
+    const btn = event.target.closest('[data-inline-hunt-details]');
+    if (!btn) return;
+    const key = btn.getAttribute('data-hunt-key');
+    const hunt = (key ? huntData.find(h => getHuntRecordKey(h) === key) : null) || selectedHunt;
+    openInlineHuntDetails(hunt);
+  });
   mapTypeSelect?.addEventListener('change', applyMapMode);
   globeBasemapSelect?.addEventListener('change', () => {
     currentGlobeBasemap = safe(globeBasemapSelect.value || 'osm');
