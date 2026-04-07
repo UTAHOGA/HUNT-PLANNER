@@ -1260,7 +1260,6 @@ function openSelectedHuntFloat() {
             Hunt Research
           </button>
         </div>
-        <div class="selected-unit-placard-note">Built to stay just off the left rail so the map area still breathes.</div>
       </div>
     </section>`;
   selectedHuntFloat.classList.add('is-open');
@@ -2244,10 +2243,6 @@ function updatePrivateLayersSummary() {
   privateLayersSummary.innerHTML = count ? `Private <span class="toggle-menu-count">(${count})</span>` : 'Private';
 }
 
-function openSelectedHuntPopup() {
-  closeSelectedHuntPopup();
-}
-
 function closeSelectedHuntPopup() {
   if (!mapChooser) return;
   mapChooser.classList.remove('is-open');
@@ -2269,29 +2264,6 @@ function getFeatureMatches(feature) {
     const hUnitName = normalizeBoundaryKey(getUnitName(h));
     return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
   });
-}
-
-function buildPopupCardForHunt(hunt) {
-  return buildDnrPlate(hunt, true);
-}
-
-function buildPopupListForMatches(matches) {
-  return `
-    <div style="display:grid;gap:10px;min-width:320px;max-width:380px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
-        <div>
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">DWR Hunt Unit</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Matching Hunts</div>
-        </div>
-      </div>
-      ${matches.slice(0, 8).map(h => `
-        <button type="button" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" style="text-align:left;border:1px solid #d6c1ae;border-radius:10px;background:#fffdf8;padding:10px;cursor:pointer;color:#2b1c12;">
-          <div style="font-weight:900;">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
-          <div style="font-size:12px;color:#6b5646;">${escapeHtml(getSpeciesDisplay(h))} | ${escapeHtml(getNormalizedSex(h))} | ${escapeHtml(getWeapon(h))}</div>
-        </button>
-      `).join('')}
-    </div>`;
 }
 
 function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {

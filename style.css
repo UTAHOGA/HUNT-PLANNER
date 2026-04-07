@@ -518,7 +518,6 @@
     .selected-unit-placard-pill-label { font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: rgba(47, 29, 18, 0.72); }
     .selected-unit-placard-pill-value { font-size: 14px; font-weight: 800; line-height: 1.25; color: var(--selected-text); }
     .selected-unit-placard-actions { display:flex; gap:10px; flex-wrap:wrap; }
-    .selected-unit-placard-note { font-size: 12px; line-height: 1.4; color: #caa98d; }
     .globe-basemap-panel {
       position: absolute;
       top: 18px;
