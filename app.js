@@ -1299,20 +1299,62 @@ function openLandInfoWindow(card, position) {
   });
   selectionInfoWindow.open(googleBaselineMap);
 }
+const ALLOWED_MIRROR_ORIGINS = ['https://dwrapps.utah.gov', 'https://wildlife.utah.gov', 'https://dwr.utah.gov'];
+function isSafeMirrorUrl(url) {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    return ALLOWED_MIRROR_ORIGINS.some(o => parsed.origin === o);
+  } catch {
+    return false;
+  }
+}
+let _lastMirrorTrigger = null;
 function openInlineHuntDetails(hunt) {
   const section = document.getElementById('huntDetailsSection');
   const frame = document.getElementById('huntDetailsFrame');
   const title = document.getElementById('huntDetailsTitle');
   const meta = document.getElementById('huntDetailsMeta');
   const fallback = document.getElementById('huntDetailsFallbackLink');
+  const loading = document.getElementById('huntDetailsLoading');
+  const blocked = document.getElementById('huntDetailsBlocked');
+  const blockedLink = document.getElementById('huntDetailsBlockedLink');
   const link = getBoundaryLink(hunt);
   if (!section || !frame || !link || !hunt) return;
+  if (!isSafeMirrorUrl(link)) {
+    updateStatus('Hunt details link could not be loaded (unrecognized source).');
+    return;
+  }
+  _lastMirrorTrigger = document.activeElement;
   if (title) title.textContent = `${getHuntCode(hunt)} | ${getUnitName(hunt) || getHuntTitle(hunt)}`;
   if (meta) meta.textContent = `${getSpeciesDisplay(hunt)} | ${getNormalizedSex(hunt)} | ${getHuntType(hunt)} | ${getWeapon(hunt)}`;
   if (fallback) fallback.href = link;
+  if (blockedLink) blockedLink.href = link;
+  if (loading) loading.hidden = false;
+  if (blocked) blocked.hidden = true;
+  frame.classList.remove('hunt-details-frame--loaded');
+  frame.onload = () => {
+    if (loading) loading.hidden = true;
+    let likelyBlocked = false;
+    try {
+      // Cross-origin DWR pages throw SecurityError here (expected = content loaded fine).
+      // If no error is thrown and href is about:blank the page was blocked by X-Frame-Options.
+      const href = frame.contentWindow?.location?.href;
+      if (!href || href === 'about:blank') likelyBlocked = true;
+    } catch {
+      likelyBlocked = false;
+    }
+    if (likelyBlocked) {
+      if (blocked) blocked.hidden = false;
+    } else {
+      frame.classList.add('hunt-details-frame--loaded');
+    }
+  };
   frame.src = link;
   section.hidden = false;
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const closeBtn = document.getElementById('closeHuntDetailsBtn');
+  if (closeBtn) closeBtn.focus();
   updateStatus('Official Utah DWR hunt details loaded below the map.');
 }
 function closeInlineHuntDetails() {
@@ -1321,6 +1363,11 @@ function closeInlineHuntDetails() {
   if (!section || !frame) return;
   section.hidden = true;
   frame.src = 'about:blank';
+  frame.classList.remove('hunt-details-frame--loaded');
+  if (_lastMirrorTrigger && typeof _lastMirrorTrigger.focus === 'function') {
+    _lastMirrorTrigger.focus();
+    _lastMirrorTrigger = null;
+  }
 }
 
 function createGlobeImageryProvider(key) {
@@ -3127,6 +3174,12 @@ function bindControls() {
   });
   document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
   document.getElementById('closeHuntDetailsBtn')?.addEventListener('click', closeInlineHuntDetails);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      const section = document.getElementById('huntDetailsSection');
+      if (section && !section.hidden) { closeInlineHuntDetails(); return; }
+    }
+  });
   document.addEventListener('click', event => {
     const btn = event.target.closest('[data-inline-hunt-details]');
     if (!btn) return;

@@ -135,7 +135,7 @@
 
     <section class="map-wrap">
       <div class="map-stage">
-        <div id="map" aria-label="Google DWR mirror map"></div>
+        <div id="map" aria-label="Interactive Utah hunt unit boundaries map"></div>
         <div id="globeMap" aria-label="Cesium globe view"></div>
       </div>
 
@@ -212,9 +212,15 @@
     <div class="hunt-details-body">
       <p class="hunt-details-note">
         Official details are loaded below so visitors can stay on U.O.G.A. If the DWR page blocks embedding, use
-        <a id="huntDetailsFallbackLink" href="#" target="_blank" rel="noopener noreferrer">this fallback link</a>.
+        <a id="huntDetailsFallbackLink" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open official DWR hunt details in a new tab">this fallback link</a>.
       </p>
-      <iframe id="huntDetailsFrame" class="hunt-details-frame" title="Utah DWR Hunt Details" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div id="huntDetailsFrameWrap" class="hunt-details-frame-wrap">
+        <div id="huntDetailsLoading" class="hunt-details-loading" aria-live="polite">Loading…</div>
+        <div id="huntDetailsBlocked" class="hunt-details-blocked" hidden>
+          <p>The DWR page could not be embedded. <a id="huntDetailsBlockedLink" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open official DWR hunt details in a new tab">Open in a new tab instead</a>.</p>
+        </div>
+        <iframe id="huntDetailsFrame" class="hunt-details-frame" title="Utah DWR Hunt Details" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+      </div>
     </div>
   </section>
 
