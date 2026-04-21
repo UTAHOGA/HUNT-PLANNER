@@ -49,7 +49,6 @@ These are the engine and delivery files the Hunt Research page uses.
 - `processed_data/projected_bonus_draw_2026_simulated.csv`
 - `processed_data/hunt_database_2026.csv`
 - `processed_data/hunt_database_2026.xlsx`
-- `processed_data/hunt_database_foundation_dwr_aligned.sqlite`
 - `processed_data/hunt_join_2025.csv`
 - `processed_data/draw_breakdown_2025.csv`
 - `processed_data/antlerless_draw_2025.csv`
@@ -57,6 +56,13 @@ These are the engine and delivery files the Hunt Research page uses.
 - `processed_data/hunt_scores_2025.csv`
 - `processed_data/hunt_with_outfitters_2025.csv`
 - `processed_data/hunt_research_2026_split/` as optional packaging only
+
+## Database finish-work subfolders
+
+- `processed_data/canonical/`
+- `processed_data/foundation/`
+- `processed_data/trend/`
+- `processed_data/research/`
 
 ## Source-only folders
 These are inputs and should not be mixed into the published site root.
