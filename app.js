@@ -1,3325 +1,3588 @@
-const {
-  GOOGLE_MAPS_API_KEY,
-  GOOGLE_BASELINE_DEFAULT_CENTER,
-  GOOGLE_BASELINE_DEFAULT_ZOOM,
-  UTAH_LOCATION_BOUNDS,
-  CLOUDFLARE_BASE,
-  HUNT_DATA_VERSION,
-  OUTFITTERS_DATA_VERSION,
-  OUTFITTER_COVERAGE_VERSION,
-  HUNT_BOUNDARY_SOURCES,
-  OUTFITTERS_DATA_SOURCES,
-  OUTFITTER_FEDERAL_COVERAGE_SOURCES,
-  CONSERVATION_PERMIT_AREA_SOURCES,
-  CONSERVATION_PERMIT_HUNT_TABLE_SOURCES,
-  LOGO_DNR,
-  LOGO_DWR_SELECTOR,
-  LOGO_DNR_ROOMY,
-  LOGO_CWMU,
-  LOGO_DWR_WMA,
-  LOGO_USFS,
-  LOGO_BLM,
-  LOGO_SITLA,
-  LOGO_STATE_PARKS,
-  LOCAL_CWMU_BOUNDARIES_PATH,
-  CWMU_BOUNDARY_IDS_PATH,
-  PUBLIC_OWNERSHIP_LAYER_URL,
-  BLM_SURFACE_OWNERSHIP_LAYER_URL,
-  BLM_ADMIN_LAYER_URL,
-  BLM_ADMIN_QUERY_URL,
-  CWMU_QUERY_URL,
-  STATE_PARKS_QUERY_URL,
-  WMA_QUERY_URL,
-  WILDERNESS_QUERY_URL,
-  UTAH_OUTLINE_QUERY_URL,
-  USFS_QUERY_URL,
-  WATERFOWL_WMA_NAMES,
-  HUNT_DATA_SOURCES,
-  ELK_BOUNDARY_TABLE_SOURCES,
-  OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES,
-  SPIKE_ELK_HUNT_CODES,
-  HUNT_BOUNDARY_NAME_OVERRIDES,
-  huntPlannerMapStyle,
-  HUNT_TYPE_ORDER,
-  HUNT_CLASS_ORDER,
-  SEX_ORDER,
-  WEAPON_ORDER,
-  DNR_ORANGE,
-  DNR_BROWN,
-  KNOWN_OUTFITTER_COORDS
-} = window.UOGA_CONFIG;
+// -----------------------------
+// UOGA Hunt Planner - Stable Baseline
+// -----------------------------
 
-const {
-  fetchJson,
-  fetchGeoJson,
-  fetchFirstGeoJson,
-  fetchArcGisPagedGeoJson,
-  loadOfficialBoundaryLookup: loadOfficialBoundaryLookupFromData,
-  applyOfficialBoundaryMappings: applyOfficialBoundaryMappingsFromData,
-  loadOfficialElkBoundaryFeatures: loadOfficialElkBoundaryFeaturesFromData,
-  loadDerivedSpikeElkRecords: loadDerivedSpikeElkRecordsFromData,
-  loadHuntDataRecords,
-  loadFirstNormalizedList
-} = window.UOGA_DATA;
+let huntData = [];
+let selectedHunt = null;
+let selectedUnit = null;
+const APP_BUILD = 'build-2026-03-22-118';
+const FEDERAL_BADGE_MIN_ZOOM = 8;
+const CESIUM_ION_TOKEN = '';
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
-let googleMapsLoadTimeoutId = null;
-let conservationPermitAreas = [];
-let conservationPermitHuntTable = [];
-const conservationPermitAreaCodeSet = new Set();
-const conservationPermitAreaSpeciesUnitNameSet = new Set();
-const conservationPermitAreaSpeciesUnitCodeSet = new Set();
-const conservationPermitAreaAllowedTypeMap = new Map();
-const outfitterGeocodeCache = new Map();
-const outfitterMarkerIndex = new Map();
-const blmOwnershipPointCache = new Map();
-const blmDistrictPointCache = new Map();
-const outfitterFederalCoverageIndex = new Map();
-
-const searchInput = document.getElementById('searchInput'),
-  speciesFilter = document.getElementById('speciesFilter'),
-  sexFilter = document.getElementById('sexFilter'),
-  huntTypeFilter = document.getElementById('huntTypeFilter'),
-  weaponFilter = document.getElementById('weaponFilter'),
-  huntCategoryFilter = document.getElementById('huntCategoryFilter'),
-  unitFilter = document.getElementById('unitFilter'),
-  mapTypeSelect = document.getElementById('mapTypeSelect'),
-  globeBasemapSelect = document.getElementById('globeBasemapSelect'),
-  globeBasemapGrid = document.getElementById('globeBasemapGrid'),
-  streetViewBtn = document.getElementById('streetViewBtn'),
-  resetViewBtn = document.getElementById('resetViewBtn'),
-  applyFiltersBtn = document.getElementById('applyFiltersBtn'),
-  clearFiltersBtn = document.getElementById('clearFiltersBtn'),
-  statusEl = document.getElementById('status'),
-  toggleDwrUnits = document.getElementById('toggleDwrUnits'),
-  toggleUSFS = document.getElementById('toggleUSFS'),
-  toggleBLM = document.getElementById('toggleBLM'),
-  toggleBLMDetail = document.getElementById('toggleBLMDetail'),
-  federalLayersSummary = document.getElementById('federalLayersSummary'),
-  toggleSITLA = document.getElementById('toggleSITLA'),
-  toggleStateParks = document.getElementById('toggleStateParks'),
-  toggleWma = document.getElementById('toggleWma'),
-  toggleCwmu = document.getElementById('toggleCwmu'),
-  togglePrivate = document.getElementById('togglePrivate'),
-  stateLayersSummary = document.getElementById('stateLayersSummary'),
-  privateLayersSummary = document.getElementById('privateLayersSummary'),
-  mapChooser = document.getElementById('mapChooser'),
-  mapChooserTitle = document.getElementById('mapChooserTitle'),
-  mapChooserKicker = document.getElementById('mapChooserKicker'),
-  mapChooserBody = document.getElementById('mapChooserBody'),
-  selectedHuntFloat = document.getElementById('selectedHuntFloat');
-
-// --- UTILITIES ---
-function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-function safe(v) { return String(v ?? ''); }
-function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
-  function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
-  function normalizeVisibleVerificationLabel(v) { return safe(v).replace(/\bVetted\b/g, 'Verified'); }
-function assetUrl(path) {
-  try {
-    return new URL(path, window.location.href).href;
-  } catch {
-    return path;
+let outfitters = [
+  {
+    listingName: 'Wild Eyez Outfitters',
+    listingType: 'Outfitter',
+    certLevel: 'CPO',
+    verificationStatus: 'Vetted',
+    website: 'https://www.wildeyez.net',
+    phone: '4358516480',
+    email: 'tyler@wildeyez.net',
+    speciesServed: 'Elk, Mule Deer',
+    region: 'Utah',
+    city: 'Manti',
+    unitsServed: 'beaver-east,fishlake,manti-san-rafael,monroe,fillmore,nebo',
+    blmDistricts: 'Richfield',
+    usfsForests: 'Fishlake NF - Richfield; Manti-La Sal NF - Sanpete'
   }
-}
-function isMobileViewport() {
-  return typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches;
-}
+];
+const OUTFITTERS_DATA_SOURCES = [
+  './data/outfitters.json',
+  './data/outfitters.json.json'
+];
 
-function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
-  const code = String(huntCode || '').trim().toUpperCase();
-  const normalizedResidency = String(residency || '').trim().toLowerCase().replace(/[\s_-]+/g, '') === 'nonresident'
-    ? 'Nonresident'
-    : 'Resident';
-
-  localStorage.setItem('selected_hunt_code', code);
-  localStorage.setItem('selected_hunt_research_residency', normalizedResidency);
-  localStorage.setItem('selected_hunt_research_points', String(points));
-
-  window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
-}
-
-function initSlideBubbleNav() {
-  document.querySelectorAll('[data-slide-target]').forEach(link => {
-    link.addEventListener('click', event => {
-      const targetId = safe(link.getAttribute('data-slide-target'));
-      const target = targetId ? document.getElementById(targetId) : null;
-      if (!target) return;
-      event.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
-    });
-  });
-}
-
-// --- DATA NORMALIZATION ---
-function normalizeSpeciesLabel(value) {
-  const text = safe(value).trim().toLowerCase();
-  if (!text) return '';
-  if (text === 'mule deer' || text === 'deer') return 'Deer';
-  if (text.includes('desert') && text.includes('bighorn')) return 'Desert Bighorn Sheep';
-  if (text.includes('rocky') && text.includes('bighorn')) return 'Rocky Mountain Bighorn Sheep';
-  if (text === 'bighorn sheep') {
-    return 'Bighorn Sheep';
+const DWR_MAPSERVER =
+  'https://dwrmapserv.utah.gov/dwrarcgis/rest/services/HuntBoundary/HUNT_BOUNDARY_PROD/MapServer';
+const DWR_HUNT_BOUNDARY_LAYER = `${DWR_MAPSERVER}/0`;
+const DWR_HUNT_INFO_TABLE =
+  'https://dwrmapserv.utah.gov/arcgis/rest/services/hunt/Boundaries_and_Tables/MapServer/1/query';
+const LOCAL_HUNT_BOUNDARIES_PATH = 'https://json.uoga.workers.dev/hunt-boundaries';
+const HUNT_DATA_SOURCES = [
+  {
+    label: 'Buck Deer',
+    required: true,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_BuckDeer_Pages_43_53.json',
+      './data/Utah_Hunt_Planner_Master_BuckDeer_Pages_43_53.json.json'
+    ]
+  },
+  {
+    label: 'Pronghorn',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_Pronghorn.json',
+      './data/Utah_Hunt_Planner_Master_Pronghorn.json.json'
+    ]
+  },
+  {
+    label: 'Moose',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_Moose.json',
+      './data/Utah_Hunt_Planner_Master_Moose.json.json'
+    ]
+  },
+  {
+    label: 'Bighorn Sheep',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_BighornSheep.json',
+      './data/Utah_Hunt_Planner_Master_BighornSheep.json.json'
+    ]
+  },
+  {
+    label: 'Mountain Goat',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_MountainGoat.json',
+      './data/Utah_Hunt_Planner_Master_MountainGoat.json.json'
+    ]
+  },
+  {
+    label: 'Bison',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_Bison.json',
+      './data/Utah_Hunt_Planner_Master_Bison.json.json'
+    ]
+  },
+  {
+    label: 'Black Bear',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_BlackBear.json',
+      './data/Utah_Hunt_Planner_Master_BlackBear.json.json'
+    ]
+  },
+  {
+    label: 'Turkey',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_Turkey.json',
+      './data/Utah_Hunt_Planner_Master_Turkey.json.json'
+    ]
+  },
+  {
+    label: 'Cougar',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_Cougar.json',
+      './data/Utah_Hunt_Planner_Master_Cougar.json.json'
+    ]
+  },
+  {
+    label: 'Bull Elk',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_BullElk.json',
+      './data/Utah_Hunt_Planner_Master_BullElk.json.json',
+      './data/Utah_Hunt_Planner_Master_Elk.json',
+      './data/Utah_Hunt_Planner_Master_Elk.json.json'
+    ]
+  },
+  {
+    label: 'General Elk',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_GeneralElk.json',
+      './data/Utah_Hunt_Planner_Master_GeneralElk.json.json'
+    ]
+  },
+  {
+    label: 'Spike Elk',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_SpikeElk.json',
+      './data/Utah_Hunt_Planner_Master_SpikeElk.json.json'
+    ]
+  },
+  {
+    label: 'Antlerless Elk',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_AntlerlessElk.json',
+      './data/Utah_Hunt_Planner_Master_AntlerlessElk.json.json'
+    ]
+  },
+  {
+    label: 'Special Elk',
+    required: false,
+    candidates: [
+      './data/Utah_Hunt_Planner_Master_SpecialElk.json',
+      './data/Utah_Hunt_Planner_Master_SpecialElk.json.json'
+    ]
   }
-  return titleCaseWords(text);
+];
+
+const UNIT_CENTER_LOOKUP = {
+  'beaver-east': [38.28, -112.48],
+  'book-cliffs': [39.72, -109.35],
+  cache: [41.78, -111.62],
+  'chalk-creek-east': [40.88, -111.07],
+  'diamond-mountain': [40.42, -109.18],
+  'fillmore-oak-creek': [38.95, -112.33],
+  fishlake: [38.62, -111.78],
+  monroe: [38.47, -112.05],
+  'manti-san-rafael': [39.12, -111.12],
+  nebo: [39.88, -111.74],
+  'pine-valley': [37.45, -113.44],
+  'plateau-boulder-kaiparowits': [37.88, -111.42],
+  'plateau-thousand-lakes': [38.17, -111.36],
+  'south-slope-bonanza': [40.16, -110.22],
+  'south-slope-vernal': [40.46, -109.56],
+  'west-desert-south': [38.78, -113.42]
+};
+
+const OUTFITTER_CITY_LOOKUP = {
+  blanding: [37.624, -109.478],
+  beaver: [38.2769, -112.6411],
+  cedarcity: [37.6775, -113.0619],
+  'cedar city': [37.6775, -113.0619],
+  delta: [39.3527, -112.5772],
+  duchesne: [40.1633, -110.4010],
+  ephraim: [39.3597, -111.5863],
+  escalante: [37.7703, -111.6027],
+  ferron: [39.0930, -111.1299],
+  fillmore: [38.9688, -112.3233],
+  gunnison: [39.1555, -111.8199],
+  heber: [40.5070, -111.4138],
+  'heber city': [40.5070, -111.4138],
+  kanab: [37.0475, -112.5263],
+  kamas: [40.6430, -111.2807],
+  loa: [38.4022, -111.6358],
+  manti: [39.2683, -111.6369],
+  moab: [38.5733, -109.5498],
+  monroe: [38.6291, -112.1202],
+  monticello: [37.8711, -109.3429],
+  'mount pleasant': [39.5461, -111.4552],
+  nephi: [39.7103, -111.8358],
+  panguitch: [37.8228, -112.4358],
+  price: [39.5994, -110.8107],
+  richfield: [38.7725, -112.0849],
+  roosevelt: [40.2994, -109.9888],
+  salina: [38.9583, -111.8597],
+  'spanish fork': [40.1149, -111.6549],
+  springville: [40.1652, -111.6108],
+  'st george': [37.0965, -113.5684],
+  'st. george': [37.0965, -113.5684],
+  vernal: [40.4555, -109.5287]
+};
+
+const USFS_BADGE_URL = 'https://static.wixstatic.com/media/43f827_8a0c98ae96b644eca819113c1cfa0fc2~mv2.png';
+const BLM_BADGE_URL = 'https://static.wixstatic.com/media/43f827_5f1586f9c5b54340a1f8e50ec128188d~mv2.png';
+
+const HUNT_TYPE_ORDER = [
+  'General',
+  'Youth',
+  'Limited Entry',
+  'Premium Limited Entry',
+  'Management',
+  'Dedicated Hunter',
+  'Cactus Buck',
+  'Once-in-a-Lifetime',
+  'Antlerless'
+];
+
+const HUNT_CATEGORY_ORDER = [
+  'Mature Bull',
+  'General Bull',
+  'Spike Only',
+  'Youth',
+  'Extended Archery',
+  'Private Land Only',
+  'Antlerless',
+  'Pronghorn',
+  'Moose',
+  'Rocky Mountain Bighorn',
+  'Desert Bighorn',
+  'Mountain Goat',
+  'Bison',
+  'Turkey',
+  'Cougar',
+  'Conservation',
+  'Pursuit',
+  'Spot and Stalk',
+  'Control',
+  'CWMU',
+  'Select Areas',
+  'Statewide Permit'
+];
+
+const SEX_ORDER = ['Buck', 'Bull', 'Antlerless', 'Either Sex'];
+const WEAPON_ORDER = [
+  'Any Legal Weapon',
+  'Archery',
+  'Extended Archery',
+  'Restricted Archery',
+  'Muzzleloader',
+  'Restricted Muzzleloader',
+  'Restricted Rifle',
+  'HAMSS',
+  'Multiseason',
+  'Restricted Multiseason'
+];
+const HUNT_BOUNDARY_NAME_OVERRIDES = {
+  DB1503: ['Manti, San Rafael'],
+  DB1533: ['Manti, San Rafael'],
+  DB1504: ['Nebo'],
+  DB1534: ['Nebo'],
+  DB1510: ['Monroe'],
+  DB1540: ['Monroe'],
+  DB1506: ['Fillmore'],
+  DB1536: ['Fillmore'],
+  EA1220: [
+    'Manti, North',
+    'Manti, South',
+    'Manti, West',
+    'Manti, Central',
+    'Manti, Mohrland-Stump Flat',
+    'Manti, Horn Mtn',
+    'Manti, Gordon Creek-Price Canyon',
+    'Manti, Ferron Canyon'
+  ],
+  EA1221: [
+    'Fishlake/Thousand Lakes',
+    'Fishlake/Thousand Lakes East',
+    'Fishlake/Thousand Lakes West'
+  ],
+  EA1258: [
+    'La Sal Mtns',
+    'Dolores Triangle',
+    'La Sal, La Sal Mtns-North'
+  ]
+};
+
+const searchInput = document.getElementById('searchInput');
+const speciesFilter = document.getElementById('speciesFilter');
+const sexFilter = document.getElementById('sexFilter');
+const weaponFilter = document.getElementById('weaponFilter');
+const huntTypeFilter = document.getElementById('huntTypeFilter');
+const huntCategoryFilter = document.getElementById('huntCategoryFilter');
+const unitFilter = document.getElementById('unitFilter');
+const basemapSelect = document.getElementById('basemapSelect');
+
+const toggleLiveUnits = document.getElementById('toggleLiveUnits');
+const toggleUSFS = document.getElementById('toggleUSFS');
+const toggleBLM = document.getElementById('toggleBLM');
+const toggleSITLA = document.getElementById('toggleSITLA');
+const toggleState = document.getElementById('toggleState');
+const togglePrivate = document.getElementById('togglePrivate');
+
+const toggleOutfitters = document.getElementById('toggleOutfitters');
+
+const openBoundaryBtn = document.getElementById('openBoundaryBtn');
+const openAboutBtn = document.getElementById('openAboutBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+const selectedTitle = document.getElementById('selectedTitle');
+const selectedMeta = document.getElementById('selectedMeta');
+const selectedRef = document.getElementById('selectedRef');
+const selectedTitleMobile = document.getElementById('selectedTitleMobile');
+const selectedMetaMobile = document.getElementById('selectedMetaMobile');
+const selectedRefMobile = document.getElementById('selectedRefMobile');
+const selectedSummaryDesktop = document.getElementById('selectedSummaryDesktop');
+const selectedSummaryMobile = document.getElementById('selectedSummaryMobile');
+const dwrBoundaryEmbed = document.getElementById('dwrBoundaryEmbed');
+const dwrBoundaryMeta = document.getElementById('dwrBoundaryMeta');
+const dwrBoundarySnapshot = document.getElementById('dwrBoundarySnapshot');
+const cesiumContainer = document.getElementById('cesiumContainer');
+const cesiumMeta = document.getElementById('cesiumMeta');
+const cesiumNotice = document.getElementById('cesiumNotice');
+const cesiumZoomBtn = document.getElementById('cesiumZoomBtn');
+const cesiumTiltBtn = document.getElementById('cesiumTiltBtn');
+const cesiumResetBtn = document.getElementById('cesiumResetBtn');
+const cesiumTerrainBtn = document.getElementById('cesiumTerrainBtn');
+const dwrShell = dwrBoundaryEmbed?.closest('.google-shell') || null;
+const cesiumShell = cesiumContainer?.closest('.google-shell') || null;
+const toggleCesiumPanelBtn = document.getElementById('toggleCesiumPanelBtn');
+const aboutModal = document.getElementById('aboutModal');
+const closeAboutBtn = document.getElementById('closeAboutBtn');
+const aboutOkBtn = document.getElementById('aboutOkBtn');
+
+let cesiumViewer = null;
+let cesiumSelectionEntity = null;
+let cesiumBoundaryDataSource = null;
+let cesiumTerrainEnabled = false;
+let cesiumTilted = false;
+let cesiumViewRequestId = 0;
+const remoteHuntInfoCache = new Map();
+const toggleDwrPanelBtn = document.getElementById('toggleDwrPanelBtn');
+const huntResultsEl = document.getElementById('huntResults');
+const huntResultsMobileEl = document.getElementById('huntResultsMobile');
+const resultsEl = document.getElementById('results');
+const resultsMobileEl = document.getElementById('resultsMobile');
+const areaInfoMobileEl = document.getElementById('areaInfoMobile');
+const areaInfoMapEl = document.getElementById('areaInfoMap');
+const huntCountEl = document.getElementById('huntCount');
+const huntCountMobileEl = document.getElementById('huntCountMobile');
+const resultsTrayEl = document.querySelector('.results');
+const toggleResultsTrayBtn = document.getElementById('toggleResultsTray');
+const mapWrapEl = document.getElementById('map-wrap');
+
+function safe(v) {
+  return String(v ?? '');
 }
 
-function inferBighornSpecies(hunt) {
-  const code = safe(getHuntCode(hunt)).toUpperCase();
-  const title = safe(getHuntTitle(hunt)).toLowerCase();
-  const rawSpecies = safe(firstNonEmpty(hunt.species, hunt.Species)).toLowerCase();
-  const haystack = `${title} ${rawSpecies}`;
-  if (code.startsWith('DS') || haystack.includes('desert bighorn')) return 'Desert Bighorn Sheep';
-  if (code.startsWith('RS') || code.startsWith('RE') || haystack.includes('rocky mountain bighorn')) return 'Rocky Mountain Bighorn Sheep';
-  return 'Bighorn Sheep';
-}
-
-function getSpeciesDisplayList(h) {
-  const rawSpecies = safe(firstNonEmpty(h.species, h.Species));
-  const normalized = rawSpecies.split(',').map(normalizeSpeciesLabel).filter(Boolean);
-  const resolved = normalized.map(species => species === 'Bighorn Sheep' ? inferBighornSpecies(h) : species);
-  return Array.from(new Set(resolved));
-}
-function getSpeciesDisplay(h) { return getSpeciesDisplayList(h)[0] || ''; }
-
-function getNormalizedSex(valueOrHunt) {
-  const raw = typeof valueOrHunt === 'string' ? safe(valueOrHunt).trim() : firstNonEmpty(valueOrHunt.sex, valueOrHunt.Sex);
-  const hunt = typeof valueOrHunt === 'string' ? null : valueOrHunt;
-  const val = raw.toLowerCase();
-  const species = hunt ? getSpeciesDisplay(hunt) : '';
-  if (val.includes('choice')) return "Hunter's Choice";
-  if (val.includes('either')) return 'Either Sex';
-  if (val === 'ewe') return 'Ewe';
-  if ((val === 'doe' || val === 'cow' || val.includes('antlerless')) && species === 'Rocky Mountain Bighorn Sheep') return 'Ewe';
-  if ((val === 'doe' || val === 'cow' || val.includes('antlerless')) && species === 'Desert Bighorn Sheep') return 'Ram';
-  if (val === 'doe' || val === 'cow' || val.includes('antlerless')) return 'Antlerless';
-  if (val.includes('bearded')) return 'Bearded';
-  if (val.includes('ram')) return 'Ram';
-  if (val.includes('buck')) return 'Buck';
-  if (val.includes('bull')) return 'Bull';
-  if (val.includes('male only') && hunt) {
-    if (species === 'Rocky Mountain Bighorn Sheep') return 'Ram';
-    if (species === 'Desert Bighorn Sheep') return 'Ram';
+function firstNonEmpty(...values) {
+  for (const v of values) {
+    const s = safe(v).trim();
+    if (s) return s;
   }
-  return titleCaseWords(raw) || 'All';
+  return '';
 }
 
-function getHuntCode(h) { return firstNonEmpty(h.huntCode, h.hunt_code, h.HuntCode, h.code); }
-function getHuntTitle(h) { return firstNonEmpty(h.title, h.Title, h.huntTitle, getHuntCode(h)); }
-function getUnitCode(h) { return firstNonEmpty(h.unitCode, h.unit_code, h.UnitCode); }
-function getUnitName(h) { return firstNonEmpty(h.unitName, h.unit_name, h.UnitName); }
-function getBoundaryNamesForHunt(h) {
-  const code = safe(getUnitCode(h)).trim();
-  const unitName = safe(getUnitName(h)).trim();
-  const strippedUnitName = unitName.replace(/\s*\((?:conservation|private lands only|select areas only)\)\s*$/i, '').trim();
-  const officialNames = Array.isArray(h?.officialBoundaryNames) ? h.officialBoundaryNames : [];
-  const base = [unitName, strippedUnitName, ...officialNames];
-  const overrides = Array.isArray(HUNT_BOUNDARY_NAME_OVERRIDES[code]) ? HUNT_BOUNDARY_NAME_OVERRIDES[code] : [];
-  return [...new Set([...base, ...overrides].map(v => safe(v).trim()).filter(Boolean))];
+function escapeHtml(v) {
+  return safe(v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-function buildBoundaryMatcher(hunts) {
-  const boundaryIds = new Set();
-  const exactNames = new Set();
-  const prefixNames = new Set();
-  hunts.forEach(hunt => {
-    const boundaryId = safe(getBoundaryId(hunt)).trim();
-    if (boundaryId) boundaryIds.add(boundaryId);
-    const officialBoundaryIds = Array.isArray(hunt?.officialBoundaryIds) ? hunt.officialBoundaryIds : [];
-    officialBoundaryIds.forEach(id => {
-      const normalizedId = safe(id).trim();
-      if (normalizedId) boundaryIds.add(normalizedId);
-    });
-    const names = getBoundaryNamesForHunt(hunt).map(normalizeBoundaryKey).filter(Boolean);
-    names.forEach(name => exactNames.add(name));
-    if (!boundaryId) names.forEach(name => prefixNames.add(name));
-  });
-  return {
-    matches(featureBoundaryId, featureName) {
-      if (boundaryIds.has(featureBoundaryId)) return true;
-      if (exactNames.has(featureName)) return true;
-      for (const prefix of prefixNames) {
-        if (featureName.startsWith(`${prefix}-`) || prefix.startsWith(`${featureName}-`)) return true;
-      }
-      return false;
-    }
-  };
+function normalizeUrl(url) {
+  const raw = safe(url).trim();
+  if (!raw) return '';
+  if (/^https?:\/\//i.test(raw)) return raw;
+  return `https://${raw}`;
 }
 
-let officialBoundaryLookupPromise = null;
-async function loadOfficialBoundaryLookup() {
-  if (!officialBoundaryLookupPromise) {
-    officialBoundaryLookupPromise = loadOfficialBoundaryLookupFromData({
-      OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES,
-      normalizeHuntCode,
-      safe
-    });
-  }
-  return officialBoundaryLookupPromise;
-}
-
-async function applyOfficialBoundaryMappings(records) {
-  return applyOfficialBoundaryMappingsFromData(records, {
-    OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES,
-    normalizeHuntCode,
-    getHuntCode,
-    getBoundaryId,
-    safe
-  });
-}
-function getRequiredUsfsForestsForHunt(hunt) {
-  const boundaryKeys = getBoundaryNamesForHunt(hunt).map(normalizeBoundaryKey);
-  const required = new Set();
-  boundaryKeys.forEach(key => {
-    if (!key) return;
-    if (
-      key.includes('manti') ||
-      key.includes('san rafael') ||
-      key.includes('la sal') ||
-      key.includes('dolores') ||
-      key.includes('ferron') ||
-      key.includes('price canyon') ||
-      key.includes('gordon creek') ||
-      key.includes('mohrland') ||
-      key.includes('horn mtn') ||
-      key.includes('moab') ||
-      key.includes('monticello')
-    ) {
-      required.add('manti-la-sal');
-    }
-    if (
-      key.includes('fishlake') ||
-      key.includes('thousand lakes') ||
-      key.includes('fillmore') ||
-      key.includes('monroe') ||
-      key.includes('beaver') ||
-      key.includes('mt dutton') ||
-      key.includes('plateau')
-    ) {
-      required.add('fishlake');
-    }
-    if (key.includes('nebo')) {
-      required.add('uinta-wasatch-cache');
-    }
-  });
-  return [...required];
-}
-function getUnitValue(h) { return firstNonEmpty(getUnitCode(h), getUnitName(h)); }
-function getBoundaryId(h) { return firstNonEmpty(h.boundaryId, h.boundaryID, h.BoundaryID); }
-function normalizeHuntCode(value) { return safe(value).trim().toUpperCase(); }
-function getHuntRecordKey(h) {
-  return [
-    normalizeHuntCode(getHuntCode(h)),
-    safe(getBoundaryId(h)).trim(),
-    safe(getWeapon(h)).trim().toLowerCase(),
-    normalizeBoundaryKey(getUnitName(h) || getUnitCode(h))
-  ].join('|');
-}
-function getSelectedHuntKey() {
-  return selectedHunt ? getHuntRecordKey(selectedHunt) : '';
-}
-function normalizeWeaponLabel(raw) {
-  const value = safe(raw).trim();
-  const lower = value.toLowerCase();
-  if (!value) return '';
-  if (lower.includes('any legal weapon')) return 'Any Legal Weapon';
-  if (lower.includes('extended archery')) return 'Extended Archery';
-  if (lower.includes('restricted archery')) return 'Restricted Archery';
-  if (lower.includes('restricted muzzleloader')) return 'Restricted Muzzleloader';
-  if (lower.includes('restricted multiseason')) return 'Restricted Multiseason';
-  if (lower.includes('restricted rifle')) return 'Restricted Rifle';
-  if (lower.includes('muzzleloader')) return 'Muzzleloader';
-  if (lower.includes('archery')) return 'Archery';
-  if (lower.includes('dedicated hunter')) return 'Multiseason';
-  if (lower.includes('hamss') || lower.includes('shotgun') || lower.includes('straight-walled')) return 'HAMSS';
-  if (lower.includes('multiseason')) return 'Multiseason';
-  return value;
-}
-function getWeapon(h) { return normalizeWeaponLabel(firstNonEmpty(h.weapon, h.Weapon)); }
-function weaponMatchesFilter(hunt, selectedWeapon) {
-  if (!selectedWeapon || selectedWeapon === 'All') return true;
-  const huntWeapon = getWeapon(hunt);
-  if (huntWeapon === selectedWeapon) return true;
-  if (
-    hunt?.syntheticConservationPermit &&
-    selectedWeapon === 'Any Legal Weapon' &&
-    (huntWeapon === 'Multiseason' || huntWeapon === 'Restricted Multiseason' || huntWeapon === "Hunter's Choice")
-  ) {
-    return true;
-  }
-  return false;
-}
-function normalizeHuntTypeLabel(raw) {
-  const value = safe(raw).trim();
-  const lower = value.toLowerCase();
-  if (!value) return '';
-  if (lower.includes('private land only')) return 'Private Land Only';
-  if (lower.includes('premium')) return 'Premium Limited Entry';
-  if (lower.includes('limited')) return 'Limited Entry';
-  if (lower.includes('once-in-a-lifetime')) return 'Once-in-a-Lifetime';
-  if (lower.includes('dedicated hunter')) return 'Dedicated Hunter';
-  if (lower.includes('management')) return 'Management';
-  if (lower.includes('youth')) return 'Youth';
-  if (lower.includes('conservation')) return 'Conservation';
-  if (lower.includes('cwmu')) return 'CWMU';
-  if (lower.includes('antlerless')) return 'Antlerless';
-  if (lower.includes('general')) return 'General Season';
-  return value;
-}
-function buildConservationSpeciesKey(species, value) {
-  const normalizedSpecies = normalizeBoundaryKey(species);
-  const normalizedValue = normalizeBoundaryKey(value);
-  if (!normalizedSpecies || !normalizedValue) return '';
-  return `${normalizedSpecies}|${normalizedValue}`;
-}
-function indexConservationPermitAreas(list) {
-  conservationPermitAreas = Array.isArray(list) ? list : [];
-  conservationPermitAreaCodeSet.clear();
-  conservationPermitAreaSpeciesUnitNameSet.clear();
-  conservationPermitAreaSpeciesUnitCodeSet.clear();
-  conservationPermitAreaAllowedTypeMap.clear();
-
-  conservationPermitAreas.forEach(entry => {
-    const species = safe(entry?.species).trim();
-    const allowedRawTypes = new Set((Array.isArray(entry?.allowedRawHuntTypes) ? entry.allowedRawHuntTypes : []).map(v => safe(v).trim().toLowerCase()).filter(Boolean));
-    (Array.isArray(entry?.huntCodes) ? entry.huntCodes : []).forEach(code => {
-      const normalizedCode = normalizeHuntCode(code);
-      if (!normalizedCode) return;
-      conservationPermitAreaCodeSet.add(normalizedCode);
-      if (allowedRawTypes.size) conservationPermitAreaAllowedTypeMap.set(`code|${normalizedCode}`, allowedRawTypes);
-    });
-    (Array.isArray(entry?.unitNames) ? entry.unitNames : []).forEach(name => {
-      const key = buildConservationSpeciesKey(species, name);
-      if (!key) return;
-      conservationPermitAreaSpeciesUnitNameSet.add(key);
-      if (allowedRawTypes.size) conservationPermitAreaAllowedTypeMap.set(`name|${key}`, allowedRawTypes);
-    });
-    (Array.isArray(entry?.unitCodes) ? entry.unitCodes : []).forEach(code => {
-      const key = buildConservationSpeciesKey(species, code);
-      if (!key) return;
-      conservationPermitAreaSpeciesUnitCodeSet.add(key);
-      if (allowedRawTypes.size) conservationPermitAreaAllowedTypeMap.set(`codekey|${key}`, allowedRawTypes);
-    });
-  });
-}
-async function loadConservationPermitAreas() {
-  try {
-    const list = await loadFirstNormalizedList(
-      CONSERVATION_PERMIT_AREA_SOURCES,
-      json => Array.isArray(json) ? json : [],
-      []
-    );
-    indexConservationPermitAreas(list);
-  } catch (error) {
-    console.error('Conservation permit area load failed; continuing without conservation register.', error);
-    indexConservationPermitAreas([]);
-  }
-}
-async function loadConservationPermitHuntTable() {
-  try {
-    conservationPermitHuntTable = await loadFirstNormalizedList(
-      CONSERVATION_PERMIT_HUNT_TABLE_SOURCES,
-      json => Array.isArray(json) ? json : [],
-      []
-    );
-  } catch (error) {
-    console.error('Conservation permit hunt table load failed; continuing without synthetic conservation hunts.', error);
-    conservationPermitHuntTable = [];
-  }
-}
-function isConservationPermitHunt(h) {
-  return !!h?.syntheticConservationPermit;
-}
-function getHuntType(h) {
-  if (h?.syntheticConservationPermit) return 'Conservation';
-  const raw = firstNonEmpty(h.huntType, h.HuntType, h.type);
-  return normalizeHuntTypeLabel(raw);
-}
-function normalizeHuntCategoryLabel(raw) {
-  const value = safe(raw).trim();
-  const lower = value.toLowerCase();
-  if (!value) return '';
-  if (lower.includes('statewide permit')) return 'Statewide Permit';
-  if (lower.includes('private land only')) return 'Private Land Only';
-  if (lower.includes('extended archery')) return 'Extended Archery';
-  if (lower.includes('premium')) return 'Premium Limited Entry';
-  if (lower.includes('limited')) return 'Limited Entry';
-  if (lower.includes('cwmu')) return 'CWMU';
-  if (lower.includes('youth')) return 'Youth';
-  if (lower.includes('conservation')) return 'Conservation';
-  if (lower.includes('management')) return 'Management';
-  if (lower.includes('spike')) return 'Spike Only';
-  if (lower.includes('general bull') || lower.includes('bull elk') || lower.includes('any bull')) return 'General Bull';
-  if (lower.includes('antlerless')) return 'Antlerless';
-  if (lower.includes('general')) return 'General Season';
-  return value;
-}
-function getHuntCategory(h) {
-  if (h?.syntheticConservationPermit) {
-    return firstNonEmpty(h.huntCategory, h.HuntCategory, h.category, 'Conservation');
-  }
-  const raw = firstNonEmpty(h.huntCategory, h.HuntCategory, h.category);
-  const normalized = normalizeHuntCategoryLabel(raw);
-  const huntType = getHuntType(h);
-  const species = getSpeciesDisplay(h);
-  const sex = getNormalizedSex(h);
-  const haystack = `${safe(raw)} ${getHuntTitle(h)} ${getUnitName(h)}`.toLowerCase();
-
-  if (species === 'Elk' && sex === 'Bull') {
-    if (huntType === 'Limited Entry') {
-      if (
-        haystack.includes('bull elk') ||
-        haystack.includes('mature bull') ||
-        haystack.includes('any bull') ||
-        normalized === 'General Bull' ||
-        normalized === 'General Season'
-      ) {
-        return 'Mature Bull';
-      }
-    }
-
-    if (huntType === 'General Season') {
-      if (haystack.includes('spike')) return 'Spike Only';
-      if (
-        haystack.includes('bull elk') ||
-        haystack.includes('any bull') ||
-        haystack.includes('hunters choice') ||
-        normalized === 'General Bull'
-      ) {
-        return 'General Bull';
-      }
-    }
-  }
-
-  return normalized;
-}
-function buildSyntheticConservationPermitHunts(records) {
-  void records;
-  if (!Array.isArray(conservationPermitHuntTable) || !conservationPermitHuntTable.length) return [];
-
-  return conservationPermitHuntTable.map((row, index) => {
-    const boundaryIds = [...new Set((Array.isArray(row?.boundaryIds) ? row.boundaryIds : []).map(id => safe(id).trim()).filter(Boolean))];
-    const boundaryNames = [...new Set((Array.isArray(row?.unitNames) ? row.unitNames : [row?.area]).map(v => safe(v).trim()).filter(Boolean))];
-    const species = firstNonEmpty(row?.species);
-    const area = firstNonEmpty(row?.area, boundaryNames[0], row?.matchedRegisterLabel);
-    const unitCode = firstNonEmpty(row?.unitCode, normalizeBoundaryKey(area), `conservation-permit-${index + 1}`);
-    const huntCode = firstNonEmpty(row?.huntCode, `CP-${normalizeBoundaryKey(species)}-${normalizeBoundaryKey(area)}`).toUpperCase();
-
-    return {
-      syntheticConservationPermit: true,
-      huntCode,
-      species,
-      sex: firstNonEmpty(row?.sex),
-      huntType: 'Conservation',
-      huntCategory: firstNonEmpty(row?.huntClass, 'Conservation'),
-      weapon: firstNonEmpty(row?.weapon, row?.condition),
-      unitCode,
-      unitName: area,
-      boundaryId: boundaryIds.length === 1 ? boundaryIds[0] : '',
-      boundaryIds,
-      officialBoundaryIds: boundaryIds,
-      officialBoundaryNames: boundaryNames,
-      boundaryNames,
-      seasonLabel: 'Conservation Permit Area',
-      dates: 'See official conservation permit details',
-      title: firstNonEmpty(row?.matchedRegisterLabel, area, `${species} Conservation Permit`),
-      source: 'UOGA conservation permit hunt table',
-      sourceHuntCodes: Array.isArray(row?.sourceHuntCodes) ? row.sourceHuntCodes.slice() : [],
-      permitCount: row?.permitCount,
-      organizations: Array.isArray(row?.organizations) ? row.organizations.slice() : [],
-      averageValue: row?.averageValue
-    };
-  }).filter(row => Array.isArray(row.boundaryIds) && row.boundaryIds.length);
-}
-function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
-function getBoundaryLink(h) { return firstNonEmpty(h.boundaryLink, h.boundaryURL, h.huntBoundaryLink); }
-function getSpeciesHeadingLabel(species) {
-  if (species === 'Rocky Mountain Bighorn Sheep') return 'R.M. Bighorn Sheep';
-  if (species === 'Desert Bighorn Sheep') return 'Desert Bighorn Sheep';
-  return species;
-}
-function getPermitTotal(hunt) {
-  const values = [
-    hunt.permitsTotal, hunt.permitTotal, hunt.totalPermits, hunt.quota,
-    hunt.residentPermits, hunt.nonresidentPermits, hunt.resident, hunt.nonresident
-  ].map(v => Number(v)).filter(v => Number.isFinite(v) && v >= 0);
-  if (!values.length) return null;
-  if (values.length >= 2 && values[0] !== values[1]) return values[0] + values[1];
-  return values[0];
-}
-function getPanelHeading(hunt) {
-  const species = getSpeciesDisplay(hunt) || 'Hunt';
-  const speciesHeading = getSpeciesHeadingLabel(species);
-  const sex = getNormalizedSex(hunt) || '';
-  const huntType = getHuntType(hunt) || '';
-  const huntClass = getHuntCategory(hunt) || '';
-  const combined = `${huntType} ${huntClass}`.toLowerCase();
-  const permitTotal = getPermitTotal(hunt);
-
-  const prefixParts = [];
-  const isOil = combined.includes('once-in-a-lifetime');
-  const isPremium = combined.includes('premium');
-  if (isOil) prefixParts.push('O.I.L.');
-  else if (isPremium || combined.includes('limited')) prefixParts.push('L.E.');
-  else if (combined.includes('general')) prefixParts.push('G.S.');
-
-  let classLabel = '';
-  if (combined.includes('mature bull')) classLabel = 'Mature Bull';
-  else if (combined.includes('mature buck')) classLabel = 'Mature Buck';
-  else if (combined.includes('general bull')) classLabel = 'General Bull';
-  else if (combined.includes('general buck')) classLabel = 'General Buck';
-  else if (combined.includes('spike')) classLabel = 'Spike Only';
-  else if (combined.includes('antlerless')) classLabel = 'Antlerless';
-  else if (sex === 'Bull' && prefixParts.includes('L.E.')) classLabel = 'Mature Bull';
-  else if (sex === 'Buck' && prefixParts.includes('L.E.')) classLabel = 'Mature Buck';
-  else if (sex === 'Bull' && prefixParts.includes('G.S.')) classLabel = 'General Bull';
-  else if (sex === 'Buck' && prefixParts.includes('G.S.')) classLabel = 'General Buck';
-  else if (sex && sex !== 'All') classLabel = sex;
-
-  const parts = [];
-  if (prefixParts.length) parts.push(prefixParts.join(' '));
-  const isTrophyOilSpecies = isOil && ['Rocky Mountain Bighorn Sheep', 'Desert Bighorn Sheep', 'Moose', 'Mountain Goat', 'Bison'].includes(species);
-  const isPremiumDeerTrophy = isPremium && species === 'Deer';
-  const isLowPermitElkTrophy = species === 'Elk' && prefixParts.includes('L.E.') && permitTotal !== null && permitTotal < 20;
-  const isTrophy = isTrophyOilSpecies || isPremiumDeerTrophy || isLowPermitElkTrophy;
-
-  if (isTrophy) {
-    parts.push('Trophy');
-    if (species === 'Elk' || species === 'Deer') {
-      if (classLabel && !/^antlerless$/i.test(classLabel)) parts.push(classLabel);
-      parts.push(speciesHeading);
-    } else {
-      parts.push(speciesHeading);
-    }
-  } else {
-    if (classLabel) parts.push(classLabel);
-    parts.push(speciesHeading);
-  }
-  return parts.join(' ');
-}
-function normalizeBoundaryKey(value) {
-  return safe(value)
+function slugify(v) {
+  return safe(v)
+    .trim()
     .toLowerCase()
     .replace(/&/g, 'and')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
-function hasActiveMatrixSelections() {
-  return [
-    safe(searchInput?.value).trim(),
-    speciesFilter?.value && speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
-    sexFilter?.value && sexFilter.value !== 'All' ? sexFilter.value : '',
-    huntTypeFilter?.value && huntTypeFilter.value !== 'All' ? huntTypeFilter.value : '',
-    huntCategoryFilter?.value && huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : '',
-    weaponFilter?.value && weaponFilter.value !== 'All' ? weaponFilter.value : '',
-    unitFilter?.value || ''
-  ].filter(Boolean).length > 0;
-}
-function hasReadyUnitSelection() {
-  return !!safe(unitFilter?.value).trim();
+
+function listify(value) {
+  if (Array.isArray(value)) return value.map(v => safe(v).trim()).filter(Boolean);
+  return safe(value)
+    .split(/[;,|]/)
+    .map(v => safe(v).trim())
+    .filter(Boolean);
 }
 
-// --- FILTERING ENGINE ---
-function getFilteredHunts(excludeKey = '') {
+function splitEmailList(value) {
+  if (Array.isArray(value)) return value.map(v => safe(v).trim()).filter(Boolean);
+  return safe(value)
+    .split(/[\s,;|]+/)
+    .map(v => safe(v).trim())
+    .filter(v => v && v.includes('@'));
+}
+
+function splitOwnerList(value) {
+  if (Array.isArray(value)) return value.map(v => safe(v).trim()).filter(Boolean);
+  return safe(value)
+    .split(/[;|]/)
+    .map(v => safe(v).trim())
+    .filter(Boolean);
+}
+
+function splitPhoneList(value) {
+  if (Array.isArray(value)) return value.map(v => safe(v).trim()).filter(Boolean);
+  const raw = safe(value).trim();
+  if (!raw) return [];
+  const matches = raw.match(/(?:\+?1[\s.-]*)?(?:\(?\d{3}\)?[\s.-]*)\d{3}[\s.-]*\d{4}/g);
+  if (matches && matches.length) {
+    return matches.map(v => safe(v).trim()).filter(Boolean);
+  }
+  return [raw];
+}
+
+function slugList(value) {
+  return listify(value).map(slugify).filter(Boolean);
+}
+
+function formatPhone(phone) {
+  const d = safe(phone).replace(/\D/g, '');
+  if (d.length === 10) return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+  return safe(phone);
+}
+
+function formatPhoneList(phone) {
+  return splitPhoneList(phone).map(formatPhone).filter(Boolean).join(', ');
+}
+
+function getOutfitterCityCenter(outfitter) {
+  const rawCity = safe(outfitter?.city).trim().toLowerCase();
+  if (!rawCity) return null;
+  return (
+    OUTFITTER_CITY_LOOKUP[rawCity] ||
+    OUTFITTER_CITY_LOOKUP[rawCity.replace(/\./g, '')] ||
+    OUTFITTER_CITY_LOOKUP[rawCity.replace(/\s+/g, '')] ||
+    null
+  );
+}
+
+function getOutfitterLogoUrl(outfitter) {
+  const url = normalizeUrl(outfitter?.logoUrl || outfitter?.logo || outfitter?.imageUrl);
+  return url || '';
+}
+
+function createOutfitterMarkerIcon(outfitter) {
+  const logoUrl = getOutfitterLogoUrl(outfitter);
+  if (!logoUrl) return null;
+  const safeLogoUrl = escapeHtml(logoUrl);
+  return L.divIcon({
+    className: 'outfitter-logo-pin',
+    iconSize: [44, 58],
+    iconAnchor: [22, 52],
+    popupAnchor: [0, -46],
+    html: `
+      <div class="outfitter-logo-pin-shell">
+        <div class="outfitter-logo-pin-base"></div>
+        <div class="outfitter-logo-pin-center">
+          <img src="${safeLogoUrl}" alt="${escapeHtml(outfitter?.listingName || 'Outfitter')}">
+        </div>
+      </div>
+    `
+  });
+}
+
+function setSelectedDisplay(title, meta, reference = '') {
+  const resolvedTitle = safe(title).trim() || 'No hunt selected';
+  const resolvedMeta = safe(meta).trim() || 'Choose filters or click a hunt unit to load hunt and outfitter results.';
+  const resolvedReference = safe(reference).trim() || 'Reference';
+  const hasSelection = resolvedTitle.toLowerCase() !== 'no hunt selected';
+
+  if (selectedTitle) selectedTitle.textContent = resolvedTitle;
+  if (selectedMeta) selectedMeta.textContent = resolvedMeta;
+  if (selectedRef) selectedRef.textContent = hasSelection ? resolvedReference : 'Reference';
+  if (selectedTitleMobile) selectedTitleMobile.textContent = resolvedTitle;
+  if (selectedMetaMobile) selectedMetaMobile.textContent = resolvedMeta;
+  if (selectedRefMobile) selectedRefMobile.textContent = hasSelection ? resolvedReference : 'Reference';
+  if (selectedSummaryDesktop) selectedSummaryDesktop.classList.toggle('is-active', hasSelection);
+  if (selectedSummaryMobile) selectedSummaryMobile.classList.toggle('is-active', hasSelection);
+}
+
+function getDwrPlannerUrl(hunt = null) {
+  const huntCode = safe(hunt?.huntCode || hunt?.code).trim();
+  if (huntCode) return `https://dwrapps.utah.gov/huntboundary/hbstart?HN=${encodeURIComponent(huntCode)}`;
+  return 'https://dwrapps.utah.gov/huntboundary/hbstart';
+}
+
+function getDwrHuntInfoUrl(hunt = null) {
+  const huntCode = safe(getHuntCode(hunt)).trim();
+  if (huntCode) return `https://dwrapps.utah.gov/huntboundary/PrintABoundary?HN=${encodeURIComponent(huntCode)}`;
+  return getDwrPlannerUrl(hunt);
+}
+
+async function fetchRemoteHuntInfo(hunt) {
+  const huntCode = safe(getHuntCode(hunt)).trim();
+  if (!huntCode) return null;
+
+  const now = Date.now();
+  const cached = remoteHuntInfoCache.get(huntCode);
+  if (cached && (now - cached.fetchedAt) < 5 * 60 * 1000) {
+    return cached.data;
+  }
+
+  const url =
+    `${DWR_HUNT_INFO_TABLE}?` +
+    `where=${encodeURIComponent(`HUNT_NUMBER='${huntCode.replace(/'/g, "''")}'`)}` +
+    '&outFields=BOUNDARY_NAME,SEASON,BOUNDARYID,HUNT_NUMBER' +
+    '&returnGeometry=false' +
+    '&f=json';
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Remote hunt info query failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  const features = Array.isArray(payload?.features) ? payload.features : [];
+  const rows = features.map(feature => feature?.attributes || {});
+
+  const data = {
+    huntCode,
+    seasons: Array.from(new Set(rows.map(r => safe(r.SEASON).trim()).filter(Boolean))),
+    boundaryNames: Array.from(new Set(rows.map(r => safe(r.BOUNDARY_NAME).trim()).filter(Boolean))),
+    boundaryIds: Array.from(new Set(rows.map(r => safe(r.BOUNDARYID).trim()).filter(Boolean)))
+  };
+
+  remoteHuntInfoCache.set(huntCode, {
+    fetchedAt: now,
+    data
+  });
+
+  return data;
+}
+
+function getEffectiveSeasonText(hunt, remoteInfo = null) {
+  const remoteSeasons = Array.isArray(remoteInfo?.seasons) ? remoteInfo.seasons.filter(Boolean) : [];
+  if (remoteSeasons.length) return remoteSeasons.join(' | ');
+  return safe(getDates(hunt)).trim();
+}
+
+function getSelectedBoundaryFeaturesForHunt(hunt = selectedHunt) {
+  if (!hunt) return [];
+  const matchSets = buildBoundaryMatchSets(hunt);
+  return filterBoundaryFeatures(matchSets.names, matchSets.ids);
+}
+
+async function refreshSelectedHuntOfficialInfo(hunt = selectedHunt) {
+  if (!hunt) return;
+
+  try {
+    const remoteInfo = await fetchRemoteHuntInfo(hunt);
+    if (!selectedHunt || getHuntCode(selectedHunt) !== getHuntCode(hunt)) return;
+    renderAreaInfo(remoteInfo);
+  } catch (error) {
+    console.warn('Remote hunt info refresh failed:', error);
+  }
+}
+
+function updateDwrBoundaryEmbed(hunt = null, options = {}) {
+  if (!dwrBoundaryEmbed) return;
+
+  const src = options.forceFrame && hunt ? getDwrHuntInfoUrl(hunt) : getDwrPlannerUrl(hunt);
+  const frameWrap = dwrBoundaryEmbed.closest('.google-frame-wrap');
+
+  if (hunt) {
+    if (dwrBoundarySnapshot) {
+      dwrBoundarySnapshot.style.display = 'block';
+      dwrBoundarySnapshot.innerHTML = `
+        <div class="dwr-snapshot-card">
+          <h4>${escapeHtml(getHuntTitle(hunt) || getHuntCode(hunt))}</h4>
+          <div class="dwr-snapshot-grid">
+            <div><strong>Hunt Number:</strong><br>${escapeHtml(getHuntCode(hunt) || 'N/A')}</div>
+            <div><strong>Unit:</strong><br>${escapeHtml(getUnitName(hunt) || getUnitValue(hunt) || 'N/A')}</div>
+            <div><strong>Species:</strong><br>${escapeHtml(getSpeciesRaw(hunt) || 'N/A')}</div>
+            <div><strong>Sex:</strong><br>${escapeHtml(getSex(hunt) || 'N/A')}</div>
+            <div><strong>Weapon:</strong><br>${escapeHtml(getWeapon(hunt) || 'N/A')}</div>
+            <div><strong>Hunt Type:</strong><br>${escapeHtml(getHuntType(hunt) || 'N/A')}</div>
+            <div><strong>Dates:</strong><br>${escapeHtml(getDates(hunt) || 'N/A')}</div>
+          </div>
+          <div class="dwr-snapshot-actions">
+            <button type="button" class="btn-primary" data-action="load-dwr-map-here">Load Full Hunt Info Here</button>
+            <a href="${escapeHtml(src)}" target="_blank" rel="noopener noreferrer">
+              <button type="button" class="btn-secondary">Open Full Hunt Info in New Tab</button>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+    if (frameWrap && !options.forceFrame) frameWrap.style.display = 'none';
+  } else {
+    if (dwrBoundarySnapshot) {
+      dwrBoundarySnapshot.style.display = 'none';
+      dwrBoundarySnapshot.innerHTML = '';
+    }
+    if (frameWrap) frameWrap.style.display = '';
+    dwrBoundaryEmbed.src = src;
+  }
+
+  if (options.forceFrame) {
+    if (frameWrap) frameWrap.style.display = '';
+    dwrBoundaryEmbed.src = src;
+  }
+
+  if (dwrBoundaryMeta) {
+    dwrBoundaryMeta.textContent = hunt
+      ? `Showing a hunt info snapshot for ${getUnitName(hunt) || getHuntTitle(hunt)}. Load the full official hunt details here when you want the long-form unit information.`
+      : 'Showing the official state hunt reference. Select a hunt, then use the hunt info button to load the full hunt details here.';
+  }
+
+  if (options.scrollIntoView) {
+    (dwrBoundarySnapshot || dwrBoundaryEmbed).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function initCesiumViewer() {
+  if (!cesiumContainer || !window.Cesium) return;
+
+  const C = window.Cesium;
+
+  try {
+    if (CESIUM_ION_TOKEN) {
+      C.Ion.defaultAccessToken = CESIUM_ION_TOKEN;
+    }
+
+    cesiumViewer = new C.Viewer('cesiumContainer', {
+      animation: false,
+      timeline: false,
+      geocoder: false,
+      baseLayerPicker: false,
+      sceneModePicker: true,
+      homeButton: true,
+      navigationHelpButton: false,
+      fullscreenButton: true,
+      infoBox: false,
+      selectionIndicator: false,
+      scene3DOnly: true,
+      terrainProvider: new C.EllipsoidTerrainProvider(),
+      baseLayer: false
+    });
+
+    cesiumViewer.imageryLayers.addImageryProvider(
+      new C.UrlTemplateImageryProvider({
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        credit: 'Esri'
+      })
+    );
+
+    cesiumViewer.imageryLayers.addImageryProvider(
+      new C.UrlTemplateImageryProvider({
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{z}/{y}/{x}',
+        credit: 'Esri'
+      })
+    );
+
+    cesiumViewer.scene.globe.enableLighting = true;
+    cesiumViewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
+    cesiumViewer.camera.setView({
+      destination: C.Cartesian3.fromDegrees(-111.7, 39.3, 1800000)
+    });
+
+    if (cesiumNotice) {
+      cesiumNotice.textContent = CESIUM_ION_TOKEN
+        ? '3D scouting is live with Cesium. This panel can be upgraded further with terrain and more advanced 3D services as needed.'
+        : '3D scouting is live. This section uses free imagery right now; adding true mountain terrain relief later will require a terrain service connection.';
+    }
+
+    updateCesiumControlLabels();
+  } catch (error) {
+    console.error('Failed to initialize Cesium viewer:', error);
+    if (cesiumMeta) {
+      cesiumMeta.textContent = 'Cesium 3D view could not be initialized in this browser.';
+    }
+    if (cesiumNotice) {
+      cesiumNotice.textContent = 'Cesium did not finish loading here. The rest of the planner is still working normally.';
+    }
+  }
+}
+
+function getCesiumSelectedCenter(hunt = selectedHunt) {
+  if (!hunt) return null;
+  const boundaryCenter = getSelectedBoundaryCenter(hunt);
+  if (boundaryCenter && isLikelyUtahCoordinate(boundaryCenter.lat, boundaryCenter.lng)) {
+    return boundaryCenter;
+  }
+  const trustedCenter = getTrustedUnitCenter(hunt);
+  const lat = getHuntLat(hunt);
+  const lng = getHuntLng(hunt);
+  const hasValidTrustedCenter = Array.isArray(trustedCenter) && isLikelyUtahCoordinate(trustedCenter[0], trustedCenter[1]);
+  const hasValidHuntCenter = isLikelyUtahCoordinate(lat, lng);
+  const centerLat = hasValidTrustedCenter ? trustedCenter[0] : hasValidHuntCenter ? lat : null;
+  const centerLng = hasValidTrustedCenter ? trustedCenter[1] : hasValidHuntCenter ? lng : null;
+  if (!Number.isFinite(centerLat) || !Number.isFinite(centerLng)) return null;
+  return { lat: centerLat, lng: centerLng };
+}
+
+function updateCesiumControlLabels() {
+  if (cesiumTiltBtn) {
+    cesiumTiltBtn.textContent = cesiumTilted ? 'Flatten View' : 'Tilt View';
+  }
+  if (cesiumTerrainBtn) {
+    cesiumTerrainBtn.textContent = cesiumTerrainEnabled ? 'Terrain Relief On' : 'Terrain Relief';
+  }
+}
+
+async function enableCesiumTerrainRelief() {
+  if (!cesiumViewer || !window.Cesium) return;
+
+  const C = window.Cesium;
+
+  if (!CESIUM_ION_TOKEN) {
+    if (cesiumNotice) {
+      cesiumNotice.textContent = 'Terrain Relief is ready, but it needs a Cesium ion terrain token in app.js before true mountain relief can load.';
+    }
+    return;
+  }
+
+  try {
+    C.Ion.defaultAccessToken = CESIUM_ION_TOKEN;
+    const terrainProvider = typeof C.createWorldTerrainAsync === 'function'
+      ? await C.createWorldTerrainAsync()
+      : C.createWorldTerrain();
+    cesiumViewer.scene.terrainProvider = terrainProvider;
+    cesiumTerrainEnabled = true;
+    if (cesiumNotice) {
+      cesiumNotice.textContent = 'Terrain Relief is enabled. Cesium is now using a terrain service to add real mountain shape and relief.';
+    }
+    updateCesiumControlLabels();
+    updateCesiumView(selectedHunt);
+  } catch (error) {
+    console.error('Failed to enable Cesium terrain:', error);
+    if (cesiumNotice) {
+      cesiumNotice.textContent = 'Terrain Relief could not be enabled. Check the Cesium terrain token and connection, then try again.';
+    }
+  }
+}
+
+function resetCesiumView() {
+  if (!cesiumViewer || !window.Cesium) return;
+  const C = window.Cesium;
+  cesiumTilted = false;
+  updateCesiumControlLabels();
+  cesiumViewer.camera.flyTo({
+    destination: C.Cartesian3.fromDegrees(-111.7, 39.3, 1800000),
+    orientation: {
+      heading: 0,
+      pitch: C.Math.toRadians(-65),
+      roll: 0
+    },
+    duration: 1.4
+  });
+  if (cesiumMeta) {
+    cesiumMeta.textContent = 'Showing a general Utah 3D scouting view. Select a hunt to fly to that unit.';
+  }
+}
+
+function zoomCesiumToSelectedHunt() {
+  if (!selectedHunt) {
+    if (cesiumNotice) {
+      cesiumNotice.textContent = 'Select a hunt first, then use Zoom To Hunt to focus the 3D scouting view.';
+    }
+    return;
+  }
+  updateCesiumView(selectedHunt);
+}
+
+async function syncCesiumBoundaryOutline(hunt, requestId) {
+  if (!cesiumViewer || !window.Cesium) return;
+  const C = window.Cesium;
+
+  if (cesiumBoundaryDataSource) {
+    try {
+      cesiumViewer.dataSources.remove(cesiumBoundaryDataSource, true);
+    } catch (error) {
+      console.warn('Failed to remove previous Cesium boundary data source:', error);
+    }
+    cesiumBoundaryDataSource = null;
+  }
+
+  if (!hunt) return;
+
+  const features = getSelectedBoundaryFeaturesForHunt(hunt).filter(feature => feature?.geometry);
+  if (!features.length) return;
+
+  const geojson = {
+    type: 'FeatureCollection',
+    features: features.map(feature => ({
+      type: 'Feature',
+      geometry: feature.geometry,
+      properties: {
+        name: getBoundaryFeatureName(feature) || getUnitName(hunt) || getHuntCode(hunt) || 'Selected Hunt Boundary'
+      }
+    }))
+  };
+
+  try {
+    const dataSource = await C.GeoJsonDataSource.load(geojson, {
+      stroke: C.Color.fromCssColorString('#c96b33'),
+      fill: C.Color.fromCssColorString('#c96b33').withAlpha(0.08),
+      strokeWidth: 3,
+      clampToGround: false
+    });
+
+    if (requestId !== cesiumViewRequestId) {
+      return;
+    }
+
+    dataSource.entities.values.forEach(entity => {
+      if (entity.polygon) {
+        entity.polygon.outline = true;
+        entity.polygon.outlineColor = C.Color.fromCssColorString('#fff6ed');
+        entity.polygon.outlineWidth = 2;
+      }
+      if (entity.polyline) {
+        entity.polyline.width = 4;
+        entity.polyline.material = C.Color.fromCssColorString('#c96b33');
+      }
+    });
+
+    cesiumBoundaryDataSource = dataSource;
+    cesiumViewer.dataSources.add(dataSource);
+  } catch (error) {
+    console.warn('Failed to load selected hunt outline into Cesium:', error);
+  }
+}
+
+function toggleCesiumTilt() {
+  if (!cesiumViewer || !window.Cesium) return;
+  const C = window.Cesium;
+  const center = getCesiumSelectedCenter(selectedHunt);
+  const destination = center
+    ? C.Cartesian3.fromDegrees(center.lng, center.lat, cesiumTerrainEnabled ? 180000 : 300000)
+    : C.Cartesian3.fromDegrees(-111.7, 39.3, 1800000);
+
+  cesiumTilted = !cesiumTilted;
+  updateCesiumControlLabels();
+
+  cesiumViewer.camera.flyTo({
+    destination,
+    orientation: {
+      heading: 0,
+      pitch: C.Math.toRadians(cesiumTilted ? -28 : -65),
+      roll: 0
+    },
+    duration: 1.2
+  });
+}
+
+function updateCesiumView(hunt = null) {
+  if (!cesiumViewer || !window.Cesium) return;
+
+  const C = window.Cesium;
+  const requestId = ++cesiumViewRequestId;
+
+  if (cesiumSelectionEntity) {
+    cesiumViewer.entities.remove(cesiumSelectionEntity);
+    cesiumSelectionEntity = null;
+  }
+
+  if (cesiumBoundaryDataSource) {
+    try {
+      cesiumViewer.dataSources.remove(cesiumBoundaryDataSource, true);
+    } catch (error) {
+      console.warn('Failed to clear Cesium boundary data source:', error);
+    }
+    cesiumBoundaryDataSource = null;
+  }
+
+  if (!hunt) {
+    cesiumViewer.camera.flyTo({
+      destination: C.Cartesian3.fromDegrees(-111.7, 39.3, 1800000),
+      orientation: {
+        heading: 0,
+        pitch: C.Math.toRadians(-65),
+        roll: 0
+      },
+      duration: 1.2
+    });
+    cesiumTilted = false;
+    updateCesiumControlLabels();
+    if (cesiumMeta) {
+      cesiumMeta.textContent = 'Showing a general Utah 3D scouting view. Select a hunt to fly to that unit.';
+    }
+    return;
+  }
+
+  const center = getCesiumSelectedCenter(hunt);
+  const centerLat = center?.lat ?? null;
+  const centerLng = center?.lng ?? null;
+
+  if (!Number.isFinite(centerLat) || !Number.isFinite(centerLng)) {
+    if (cesiumMeta) {
+      cesiumMeta.textContent = `Cesium 3D could not find a reliable center for ${getUnitName(hunt) || getHuntTitle(hunt)}.`;
+    }
+    return;
+  }
+
+  cesiumSelectionEntity = cesiumViewer.entities.add({
+    position: C.Cartesian3.fromDegrees(centerLng, centerLat, 0),
+    point: {
+      pixelSize: 12,
+      color: C.Color.fromCssColorString('#c96b33'),
+      outlineColor: C.Color.fromCssColorString('#fff6ed'),
+      outlineWidth: 2
+    },
+    label: {
+      text: getUnitName(hunt) || getHuntTitle(hunt) || 'Selected Hunt',
+      font: '600 14px Georgia, serif',
+      fillColor: C.Color.fromCssColorString('#2f1f12'),
+      outlineColor: C.Color.WHITE,
+      outlineWidth: 3,
+      style: C.LabelStyle.FILL_AND_OUTLINE,
+      verticalOrigin: C.VerticalOrigin.TOP,
+      pixelOffset: new C.Cartesian2(0, 16),
+      disableDepthTestDistance: Number.POSITIVE_INFINITY
+    }
+  });
+
+  cesiumViewer.flyTo(cesiumSelectionEntity, {
+    duration: 1.6,
+    offset: new C.HeadingPitchRange(0, C.Math.toRadians(cesiumTilted ? -28 : -55), cesiumTerrainEnabled ? 180000 : 300000)
+  });
+
+  if (cesiumMeta) {
+    cesiumMeta.textContent = `Showing a 3D scouting view for ${getUnitName(hunt) || getHuntTitle(hunt)}. This panel uses free imagery and follows the selected hunt.`;
+  }
+
+  void syncCesiumBoundaryOutline(hunt, requestId);
+}
+
+function setHtml(targets, html) {
+  targets.filter(Boolean).forEach(el => {
+    el.innerHTML = html;
+  });
+}
+
+function toggleEmbeddedPanel(buttonEl, frameEl) {
+  const shell = frameEl?.closest('.google-shell');
+  if (!shell || !buttonEl) return;
+  shell.classList.toggle('expanded');
+  buttonEl.textContent = shell.classList.contains('expanded') ? 'Collapse Panel' : 'Expand Panel';
+}
+
+function setAboutModalOpen(isOpen) {
+  if (!aboutModal) return;
+  aboutModal.classList.toggle('is-open', isOpen);
+  aboutModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+function setText(targets, value) {
+  targets.filter(Boolean).forEach(el => {
+    el.textContent = value;
+  });
+}
+
+function attachHuntResultsInteraction(container) {
+  if (!container) return;
+  container.addEventListener('click', e => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+
+    const actionEl = target.closest('[data-action]');
+    if (actionEl) {
+      const action = actionEl.getAttribute('data-action');
+      if (action === 'select-hunt') {
+        const code = actionEl.getAttribute('data-hunt-code');
+        if (code) selectHuntByCode(code);
+      }
+    if (action === 'show-more-hunts') {
+      huntResultsLimit += 100;
+      renderHuntResults();
+    }
+      return;
+    }
+
+    const card = target.closest('.result-card');
+    if (!card) return;
+    const button = card.querySelector('[data-hunt-code]');
+    const code = button?.getAttribute('data-hunt-code');
+    if (code) selectHuntByCode(code);
+  });
+}
+
+function getUsfsLabel(properties, feature = null) {
+  const p = properties || {};
+  const label = firstNonEmpty(
+    p.FORESTNAME,
+    p.FORESTNAMECOMMON,
+    p.FORESTSHORTNAME,
+    p.UNIT_NAME,
+    p.UNITNAME,
+    p.ADMIN_NAME,
+    p.NAME,
+    p.LABEL,
+    'US Forest Service Unit'
+  );
+
+  const normalized = label
+    .replace(/^Manti-La Sal National Forest$/i, 'Manti LaSal USFS')
+    .replace(/^Fishlake National Forest$/i, 'Fishlake USFS')
+    .replace(/^Dixie National Forest$/i, 'Dixie USFS')
+    .replace(/^Ashley National Forest$/i, 'Ashley USFS')
+    .replace(/^Uinta-Wasatch-Cache National Forest$/i, 'Uintah USFS')
+    .replace(/ National Forest$/i, ' USFS')
+    .trim();
+
+  if (normalized !== 'Manti LaSal USFS' || !feature?.geometry) return normalized;
+
+  if (pointInGeometry({ lat: 39.28, lng: -111.33 }, feature.geometry)) return 'Manti LaSal USFS';
+  if (pointInGeometry({ lat: 38.58, lng: -109.23 }, feature.geometry)) return 'LaSals USFS';
+  if (pointInGeometry({ lat: 38.02, lng: -109.35 }, feature.geometry)) return 'Manti LaSal USFS';
+  return normalized;
+}
+
+function normalizeBlmDistrictName(value) {
+  const raw = safe(value).trim();
+  if (!raw) return '';
+  const normalized = raw
+    .replace(/\s+field\s+office$/i, '')
+    .replace(/\s+district\s+office$/i, ' District')
+    .replace(/\s+office$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const slug = slugify(normalized);
+  const exactMap = {
+    richfield: 'Color Country District',
+    fillmore: 'West Desert District',
+    'salt-lake': 'West Desert District',
+    'salt-lake-city': 'West Desert District',
+    cedarcity: 'Color Country District',
+    'cedar-city': 'Color Country District',
+    'st-george': 'Color Country District',
+    'green-river': 'Green River District',
+    vernal: 'Green River District',
+    price: 'Green River District',
+    moab: 'Canyon Country District',
+    monticello: 'Canyon Country District',
+    kanab: 'Paria River District',
+    'grand-staircase-kanab': 'Paria River District',
+    'grand-staircase': 'Paria River District',
+    'west-desert-district': 'West Desert District',
+    'green-river-district': 'Green River District',
+    'color-country-district': 'Color Country District',
+    'paria-river-district': 'Paria River District',
+    'canyon-country-district': 'Canyon Country District'
+  };
+
+  return exactMap[slug] || normalized;
+}
+
+function getBlmLabel(properties) {
+  const p = properties || {};
+  const label = firstNonEmpty(
+    p.ADMU_NAME,
+    p.ADMU_DISPLAY_NAME,
+    p.ADMIN_ST_NAME,
+    p.OFFICE_NAME,
+    p.DISTRICT_NAME,
+    p.PARENT_NAME,
+    p.ADM_UNIT_CD,
+    p.ADMIN_UNIT,
+    p.FIELD_OFFICE,
+    p.NAME,
+    'BLM Utah Administrative Unit'
+  );
+
+  const districtName = normalizeBlmDistrictName(label);
+  if (!districtName) return '';
+  if (/ BLM$/i.test(districtName)) return districtName;
+  return `${districtName} BLM`;
+}
+
+function getRingArea(ring = []) {
+  let area = 0;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = Number(ring[i]?.[1]);
+    const yi = Number(ring[i]?.[0]);
+    const xj = Number(ring[j]?.[1]);
+    const yj = Number(ring[j]?.[0]);
+    if (![xi, yi, xj, yj].every(Number.isFinite)) continue;
+    area += (xj * yi) - (xi * yj);
+  }
+  return Math.abs(area / 2);
+}
+
+function getRingCentroid(ring = []) {
+  if (!Array.isArray(ring) || ring.length < 3) return null;
+
+  let areaAccumulator = 0;
+  let lngAccumulator = 0;
+  let latAccumulator = 0;
+
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const lng1 = Number(ring[j]?.[1]);
+    const lat1 = Number(ring[j]?.[0]);
+    const lng2 = Number(ring[i]?.[1]);
+    const lat2 = Number(ring[i]?.[0]);
+    if (![lng1, lat1, lng2, lat2].every(Number.isFinite)) continue;
+    const cross = (lng1 * lat2) - (lng2 * lat1);
+    areaAccumulator += cross;
+    lngAccumulator += (lng1 + lng2) * cross;
+    latAccumulator += (lat1 + lat2) * cross;
+  }
+
+  if (Math.abs(areaAccumulator) < 1e-9) return null;
+
+  return [
+    latAccumulator / (3 * areaAccumulator),
+    lngAccumulator / (3 * areaAccumulator)
+  ];
+}
+
+function getRepresentativePolygonRing(geometry) {
+  if (!geometry) return null;
+  const { type, coordinates, rings } = geometry;
+  if (type === 'Polygon' && Array.isArray(coordinates?.[0])) {
+    return coordinates[0];
+  }
+  if (type === 'MultiPolygon' && Array.isArray(coordinates)) {
+    let bestRing = null;
+    let bestArea = -Infinity;
+    coordinates.forEach(poly => {
+      const ring = poly?.[0];
+      const area = getRingArea(ring);
+      if (area > bestArea) {
+        bestArea = area;
+        bestRing = ring;
+      }
+    });
+    return bestRing;
+  }
+  if (Array.isArray(rings?.[0])) {
+    let bestRing = null;
+    let bestArea = -Infinity;
+    rings.forEach(ring => {
+      const area = getRingArea(ring);
+      if (area > bestArea) {
+        bestArea = area;
+        bestRing = ring;
+      }
+    });
+    return bestRing;
+  }
+  return null;
+}
+
+function getFeatureBoundsCenter(feature) {
+  const geometry = feature?.geometry;
+  if (!geometry) return null;
+  const bounds = {
+    minLat: Infinity,
+    maxLat: -Infinity,
+    minLng: Infinity,
+    maxLng: -Infinity
+  };
+
+  if (Array.isArray(geometry.coordinates)) {
+    extendBoundsFromCoordinates(bounds, geometry.coordinates);
+  } else if (Array.isArray(geometry.rings)) {
+    extendBoundsFromCoordinates(bounds, geometry.rings);
+  } else if (Array.isArray(geometry.paths)) {
+    extendBoundsFromCoordinates(bounds, geometry.paths);
+  }
+
+  if (![bounds.minLat, bounds.maxLat, bounds.minLng, bounds.maxLng].every(Number.isFinite)) {
+    return null;
+  }
+
+  const boundsCenter = [(bounds.minLat + bounds.maxLat) / 2, (bounds.minLng + bounds.maxLng) / 2];
+  if (pointInGeometry({ lat: boundsCenter[0], lng: boundsCenter[1] }, geometry)) {
+    return boundsCenter;
+  }
+
+  const ring = getRepresentativePolygonRing(geometry);
+  const centroid = getRingCentroid(ring);
+  if (centroid && pointInGeometry({ lat: centroid[0], lng: centroid[1] }, geometry)) {
+    return centroid;
+  }
+
+  if (Array.isArray(ring) && Array.isArray(ring[0]) && ring[0].length >= 2) {
+    return [Number(ring[0][0]), Number(ring[0][1])];
+  }
+
+  return boundsCenter;
+}
+
+function getFeatureMarkerKey(feature, fallbackLabel = '') {
+  const props = feature?.properties || feature?.attributes || {};
+  return firstNonEmpty(
+    props.OBJECTID,
+    props.OBJECTID_1,
+    props.ADMU_ID,
+    props.GLOBALID,
+    props.FID,
+    fallbackLabel
+  ).toString();
+}
+
+const FEDERAL_BADGE_ANCHORS = {
+  'Ashley USFS': [
+    [40.55, -109.86]
+  ],
+  'Dixie USFS': [
+    [37.69, -112.86]
+  ],
+  'Fishlake USFS': [
+    [38.44, -112.00]
+  ],
+  'Manti LaSal USFS': [
+    [39.34, -111.22],
+    [37.75, -109.56]
+  ],
+  'LaSals USFS': [
+    [38.66, -108.93]
+  ],
+  'Uintah USFS': [
+    [40.10, -111.54]
+  ],
+  'Wasatch USFS': [
+    [40.56, -111.06]
+  ],
+  'Cache USFS': [
+    [41.68, -111.57]
+  ],
+  'West Desert District BLM': [
+    [40.58, -113.62]
+  ],
+  'Green River District BLM': [
+    [39.70, -109.74]
+  ],
+  'Color Country District BLM': [
+    [38.92, -113.42]
+  ],
+  'Paria River District BLM': [
+    [37.15, -111.89]
+  ],
+  'Canyon Country District BLM': [
+    [38.66, -109.78]
+  ]
+};
+
+function getPreferredFederalBadgeCenter(label, feature, labelUsage) {
+  const candidates = FEDERAL_BADGE_ANCHORS[safe(label).trim()] || [];
+  if (!candidates.length) return null;
+
+  const usedIndexes = labelUsage.get(label) || new Set();
+  for (let i = 0; i < candidates.length; i++) {
+    if (usedIndexes.has(i)) continue;
+    const [lat, lng] = candidates[i];
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+    usedIndexes.add(i);
+    labelUsage.set(label, usedIndexes);
+    return [lat, lng];
+  }
+
+  for (let i = 0; i < candidates.length; i++) {
+    const [lat, lng] = candidates[i];
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+    return [lat, lng];
+  }
+
+  return null;
+}
+
+function createFederalBadgeIcon(iconUrl, label) {
+  const zoom = map?.getZoom?.() ?? 6;
+  const showLabel = zoom >= 9;
+  const iconSize = showLabel ? [132, 86] : [44, 44];
+  const iconAnchor = showLabel ? [66, 43] : [22, 22];
+  const safeLabel = escapeHtml(label || '');
+  const safeIconUrl = escapeHtml(iconUrl || '');
+  return L.divIcon({
+    className: 'federal-badge-marker',
+    iconSize,
+    iconAnchor,
+    html: `
+      <div class="federal-badge-shell">
+        <img src="${safeIconUrl}" alt="${safeLabel}" class="federal-badge-logo">
+        ${showLabel ? `<div class="federal-badge-name">${safeLabel}</div>` : ''}
+      </div>
+    `
+  });
+}
+
+function getRenderedLayerCenter(layer, feature) {
+  if (layer && typeof layer.getBounds === 'function') {
+    try {
+      const bounds = layer.getBounds();
+      if (bounds && typeof bounds.getCenter === 'function') {
+        const center = bounds.getCenter();
+        if (Number.isFinite(center?.lat) && Number.isFinite(center?.lng)) {
+          return [center.lat, center.lng];
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (layer && typeof layer.getLatLng === 'function') {
+    try {
+      const center = layer.getLatLng();
+      if (Number.isFinite(center?.lat) && Number.isFinite(center?.lng)) {
+        return [center.lat, center.lng];
+      }
+    } catch (e) {}
+  }
+
+  return getFeatureBoundsCenter(feature);
+}
+
+function clearFederalBadgeMarkers(badgeLayer, badgeMap) {
+  if (badgeLayer) {
+    try { badgeLayer.clearLayers(); } catch (e) {}
+  }
+  badgeMap.clear();
+}
+
+function rebuildFederalBadgesFromFeatureLayer(featureLayer, badgeLayer, badgeMap, labelGetter, iconUrl) {
+  if (!featureLayer || !badgeLayer) return;
+  clearFederalBadgeMarkers(badgeLayer, badgeMap);
+  const labelUsage = new Map();
+
+  const renderLayerBadge = layer => {
+    const feature = layer?.feature;
+    if (!feature) return;
+    const label = labelGetter(feature?.properties || feature?.attributes || {}, feature);
+    addFederalBadgeMarker(feature, label, badgeLayer, badgeMap, iconUrl, layer, labelUsage);
+  };
+
+  if (typeof featureLayer.eachFeature === 'function') {
+    featureLayer.eachFeature(renderLayerBadge);
+  }
+
+  if (!badgeMap.size && typeof featureLayer.eachLayer === 'function') {
+    featureLayer.eachLayer(renderLayerBadge);
+  }
+
+  if (!badgeMap.size && featureLayer._layers) {
+    Object.values(featureLayer._layers).forEach(renderLayerBadge);
+  }
+}
+
+function addFederalBadgeMarker(feature, label, badgeLayer, badgeMap, iconUrl, renderedLayer = null, labelUsage = new Map()) {
+  if (!badgeLayer || !feature) return;
+  const key = getFeatureMarkerKey(feature, label);
+  if (!key) return;
+
+  if (label === 'Manti LaSal USFS') {
+    const anchors = FEDERAL_BADGE_ANCHORS[label] || [];
+    anchors.forEach((center, index) => {
+      if (!Array.isArray(center) || center.length < 2) return;
+      const markerKey = `${key}:manti-${index}`;
+      if (badgeMap.has(markerKey)) return;
+      const marker = L.marker(center, {
+        icon: createFederalBadgeIcon(iconUrl, label),
+        pane: 'federalBadgePane',
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: -50
+      });
+      badgeMap.set(markerKey, marker);
+      badgeLayer.addLayer(marker);
+    });
+    return;
+  }
+
+  if (label === 'Uintah USFS') {
+    const primaryAnchors = FEDERAL_BADGE_ANCHORS[label] || [];
+    const wasatchAnchors = FEDERAL_BADGE_ANCHORS['Wasatch USFS'] || [];
+    const cacheAnchors = FEDERAL_BADGE_ANCHORS['Cache USFS'] || [];
+    [...primaryAnchors.map((center, index) => ({ center, markerLabel: label, markerKey: `${key}:uwc-${index}` })),
+     ...wasatchAnchors.map((center, index) => ({ center, markerLabel: 'Wasatch USFS', markerKey: `${key}:wasatch-${index}` })),
+     ...cacheAnchors.map((center, index) => ({ center, markerLabel: 'Cache USFS', markerKey: `${key}:cache-${index}` }))]
+      .forEach(({ center, markerLabel, markerKey }) => {
+        if (!Array.isArray(center) || center.length < 2) return;
+        if (badgeMap.has(markerKey)) return;
+        const marker = L.marker(center, {
+          icon: createFederalBadgeIcon(iconUrl, markerLabel),
+          pane: 'federalBadgePane',
+          interactive: false,
+          keyboard: false,
+          zIndexOffset: -50
+        });
+        badgeMap.set(markerKey, marker);
+        badgeLayer.addLayer(marker);
+      });
+    return;
+  }
+
+  if (label === 'Cache USFS') {
+    const anchors = FEDERAL_BADGE_ANCHORS[label] || [];
+    anchors.forEach((center, index) => {
+      if (!Array.isArray(center) || center.length < 2) return;
+      const markerKey = `${key}:cache-dup-${index}`;
+      if (badgeMap.has(markerKey)) return;
+      const marker = L.marker(center, {
+        icon: createFederalBadgeIcon(iconUrl, label),
+        pane: 'federalBadgePane',
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: -50
+      });
+      badgeMap.set(markerKey, marker);
+      badgeLayer.addLayer(marker);
+    });
+    return;
+  }
+
+  if (badgeMap.has(key)) return;
+  const center = getPreferredFederalBadgeCenter(label, feature, labelUsage);
+  if (!center) return;
+  const marker = L.marker(center, {
+    icon: createFederalBadgeIcon(iconUrl, label),
+    pane: 'federalBadgePane',
+    interactive: false,
+    keyboard: false,
+    zIndexOffset: -50
+  });
+  badgeMap.set(key, marker);
+  badgeLayer.addLayer(marker);
+}
+
+function getFieldPreview(properties, preferredKeys = []) {
+  const p = properties || {};
+  const keys = Object.keys(p);
+  if (!keys.length) return '';
+
+  const ordered = [
+    ...preferredKeys.filter(key => key in p),
+    ...keys.filter(key => !preferredKeys.includes(key))
+  ];
+
+  return ordered
+    .slice(0, 6)
+    .map(key => `${key}: ${safe(p[key]).trim() || '[blank]'}`)
+    .join(' | ');
+}
+
+function createDiamondIcon() {
+  return L.divIcon({
+    className: 'hunt-center-icon',
+    html: '<div style="width:14px;height:14px;background:#e5522b;border:3px solid #ffd84d;transform:rotate(45deg);box-sizing:border-box;"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+  });
+}
+
+function getHuntCode(h) {
+  return firstNonEmpty(h.huntCode, h.hunt_code, h.HuntCode, h.code, h.Code);
+}
+
+function getHuntTitle(h) {
+  return firstNonEmpty(h.title, h.Title, h.huntTitle, h.hunt_title, getHuntCode(h));
+}
+
+function getUnitCode(h) {
+  return firstNonEmpty(h.unitCode, h.unit_code, h.UnitCode, h.UNIT_CODE, h.unit, h.Unit);
+}
+
+function getUnitName(h) {
+  return firstNonEmpty(h.unitName, h.unit_name, h.UnitName, h.UNIT_NAME, getUnitCode(h));
+}
+
+function getUnitValue(h) {
+  return firstNonEmpty(getUnitCode(h), getUnitName(h));
+}
+
+function getSpeciesRaw(h) {
+  return firstNonEmpty(h.species, h.Species, h.SPECIES);
+}
+
+function getSpeciesList(h) {
+  return getSpeciesRaw(h)
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
+function getSex(h) {
+  const raw = firstNonEmpty(h.sex, h.Sex, h.SEX);
+  if (safe(raw).trim().toLowerCase() !== 'buck/bull') return raw;
+
+  const speciesList = getSpeciesList(h).map(s => s.toLowerCase());
+  if (speciesList.includes('elk')) return 'Bull';
+  if (speciesList.includes('mule deer') || speciesList.includes('deer')) return 'Buck';
+  return 'Buck/Bull';
+}
+
+function getWeapon(h) {
+  return firstNonEmpty(h.weapon, h.Weapon, h.WEAPON);
+}
+
+function getHuntType(h) {
+  return firstNonEmpty(h.huntType, h.HuntType, h.hunt_type, h.type, h.Type);
+}
+
+function getHuntCategory(h) {
+  const tagged = firstNonEmpty(h.huntCategory, h.HuntCategory, h.hunt_category);
+  if (tagged) return tagged;
+
+  const species = getSpeciesList(h).map(s => s.toLowerCase());
+  const title = getHuntTitle(h).toLowerCase();
+  const huntType = getHuntType(h).toLowerCase();
+
+  if (title.includes('antlerless elk-control') || title.includes('antlerless elk control')) return 'Antlerless';
+  if (title.includes('antlerless')) return 'Antlerless';
+  if (title.includes('private-lands-only') || title.includes('private lands only')) return 'Private Land Only';
+  if (title.includes('extended archery')) return 'Extended Archery';
+  if (title.includes('spike')) return 'Spike Only';
+  if (huntType.includes('youth') || title.includes('youth')) return 'Youth';
+  if (huntType.includes('mature bull')) return 'Mature Bull';
+  if (species.includes('elk') && huntType.includes('general')) return 'General Bull';
+  return getHuntType(h) || '';
+}
+
+function getDates(h) {
+  return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates, h.Dates);
+}
+
+function getRegion(h) {
+  return firstNonEmpty(h.region, h.Region, h.REGION);
+}
+
+function isProvisionalRecord(h) {
+  const guide = firstNonEmpty(h.sourceGuide, h.SourceGuide, h.source_guide);
+  return guide.toLowerCase().includes('used provisionally');
+}
+
+function getProvisionalNote(h) {
+  return isProvisionalRecord(h) ? 'Provisional: based on 2025 field regulations until 2026 field regs are published.' : '';
+}
+
+function getHuntLat(h) {
+  const n = Number(firstNonEmpty(h.centroidLat, h.centerLat, h.lat, h.latitude, h.y));
+  return Number.isFinite(n) ? n : null;
+}
+
+function getHuntLng(h) {
+  const n = Number(firstNonEmpty(h.centroidLng, h.centerLng, h.lng, h.lon, h.longitude, h.x));
+  return Number.isFinite(n) ? n : null;
+}
+
+function getTrustedUnitCenter(h) {
+  const candidates = [
+    slugify(getUnitCode(h)),
+    slugify(getUnitName(h)),
+    slugify(getUnitValue(h))
+  ].filter(Boolean);
+
+  for (const key of candidates) {
+    if (UNIT_CENTER_LOOKUP[key]) {
+      return UNIT_CENTER_LOOKUP[key];
+    }
+  }
+
+  return null;
+}
+
+function zoomToHuntSelection(hunt) {
+  const lat = getHuntLat(hunt);
+  const lng = getHuntLng(hunt);
+
+  if (isLikelyUtahCoordinate(lat, lng)) {
+    map.setView([lat, lng], 8);
+    return;
+  }
+
+  const trustedCenter = getTrustedUnitCenter(hunt);
+  if (trustedCenter) {
+    map.setView(trustedCenter, 8);
+    return;
+  }
+
+  return;
+}
+
+function isLikelyUtahCoordinate(lat, lng) {
+  return (
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= 36.5 &&
+    lat <= 42.5 &&
+    lng >= -114.5 &&
+    lng <= -108.5
+  );
+}
+
+function matchesFilter(selected, value) {
+  const s = safe(selected).trim().toLowerCase();
+  const v = safe(value).trim().toLowerCase();
+  if (!s || s === 'all' || s === 'all species') return true;
+  if (!v) return false;
+  if (s === v) return true;
+  return v.includes(s) || s.includes(v);
+}
+
+function getHuntBoundaryStyle() {
+  const zoom = map.getZoom();
+  if (zoom <= 6) {
+    return { color: '#3653b3', weight: 1.2, fillColor: '#d6def7', fillOpacity: 0.12 };
+  }
+
+  if (zoom <= 8) {
+    return { color: '#3653b3', weight: 2, fillColor: '#d6def7', fillOpacity: 0.18 };
+  }
+
+  return { color: '#3653b3', weight: 3.2, fillColor: '#d6def7', fillOpacity: 0.28 };
+}
+
+function updateMapAppearance() {
+  if (!mapWrapEl || !basemapSelect) return;
+  const isTerrainLike = ['usgs', 'outdoor', 'topo'].includes(basemapSelect.value);
+  mapWrapEl.classList.toggle('terrain-boost', isTerrainLike);
+  if (dwrShell) dwrShell.classList.remove('terrain-sync');
+  if (cesiumShell) cesiumShell.classList.toggle('terrain-sync', isTerrainLike);
+}
+
+const map = L.map('map', { zoomControl: true, doubleClickZoom: false }).setView([39.3, -111.7], 6);
+
+map.createPane('blmPane');
+map.getPane('blmPane').style.zIndex = 430;
+map.createPane('usfsPane');
+map.getPane('usfsPane').style.zIndex = 440;
+map.createPane('huntPane');
+map.getPane('huntPane').style.zIndex = 445;
+map.createPane('selectedHuntPane');
+map.getPane('selectedHuntPane').style.zIndex = 450;
+map.createPane('federalBadgePane');
+map.getPane('federalBadgePane').style.zIndex = 447;
+
+const basemaps = {
+  osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+  }),
+  topo: L.layerGroup([
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 13, attribution: 'Tiles &copy; Esri' }
+    ),
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 19, attribution: 'Labels &copy; Esri' }
+    )
+  ]),
+  natgeo: L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom: 16, attribution: 'Tiles &copy; Esri' }
+  ),
+  outdoor: L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom: 19, attribution: 'Tiles &copy; Esri' }
+  ),
+  usgs: L.tileLayer(
+    'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom: 16, attribution: 'Tiles &copy; USGS' }
+  ),
+  positron: L.layerGroup([
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+      {
+        maxZoom: 20,
+        subdomains: 'abcd',
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+      }
+    ),
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',
+      {
+        maxZoom: 20,
+        subdomains: 'abcd',
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+      }
+    )
+  ]),
+  light: L.layerGroup([
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 16, attribution: 'Tiles &copy; Esri' }
+    ),
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 16, attribution: 'Labels &copy; Esri' }
+    )
+  ]),
+  sat: L.layerGroup([
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 19, attribution: 'Tiles &copy; Esri' }
+    ),
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 19, attribution: 'Labels &copy; Esri' }
+    )
+  ])
+};
+
+basemaps.usgs.addTo(map);
+
+const unitCenterLayer = L.layerGroup().addTo(map);
+const outfitterLayer = L.layerGroup().addTo(map);
+const sitlaLayer = L.layerGroup().addTo(map);
+const stateLayer = L.layerGroup().addTo(map);
+const privateLayer = L.layerGroup().addTo(map);
+const utahOutlineLayer = L.layerGroup().addTo(map);
+
+let liveHuntUnitsLayer = null;
+let selectedBoundaryLayer = null;
+let usfsDistrictLayer = null;
+let blmDistrictLayer = null;
+let usfsBadgeLayer = null;
+let blmBadgeLayer = null;
+let liveLayerSource = 'none';
+let huntBoundaryData = null;
+let huntResultsLimit = 100;
+let liveFilterToken = 0;
+let boundaryZoomToken = 0;
+let boundaryHoverTooltip = null;
+let suppressNextMapClickInfo = false;
+let usfsBadgeMarkers = new Map();
+let blmBadgeMarkers = new Map();
+
+async function loadHuntData() {
+  const merged = [];
+  const loadedLabels = [];
+
+  for (const source of HUNT_DATA_SOURCES) {
+    let data = null;
+    let lastStatus = 'not-started';
+
+    for (const url of source.candidates) {
+      const res = await fetch(url, { cache: 'no-store' });
+      lastStatus = res.status;
+      if (!res.ok) continue;
+      data = await res.json();
+      break;
+    }
+
+    if (!data) {
+      if (source.required) {
+        throw new Error(`Failed to load ${source.label} hunt data: ${lastStatus}`);
+      }
+      continue;
+    }
+
+    let records = [];
+    if (Array.isArray(data)) records = data;
+    else if (Array.isArray(data.records)) records = data.records;
+    else if (Array.isArray(data.data)) records = data.data;
+
+    if (!records.length) {
+      if (source.required) {
+        throw new Error(`No hunt records found in ${source.label} JSON.`);
+      }
+      continue;
+    }
+
+    merged.push(...records);
+    loadedLabels.push(source.label);
+  }
+
+  const deduped = [];
+  const seenKeys = new Set();
+  merged.forEach(record => {
+    const code = safe(getHuntCode(record)).trim();
+    const unit = safe(getUnitCode(record) || getUnitName(record)).trim();
+    const weapon = safe(getWeapon(record)).trim();
+    const dates = safe(getDates(record)).trim();
+    const boundaryId = safe(firstNonEmpty(record.boundaryId, record.BoundaryID, record.boundaryID)).trim();
+    const key = [code, unit, weapon, dates, boundaryId].join('||') || JSON.stringify(record);
+    if (seenKeys.has(key)) return;
+    seenKeys.add(key);
+    deduped.push(record);
+  });
+
+  huntData = deduped;
+
+  if (!huntData.length) throw new Error('No hunt records found in any JSON source.');
+  console.log('Loaded hunt datasets:', loadedLabels.join(', '));
+}
+
+async function loadOutfittersData() {
+  for (const url of OUTFITTERS_DATA_SOURCES) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (!Array.isArray(data)) continue;
+      outfitters = data.map(o => ({
+        listingName: safe(o.listingName || o.name).trim(),
+        listingType: safe(o.listingType || 'Outfitter').trim(),
+        certLevel: safe(o.certLevel).trim(),
+        verificationStatus: safe(o.verificationStatus || 'Vetted').trim(),
+        website: safe(o.website).trim(),
+        logoUrl: normalizeUrl(o.logoUrl || o.logo || o.imageUrl),
+        phone: splitPhoneList(o.phone),
+        email: splitEmailList(o.email),
+        region: safe(o.region).trim(),
+        city: safe(o.city).trim(),
+        ownerName: splitOwnerList(o.ownerName),
+        speciesServed: Array.isArray(o.speciesServed) ? o.speciesServed.join(', ') : safe(o.speciesServed || o.species).trim(),
+        unitsServed: Array.isArray(o.unitsServed) ? o.unitsServed.join(', ') : safe(o.unitsServed).trim(),
+        blmDistricts: listify(o.blmDistricts).map(normalizeBlmDistrictName).filter(Boolean).join(', '),
+        usfsForests: Array.isArray(o.usfsForests) ? o.usfsForests.join(', ') : safe(o.usfsForests || o.forestDistricts).trim()
+      })).filter(o => o.listingName);
+      console.log('Loaded outfitter dataset:', url);
+      return;
+    } catch (error) {
+      console.warn('Outfitter data load attempt failed:', url, error);
+    }
+  }
+}
+
+async function loadBoundaryData() {
+  const res = await fetch(LOCAL_HUNT_BOUNDARIES_PATH, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load boundary data: ${res.status}`);
+
+  const data = await res.json();
+  if (!Array.isArray(data?.features) || !data.features.length) {
+    throw new Error('No hunt boundary features found in local boundary file.');
+  }
+
+  huntBoundaryData = data;
+}
+
+function setBuildMarker() {
+  if (!selectedHunt) {
+    setSelectedDisplay(
+      'No hunt selected',
+      `Choose filters or click a hunt unit to load hunt and outfitter results. (${APP_BUILD})`
+    );
+  }
+}
+
+function forcePageTop() {
+  try {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  } catch {}
+
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+  const scrollingElement = document.scrollingElement || document.documentElement || document.body;
+  if (scrollingElement) scrollingElement.scrollTop = 0;
+  if (document.documentElement) document.documentElement.scrollTop = 0;
+  if (document.body) document.body.scrollTop = 0;
+}
+
+function hasActiveHuntFilters() {
+  return Boolean(
+    safe(searchInput?.value).trim() ||
+    safe(speciesFilter?.value) !== 'All Species' ||
+    safe(sexFilter?.value) !== 'All' ||
+    safe(weaponFilter?.value) !== 'All' ||
+    safe(huntTypeFilter?.value) !== 'All' ||
+    safe(huntCategoryFilter?.value) !== 'All' ||
+    safe(unitFilter?.value).trim()
+  );
+}
+
+function clearSearchInputOnLoad() {
+  if (!searchInput) return;
+  searchInput.value = '';
+  searchInput.setAttribute('value', '');
+}
+
+function normalizeSpeciesLabel(value) {
+  const text = safe(value).trim();
+  if (!text) return '';
+  if (text.toLowerCase() === 'mule deer') return 'Deer';
+  return text;
+}
+
+function getSpeciesDisplayList(h) {
+  return Array.from(new Set(getSpeciesList(h).map(normalizeSpeciesLabel).filter(Boolean)));
+}
+
+function getSpeciesDisplay(h) {
+  return getSpeciesDisplayList(h)[0] || normalizeSpeciesLabel(getSpeciesRaw(h));
+}
+
+function getNormalizedSex(valueOrHunt) {
+  const raw = typeof valueOrHunt === 'string' ? safe(valueOrHunt).trim() : getSex(valueOrHunt);
+  const hunt = typeof valueOrHunt === 'object' ? valueOrHunt : null;
+  const title = hunt ? getHuntTitle(hunt).toLowerCase() : '';
+  const species = hunt ? getSpeciesDisplay(hunt).toLowerCase() : '';
+
+  if (title.includes("hunter's choice") || title.includes('hunters choice') || title.includes('either sex')) return 'Either Sex';
+  if (raw === 'Either') return 'Either Sex';
+  if (raw === 'Buck/Bull') {
+    if (species.includes('deer') || species.includes('pronghorn')) return 'Buck';
+    if (species.includes('elk') || species.includes('moose')) return 'Bull';
+    return 'Either Sex';
+  }
+  if (raw === 'Doe' || raw === 'Cow' || raw === 'Ewe') return 'Antlerless';
+  return raw;
+}
+
+function getFilteredHunts() {
+  return getMatrixFilteredHunts();
+}
+
+function isSelectedHuntInCurrentMatrix(hunt = selectedHunt) {
+  if (!hunt) return false;
+  const selectedCode = safe(getHuntCode(hunt)).trim().toLowerCase();
+  if (!selectedCode) return false;
+  return getFilteredHunts().some(item => safe(getHuntCode(item)).trim().toLowerCase() === selectedCode);
+}
+
+function getMatrixFilteredHunts(excludeKey = '') {
   const search = safe(searchInput?.value).trim().toLowerCase();
   const species = safe(speciesFilter?.value || 'All Species');
   const sex = safe(sexFilter?.value || 'All');
-  const huntType = safe(huntTypeFilter?.value || 'All');
   const weapon = safe(weaponFilter?.value || 'All');
+  const huntType = safe(huntTypeFilter?.value || 'All');
   const huntCategory = safe(huntCategoryFilter?.value || 'All');
   const unit = safe(unitFilter?.value || '');
 
   return huntData.filter(h => {
-    const sDisplay = getSpeciesDisplay(h);
-    const hSex = getNormalizedSex(h);
-    const hHuntType = getHuntType(h);
-    const hWeapon = getWeapon(h);
-    const hHuntCategory = getHuntCategory(h);
-    const hUnit = getUnitValue(h);
+    const title = getHuntTitle(h).toLowerCase();
+    const code = getHuntCode(h).toLowerCase();
+    const unitName = getUnitName(h).toLowerCase();
+    const unitCode = getUnitCode(h).toLowerCase();
 
-    const searchOk = !search
-      || getHuntTitle(h).toLowerCase().includes(search)
-      || getHuntCode(h).toLowerCase().includes(search)
-      || getUnitName(h).toLowerCase().includes(search);
-    const speciesOk = excludeKey === 'species' || species === 'All Species' || sDisplay === species;
-    const sexOk = excludeKey === 'sex' || sex === 'All' || hSex === sex;
-    const huntTypeOk = excludeKey === 'huntType' || huntType === 'All' || hHuntType === huntType;
-    const weaponOk = excludeKey === 'weapon' || weaponMatchesFilter(h, weapon);
-    const huntCategoryOk = excludeKey === 'huntCategory' || huntCategory === 'All' || hHuntCategory === huntCategory;
-    const unitOk = excludeKey === 'unit' || !unit || hUnit === unit;
-    const conservationDisplayOk = huntType !== 'Conservation' || !!h?.syntheticConservationPermit;
+    const searchOk =
+      !search ||
+      title.includes(search) ||
+      code.includes(search) ||
+      unitName.includes(search) ||
+      unitCode.includes(search);
 
-    return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk && conservationDisplayOk;
+    const speciesOk =
+      excludeKey === 'species' ||
+      species === 'All Species' ||
+      getSpeciesDisplayList(h).map(x => x.toLowerCase()).includes(species.toLowerCase());
+
+    const sexOk = excludeKey === 'sex' || matchesFilter(sex, getNormalizedSex(h));
+    const weaponOk = excludeKey === 'weapon' || matchesFilter(weapon, getWeapon(h));
+    const huntTypeOk = excludeKey === 'huntType' || matchesFilter(huntType, getHuntType(h));
+    const huntCategoryOk = excludeKey === 'huntCategory' || matchesFilter(huntCategory, getHuntCategory(h));
+
+    const unitOk =
+      excludeKey === 'unit' ||
+      !unit ||
+      getUnitValue(h) === unit ||
+      getUnitName(h) === unit ||
+      getUnitCode(h) === unit;
+
+    return searchOk && speciesOk && sexOk && weaponOk && huntTypeOk && huntCategoryOk && unitOk;
   });
 }
 
-function getDisplayHunts() {
-  if (!hasActiveMatrixSelections() && !selectedHunt) return [];
-  return getFilteredHunts();
-}
-function shouldShowHuntBoundaries() {
-  return hasActiveMatrixSelections() || !!selectedHunt || !!toggleDwrUnits?.checked;
-}
-function shouldShowAllHuntUnits() {
-  return !!toggleDwrUnits?.checked && !hasActiveMatrixSelections() && !selectedHunt;
-}
-function normalizeListValues(values) {
-  if (Array.isArray(values)) return values.map(v => safe(v).trim()).filter(Boolean);
-  const one = safe(values).trim();
-  return one ? [one] : [];
-}
-function normalizeBoolean(value) {
-  if (typeof value === 'boolean') return value;
-  const lowered = safe(value).trim().toLowerCase();
-  return lowered === 'true' || lowered === 'yes' || lowered === '1';
-}
-function choosePrimaryListValue(primaryValue, values) {
-  const list = normalizeListValues(values);
-  const primary = safe(primaryValue).trim();
-  if (primary && primary.length > 3) return primary;
-  return list[0] || primary;
-}
-function normalizeOutfitterRecord(record) {
-  if (!record || typeof record !== 'object') return null;
-  const isNested = !!(record.contact || record.branding || record.serviceArea || record.headquarters);
-  if (!isNested) {
-    return {
-      ...record,
-      listingName: firstNonEmpty(record.listingName, record.displayName, record.businessName, record.Outfitter),
-      logoUrl: firstNonEmpty(record.logoUrl, record.logo, record.logoURL),
-      website: firstNonEmpty(record.website, record.url),
-      phone: normalizeListValues(record.phone),
-      speciesServed: normalizeListValues(record.speciesServed),
-      unitsServed: normalizeListValues(record.unitsServed),
-      address: firstNonEmpty(record.address, record.hometown),
-      city: firstNonEmpty(record.city),
-      region: firstNonEmpty(record.region, record.state)
-    };
-  }
+function populateSpecies() {
+  if (!speciesFilter) return;
+  const previous = speciesFilter.value || 'All Species';
+  const set = new Set(['All Species']);
 
-  const contact = record.contact || {};
-  const branding = record.branding || {};
-  const headquarters = record.headquarters || {};
-  const serviceArea = record.serviceArea || {};
-  const services = record.services || {};
-
-  return {
-    ...record,
-    listingName: firstNonEmpty(record.displayName, record.legalBusinessName, record.businessName, record.Outfitter),
-    businessName: firstNonEmpty(record.displayName, record.legalBusinessName, record.businessName),
-    logoUrl: firstNonEmpty(branding.logoUrl, branding.cardImageUrl, branding.heroImageUrl),
-    website: firstNonEmpty(contact.website, contact.facebookUrl, contact.instagramUrl, contact.instagramHandle),
-    phone: normalizeListValues(contact.phoneNumbers?.length ? contact.phoneNumbers : contact.phonePrimary),
-    email: normalizeListValues(contact.emailAddresses?.length ? contact.emailAddresses : contact.emailPrimary),
-    phonePrimary: choosePrimaryListValue(contact.phonePrimary, contact.phoneNumbers),
-    emailPrimary: choosePrimaryListValue(contact.emailPrimary, contact.emailAddresses),
-    ownerNames: normalizeListValues(contact.ownerNames?.length ? contact.ownerNames : contact.primaryName),
-    address: firstNonEmpty(headquarters.mailingAddress, headquarters.publicMeetingLocation),
-    hometown: firstNonEmpty(headquarters.publicMeetingLocation, headquarters.city),
-    city: firstNonEmpty(headquarters.city),
-    region: firstNonEmpty(headquarters.region, headquarters.state),
-    state: firstNonEmpty(headquarters.state),
-    latitude: Number.isFinite(Number(headquarters.latitude)) ? Number(headquarters.latitude) : null,
-    longitude: Number.isFinite(Number(headquarters.longitude)) ? Number(headquarters.longitude) : null,
-    speciesServed: normalizeListValues(serviceArea.speciesServed),
-    unitsServed: normalizeListValues(serviceArea.unitsServed),
-    usfsForests: normalizeListValues(serviceArea.usfsForests),
-    usfsForestIds: normalizeListValues(serviceArea.usfsForestIds),
-    usfsDistrictIds: normalizeListValues(serviceArea.usfsDistrictIds),
-    blmDistricts: normalizeListValues(serviceArea.blmDistricts),
-    blmDistrictIds: normalizeListValues(serviceArea.blmDistrictIds),
-    zoneTags: normalizeListValues(serviceArea.zoneTags),
-    countiesServed: normalizeListValues(serviceArea.countiesServed),
-    wmasServed: normalizeListValues(serviceArea.wmasServed),
-    stateParks: normalizeListValues(serviceArea.stateParks),
-    sitla: normalizeListValues(serviceArea.sitla),
-    statewide: normalizeBoolean(serviceArea.statewide),
-    guidedHunts: normalizeBoolean(services.guidedHunts),
-    diySupport: normalizeBoolean(services.diySupport),
-    trespassAccess: normalizeBoolean(services.trespassAccess),
-    lodgingIncluded: normalizeBoolean(services.lodgingIncluded),
-    mealsIncluded: normalizeBoolean(services.mealsIncluded),
-    packTrips: normalizeBoolean(services.packTrips),
-    youthHunts: normalizeBoolean(services.youthHunts),
-    archery: normalizeBoolean(services.archery),
-    muzzleloader: normalizeBoolean(services.muzzleloader),
-    socialUrls: [
-      firstNonEmpty(contact.facebookUrl),
-      firstNonEmpty(contact.instagramUrl, contact.instagramHandle),
-      firstNonEmpty(contact.youtubeUrl)
-    ].filter(Boolean)
-  };
-}
-function normalizeOutfitterList(list) {
-  return (Array.isArray(list) ? list : []).map(normalizeOutfitterRecord).filter(Boolean);
-}
-function getOutfitterCoverageKey(species, unitCode) {
-  return `${normalizeBoundaryKey(species)}|${normalizeBoundaryKey(unitCode)}`;
-}
-function normalizeOutfitterCoverageList(list) {
-  return (Array.isArray(list) ? list : []).map(row => {
-    const species = firstNonEmpty(row.Species, row.species);
-    const unitCode = firstNonEmpty(row.UnitCode, row.unitCode);
-    const unitName = firstNonEmpty(row.UnitName, row.unitName);
-    return {
-      species,
-      unitCode,
-      unitName,
-      primaryUsfsForestName: firstNonEmpty(row.PrimaryUsfsForestName, row.primaryUsfsForestName),
-      primaryBlmDistrictName: firstNonEmpty(row.PrimaryBlmDistrictName, row.primaryBlmDistrictName),
-      usfsAuthoritySource: firstNonEmpty(row.UsfsAuthoritySource, row.usfsAuthoritySource),
-      blmAuthoritySource: firstNonEmpty(row.BlmAuthoritySource, row.blmAuthoritySource),
-      usfsPermitMatchedOutfitters: normalizeListValues(firstNonEmpty(row.UsfsPermitMatchedOutfitters, row.usfsPermitMatchedOutfitters)),
-      blmPermitMatchedOutfitters: normalizeListValues(firstNonEmpty(row.BlmPermitMatchedOutfitters, row.blmPermitMatchedOutfitters)),
-      federalPermitMatchedOutfitters: normalizeListValues(firstNonEmpty(row.FederalPermitMatchedOutfitters, row.federalPermitMatchedOutfitters)),
-      federalCoverageEligible: firstNonEmpty(row.FederalCoverageEligible, row.federalCoverageEligible),
-      notes: firstNonEmpty(row.Notes, row.notes)
-    };
-  }).filter(row => row.species && row.unitCode);
-}
-function indexOutfitterFederalCoverage(list) {
-  outfitterFederalCoverageIndex.clear();
-  outfitterFederalCoverage = normalizeOutfitterCoverageList(list);
-  outfitterFederalCoverage.forEach(row => {
-    outfitterFederalCoverageIndex.set(getOutfitterCoverageKey(row.species, row.unitCode), row);
-  });
-}
-function getFederalCoverageForHunt(hunt) {
-  if (!hunt) return null;
-  return outfitterFederalCoverageIndex.get(getOutfitterCoverageKey(getSpeciesDisplay(hunt), getUnitCode(hunt))) || null;
-}
-function deterministicHash(input) {
-  const text = safe(input);
-  let hash = 0;
-  for (let i = 0; i < text.length; i += 1) {
-    hash = ((hash << 5) - hash) + text.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-function getOutfitterLocalityScore(outfitter, hunt, requiredUsfsForests = []) {
-  const unitName = normalizeBoundaryKey(getUnitName(hunt));
-  const unitCode = normalizeBoundaryKey(getUnitCode(hunt));
-  const city = normalizeBoundaryKey(outfitter.city);
-  const hometown = normalizeBoundaryKey(outfitter.hometown);
-  const region = normalizeBoundaryKey(outfitter.region);
-  const usfsForestIds = normalizeListValues(outfitter.usfsForestIds).map(normalizeBoundaryKey);
-  let score = 0;
-
-  [city, hometown, region].filter(Boolean).forEach(place => {
-    if (!place) return;
-    if (unitName && (unitName.includes(place) || place.includes(unitName))) score += 8;
-    if (unitCode && (unitCode.includes(place) || place.includes(unitCode))) score += 5;
+  getMatrixFilteredHunts('species').forEach(h => {
+    getSpeciesDisplayList(h).forEach(s => set.add(s));
   });
 
-  if ((city === 'manti' || hometown === 'manti' || region === 'manti')
-    && requiredUsfsForests.includes('manti-la-sal')) {
-    score += 6;
-  }
-  if (requiredUsfsForests.some(required => usfsForestIds.includes(required))) {
-    score += 2;
-  }
-  return score;
+  const options = Array.from(set).sort((a, b) => {
+    if (a === 'All Species') return -1;
+    if (b === 'All Species') return 1;
+    return a.localeCompare(b);
+  });
+
+  speciesFilter.innerHTML = options
+    .map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`)
+    .join('');
+
+  speciesFilter.value = options.includes(previous) ? previous : 'All Species';
 }
-function orderOutfitterMatchesForDisplay(hunt, matches, requiredUsfsForests = []) {
-  const huntSeed = `${normalizeBoundaryKey(getSpeciesDisplay(hunt))}|${normalizeBoundaryKey(getUnitCode(hunt))}|${normalizeBoundaryKey(getUnitName(hunt))}`;
-  return [...matches].sort((a, b) => {
-    const aLocal = getOutfitterLocalityScore(a, hunt, requiredUsfsForests);
-    const bLocal = getOutfitterLocalityScore(b, hunt, requiredUsfsForests);
-    if (bLocal !== aLocal) return bLocal - aLocal;
-    const aReasons = normalizeListValues(a.matchReasons).length;
-    const bReasons = normalizeListValues(b.matchReasons).length;
-    if (bReasons !== aReasons) return bReasons - aReasons;
-    const aRand = deterministicHash(`${huntSeed}|${safe(a.id || a.slug || a.listingName)}`);
-    const bRand = deterministicHash(`${huntSeed}|${safe(b.id || b.slug || b.listingName)}`);
-    return aRand - bRand;
+
+function populateSexes() {
+  if (!sexFilter) return;
+  const previous = sexFilter.value || 'All';
+  const values = Array.from(new Set(
+    getMatrixFilteredHunts('sex')
+      .map(h => safe(getNormalizedSex(h)).trim())
+      .filter(Boolean)
+  ));
+  sortWithPreferredOrder(values, SEX_ORDER);
+
+  const options = ['All', ...values];
+  sexFilter.innerHTML = options
+    .map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`)
+    .join('');
+
+  sexFilter.value = options.includes(previous) ? previous : 'All';
+}
+
+function sortWithPreferredOrder(values, preferredOrder) {
+  const rank = new Map(preferredOrder.map((value, index) => [value, index]));
+  return values.sort((a, b) => {
+    const aRank = rank.has(a) ? rank.get(a) : Number.MAX_SAFE_INTEGER;
+    const bRank = rank.has(b) ? rank.get(b) : Number.MAX_SAFE_INTEGER;
+    if (aRank !== bRank) return aRank - bRank;
+    return a.localeCompare(b);
   });
 }
-function noteOutfitterInteraction() {
-  suppressLandClickUntil = Date.now() + 800;
-}
-function shouldSuppressLandClick() {
-  return Date.now() < suppressLandClickUntil;
-}
-function slugText(value) {
-  return safe(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-}
-function getOwnershipName(props) {
-  return firstNonEmpty(
-    props.label_state,
-    props.LABEL_STATE,
-    props.ut_lgd,
-    props.UT_LGD,
-    props.desig,
-    props.DESIG,
-    props.admin,
-    props.ADMIN,
-    props.owner,
-    props.OWNER
-  );
-}
-function getOwnershipCounty(props) {
-  return firstNonEmpty(props.county, props.COUNTY, props.co_name, props.CO_NAME);
-}
-function getOwnershipAcres(props) {
-  return firstNonEmpty(props.gis_acres, props.GIS_ACRES, props.acres, props.ACRES);
-}
-function getOwnershipBucket(props) {
-  const haystack = slugText([
-    props.owner, props.OWNER, props.admin, props.ADMIN, props.desig, props.DESIG,
-    props.label_state, props.LABEL_STATE, props.ut_lgd, props.UT_LGD
-  ].filter(Boolean).join(' '));
 
-  if (haystack.includes('state park')) return 'stateParks';
-  if (haystack.includes('wildlife management area') || haystack.includes('waterfowl management area') || haystack.includes(' wma')) return 'wma';
-  if (haystack.includes('trust') || haystack.includes('sitla') || haystack.includes('school and institutional trust lands')) return 'sitla';
-  if (haystack.includes('private')) return 'private';
-  if (haystack.includes('state')) return 'stateLands';
-  return '';
-}
-function getOwnershipSubtitle(bucket, props) {
-  if (bucket === 'sitla') return 'SITLA';
-  if (bucket === 'stateParks') return 'State Parks';
-  if (bucket === 'private') return 'Private Land';
-  if (bucket === 'wma') {
-    return "UT. DWR W.M.A.'s";
-  }
-  return '';
-}
-function getOwnershipTitle(bucket, props) {
-  const base = getOwnershipName(props);
-  if (bucket === 'sitla') {
-    return base && !/utah state trust lands/i.test(base)
-      ? base
-      : firstNonEmpty(getOwnershipCounty(props) && `${getOwnershipCounty(props)} County SITLA`, 'Utah State Trust Lands');
-  }
-  if (bucket === 'stateParks') return firstNonEmpty(base, 'Utah State Park');
-  if (bucket === 'stateLands') return firstNonEmpty(base, getOwnershipCounty(props) && `${getOwnershipCounty(props)} County State Lands`, 'Utah State Lands');
-  if (bucket === 'private') return firstNonEmpty(base, getOwnershipCounty(props) && `${getOwnershipCounty(props)} County Private Land`, 'Private Land');
-  if (bucket === 'wma') return firstNonEmpty(base, 'Wildlife Management Area');
-  return firstNonEmpty(base, 'Land Ownership');
-}
-function buildOwnershipDetails(bucket, props) {
-  const county = getOwnershipCounty(props);
-  const acres = getOwnershipAcres(props);
-  const detailBits = [];
-  let noticeText = '';
-  if (county) detailBits.push(`${county} County`);
-  if (acres) detailBits.push(`${acres} acres`);
-  if (bucket === 'wma') {
-    noticeText = "Utah DWR W.M.A.'s do not imply outfitter approval, endorsement, or exclusive access.";
-  }
-  const detailText = detailBits.join(' | ');
-  let logo = '';
-  if (bucket === 'sitla') logo = LOGO_SITLA;
-  if (bucket === 'stateParks') logo = LOGO_STATE_PARKS;
-  if (bucket === 'wma') logo = LOGO_DWR_WMA;
-  return {
-    logo,
-    logoSize: logo ? 68 : undefined,
-    title: getOwnershipTitle(bucket, props),
-    subtitle: getOwnershipSubtitle(bucket, props),
-    detailText,
-    noticeText
-  };
-}
-function setLayerVisibility(layer, visible) {
-  if (!layer) return;
-  layer.setMap(visible ? googleBaselineMap : null);
-}
-function shouldShowWildernessOverlay() {
-  return !!(toggleUSFS?.checked || toggleBLM?.checked);
-}
-function shouldShowWildernessFeature(featureOrAgency) {
-  const agency = typeof featureOrAgency === 'string'
-    ? safe(featureOrAgency).toUpperCase()
-    : safe(featureOrAgency?.getProperty?.('Agency')).toUpperCase();
-  if (agency === 'FS') return !!toggleUSFS?.checked;
-  if (agency === 'BLM') return !!toggleBLM?.checked;
-  return false;
-}
-function shouldDeprioritizeFederalClicks() {
-  return false;
-}
-function updateWildernessOverlayVisibility() {
-  setLayerVisibility(wildernessLayer, shouldShowWildernessOverlay());
-}
-function updateStatus(message) {
-  if (statusEl) statusEl.textContent = message;
-}
-function resetAllFilters() {
-  if (searchInput) searchInput.value = '';
-  if (speciesFilter) speciesFilter.value = 'All Species';
-  if (sexFilter) sexFilter.value = 'All';
-  if (huntTypeFilter) huntTypeFilter.value = 'All';
-  if (weaponFilter) weaponFilter.value = 'All';
-  if (huntCategoryFilter) huntCategoryFilter.value = 'All';
-  if (unitFilter) unitFilter.value = '';
-  selectedHunt = null;
-  selectedBoundaryFeature = null;
-  closeSelectedHuntPopup();
-  closeSelectedHuntFloat();
-  closeSelectionInfoWindow();
-  refreshSelectionMatrix();
-  styleBoundaryLayer();
-  renderMatchingHunts();
-  renderSelectedHunt();
-  updateStatus('Filters cleared. Select a species or click a hunt unit.');
+function getHuntTypeLabel(value) {
+  return value === 'General' ? 'General Season' : value;
 }
 
-function handleFilterChange(event) {
-  selectedHunt = null;
-  selectedBoundaryFeature = null;
-  closeSelectedHuntPopup();
-  closeSelectedHuntFloat();
-  closeSelectionInfoWindow();
-  const changedId = safe(event?.target?.id);
-  if (changedId === 'speciesFilter') {
-    if (sexFilter) sexFilter.value = 'All';
-    if (huntTypeFilter) huntTypeFilter.value = 'All';
-    if (weaponFilter) weaponFilter.value = 'All';
-    if (huntCategoryFilter) huntCategoryFilter.value = 'All';
-    if (unitFilter) unitFilter.value = '';
-  }
-  if (['sexFilter', 'huntTypeFilter', 'weaponFilter', 'huntCategoryFilter'].includes(changedId)) {
-    if (unitFilter) unitFilter.value = '';
-  }
-  if (toggleDwrUnits && hasActiveMatrixSelections()) {
-    toggleDwrUnits.checked = true;
-  }
-  refreshSelectionMatrix();
-  styleBoundaryLayer();
-  renderMatchingHunts();
-  renderSelectedHunt();
-  renderOutfitters();
+function populateHuntTypes() {
+  if (!huntTypeFilter) return;
+  const previous = huntTypeFilter.value || 'All';
+  const values = Array.from(new Set(
+    getMatrixFilteredHunts('huntType').map(h => safe(getHuntType(h)).trim()).filter(Boolean)
+  ));
+  sortWithPreferredOrder(values, HUNT_TYPE_ORDER);
+
+  huntTypeFilter.innerHTML = [
+    '<option value="All">All</option>',
+    ...values.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(getHuntTypeLabel(value))}</option>`)
+  ].join('');
+
+  huntTypeFilter.value = values.includes(previous) ? previous : 'All';
+}
+
+function populateHuntCategories() {
+  if (!huntCategoryFilter) return;
+  const previous = huntCategoryFilter.value || 'All';
+  const values = Array.from(new Set(
+    getMatrixFilteredHunts('huntCategory').map(h => safe(getHuntCategory(h)).trim()).filter(Boolean)
+  ));
+  sortWithPreferredOrder(values, HUNT_CATEGORY_ORDER);
+
+  huntCategoryFilter.innerHTML = [
+    '<option value="All">All</option>',
+    ...values.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`)
+  ].join('');
+
+  huntCategoryFilter.value = values.includes(previous) ? previous : 'All';
+}
+
+function populateWeapons() {
+  if (!weaponFilter) return;
+  const previous = weaponFilter.value || 'All';
+  const values = Array.from(new Set(
+    getMatrixFilteredHunts('weapon').map(h => safe(getWeapon(h)).trim()).filter(Boolean)
+  ));
+  sortWithPreferredOrder(values, WEAPON_ORDER);
+
+  const options = ['All', ...values];
+  weaponFilter.innerHTML = options
+    .map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`)
+    .join('');
+
+  weaponFilter.value = options.includes(previous) ? previous : 'All';
 }
 
 function refreshSelectionMatrix() {
-  if (!speciesFilter || !sexFilter || !huntTypeFilter || !weaponFilter || !huntCategoryFilter || !unitFilter) return;
+  populateSpecies();
+  populateSexes();
+  populateHuntTypes();
+  populateHuntCategories();
+  populateWeapons();
+  populateUnits();
+}
 
-  const speciesOptions = sortWithPreferredOrder(
-    Array.from(new Set(huntData.map(getSpeciesDisplay).filter(Boolean))),
-    ['Deer', 'Elk', 'Pronghorn', 'Moose', 'Bison', 'Black Bear', 'Cougar', 'Turkey', 'Desert Bighorn Sheep', 'Rocky Mountain Bighorn Sheep', 'Mountain Goat']
-  );
-  const previousSpecies = speciesFilter.value || 'All Species';
-  speciesFilter.innerHTML = `<option value="All Species">All Species</option>` + speciesOptions.map(v => `<option value="${v}">${v}</option>`).join('');
-  speciesFilter.value = speciesOptions.includes(previousSpecies) ? previousSpecies : 'All Species';
+function populateUnits() {
+  if (!unitFilter) return;
+  const previous = unitFilter.value || '';
+  const units = new Map();
 
-  const sexData = getFilteredHunts('sex');
-  const sexOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...sexData.map(getNormalizedSex).filter(Boolean)])), ['All', ...SEX_ORDER]);
-  const prevSex = sexFilter.value || 'All';
-  sexFilter.innerHTML = sexOptions.map(v => `<option value="${v}">${v}</option>`).join('');
-  sexFilter.value = sexOptions.includes(prevSex) ? prevSex : 'All';
-
-  const huntTypeData = getFilteredHunts('huntType');
-  const huntTypeOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...huntTypeData.map(getHuntType).filter(Boolean)])), ['All', ...HUNT_TYPE_ORDER]);
-  const prevHuntType = huntTypeFilter.value || 'All';
-  huntTypeFilter.innerHTML = huntTypeOptions.map(v => `<option value="${v}">${v}</option>`).join('');
-  huntTypeFilter.value = huntTypeOptions.includes(prevHuntType) ? prevHuntType : 'All';
-
-  const categoryData = getFilteredHunts('huntCategory');
-  const categoryOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...categoryData.map(getHuntCategory).filter(Boolean)])), ['All', ...HUNT_CLASS_ORDER]);
-  const prevHuntCategory = huntCategoryFilter.value || 'All';
-  huntCategoryFilter.innerHTML = categoryOptions.map(v => `<option value="${v}">${v}</option>`).join('');
-  huntCategoryFilter.value = categoryOptions.includes(prevHuntCategory) ? prevHuntCategory : 'All';
-
-  const weaponData = getFilteredHunts('weapon');
-  const weaponOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...weaponData.map(getWeapon).filter(Boolean)])), ['All', ...WEAPON_ORDER]);
-  const prevWeapon = weaponFilter.value || 'All';
-  weaponFilter.innerHTML = weaponOptions.map(v => `<option value="${v}">${v}</option>`).join('');
-  weaponFilter.value = weaponOptions.includes(prevWeapon) ? prevWeapon : 'All';
-
-  const hasNonUnitSelections = [
-    safe(searchInput?.value).trim(),
-    speciesFilter.value !== 'All Species' ? speciesFilter.value : '',
-    sexFilter.value !== 'All' ? sexFilter.value : '',
-    huntTypeFilter.value !== 'All' ? huntTypeFilter.value : '',
-    huntCategoryFilter.value !== 'All' ? huntCategoryFilter.value : '',
-    weaponFilter.value !== 'All' ? weaponFilter.value : ''
-  ].filter(Boolean).length > 0;
-
-  const unitsMap = new Map();
-  const unitSource = hasNonUnitSelections ? getFilteredHunts('unit') : huntData;
-  unitSource.forEach(h => {
-    const unitValue = getUnitValue(h);
-    if (unitValue) unitsMap.set(unitValue, getUnitName(h) || unitValue);
+  getMatrixFilteredHunts('unit').forEach(h => {
+    const value = getUnitValue(h);
+    const label = getUnitName(h) || value;
+    if (!value) return;
+    if (!units.has(value)) units.set(value, label);
   });
-  const unitOptions = Array.from(unitsMap.entries()).sort((a, b) => a[1].localeCompare(b[1]));
-  const prevUnit = unitFilter.value || '';
-  unitFilter.innerHTML = `<option value="">All DWR Hunt Units</option>` + unitOptions.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
-  unitFilter.value = unitOptions.some(([v]) => v === prevUnit) ? prevUnit : '';
+
+  const options = Array.from(units.entries()).sort((a, b) => a[1].localeCompare(b[1]));
+
+  unitFilter.innerHTML = [
+    '<option value="">All Units</option>',
+    ...options.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`)
+  ].join('');
+
+  unitFilter.value = options.some(([value]) => value === previous) ? previous : '';
 }
 
-// --- CORE APP LOGIC ---
-async function loadHuntData() {
-  huntData = await loadHuntDataRecords({
-    HUNT_DATA_SOURCES,
-    ELK_BOUNDARY_TABLE_SOURCES,
-    OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES,
-    SPIKE_ELK_HUNT_CODES,
-    getHuntRecordKey,
-    getHuntCode,
-    getBoundaryId,
-    getSpeciesDisplay,
-    getNormalizedSex,
-    getUnitName,
-    normalizeHuntCode,
-    normalizeBoundaryKey,
-    firstNonEmpty,
-    safe,
-    updateStatus
-  });
-  const syntheticConservationHunts = buildSyntheticConservationPermitHunts(huntData);
-  huntData = [...huntData, ...syntheticConservationHunts];
-  refreshSelectionMatrix();
-  updateStatus(`Loaded ${huntData.length} hunts.`);
-}
+function getSelectedOutfitters() {
+  if (!selectedHunt || !isSelectedHuntInCurrentMatrix(selectedHunt)) return [];
 
-async function loadOfficialElkBoundaryFeatures() {
-  return loadOfficialElkBoundaryFeaturesFromData({ ELK_BOUNDARY_TABLE_SOURCES });
-}
+  const codeSlug = slugify(getUnitCode(selectedHunt));
+  const nameSlug = slugify(getUnitName(selectedHunt));
+  const valueSlug = slugify(getUnitValue(selectedHunt));
+  const huntSpecies = [
+    slugify(getSpeciesRaw(selectedHunt)),
+    slugify(getSpeciesDisplay(selectedHunt))
+  ].filter(Boolean);
 
-async function loadDerivedSpikeElkRecords(existingRecords) {
-  return loadDerivedSpikeElkRecordsFromData(existingRecords, {
-    ELK_BOUNDARY_TABLE_SOURCES,
-    SPIKE_ELK_HUNT_CODES,
-    normalizeHuntCode,
-    getHuntCode,
-    getBoundaryId,
-    getSpeciesDisplay,
-    getNormalizedSex,
-    getUnitName,
-    normalizeBoundaryKey,
-    firstNonEmpty,
-    safe
-  });
-}
-
-function buildMatchingHuntCard(h, selectedKey) {
-  const selected = selectedKey && selectedKey === getHuntRecordKey(h);
-  const huntKey = escapeHtml(getHuntRecordKey(h));
-  const name = escapeHtml(firstNonEmpty(h.hunt_name, getHuntTitle(h), getUnitName(h), ''));
-  const code = escapeHtml(getHuntCode(h) || '');
-  const codeAttr = escapeHtml(getHuntCode(h) || '');
-  return `
-    <div class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}" role="button" tabindex="0">
-      <div class="hunt-card-head">
-        <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR" class="hunt-card-logo">
-        <div>
-          <div class="hunt-card-code">${code}</div>
-          <div class="hunt-card-title">${name}</div>
-        </div>
-      </div>
-      <div class="hunt-card-actions">
-        <button type="button" class="secondary hunt-research-ring" data-hunt-research-code="${codeAttr}">
-          Hunt Research
-        </button>
-      </div>
-    </div>`;
-}
-
-function renderMatchingHunts() {
-  const container = document.getElementById('matchingHunts');
-  if (!container) return;
-  const list = getDisplayHunts();
-  const selectedKey = getSelectedHuntKey();
-  updateStatus(
-    !hasActiveMatrixSelections() && !selectedHunt
-      ? 'Select filters or click a hunt unit to begin.'
-      : `${list.length} matching hunt${list.length === 1 ? '' : 's'}`
-  );
-  container.innerHTML = list.length
-    ? list.map(h => buildMatchingHuntCard(h, selectedKey)).join('')
-    : '<div class="empty-note">Use the matrix or click a hunt unit to load matching hunts.</div>';
-}
-
-function closeSelectionInfoWindow() {
-  if (selectionInfoWindow) {
-    selectionInfoWindow.close();
-    selectionInfoWindow = null;
-  }
-}
-
-function closeSelectedHuntFloat(zoomToUnit = false) {
-  if (!selectedHuntFloat) return;
-  selectedHuntFloat.classList.remove('is-open');
-  selectedHuntFloat.setAttribute('aria-hidden', 'true');
-  selectedHuntFloat.innerHTML = '';
-  if (zoomToUnit && selectedHunt && safe(mapTypeSelect?.value).toLowerCase() !== 'globe') {
-    zoomToSelectedBoundary();
-  }
-}
-function getSelectedUnitGroups() {
-  const groups = new Map();
-  getDisplayHunts().forEach(hunt => {
-    const key = firstNonEmpty(getBoundaryId(hunt), getUnitValue(hunt), getUnitName(hunt), getHuntCode(hunt));
-    if (!key) return;
-    if (!groups.has(key)) {
-      groups.set(key, {
-        key,
-        unitValue: getUnitValue(hunt),
-        unitName: getUnitName(hunt) || getHuntTitle(hunt),
-        hunts: []
-      });
-    }
-    groups.get(key).hunts.push(hunt);
-  });
-  return Array.from(groups.values()).sort((a, b) => safe(a.unitName).localeCompare(safe(b.unitName)));
-}
-function openSelectedUnitsChooser() {
-  if (!mapChooser || !mapChooserBody || !mapChooserTitle || !mapChooserKicker) return;
-  const groups = getSelectedUnitGroups();
-  if (groups.length <= 1) {
-    closeSelectedHuntPopup();
-    return;
-  }
-  closeSelectedHuntFloat();
-  closeSelectionInfoWindow();
-  selectedBoundaryMatches = [];
-  mapChooserKicker.textContent = 'Selected Units';
-  mapChooserTitle.textContent = `${groups.length} Units Selected`;
-  mapChooserBody.innerHTML = groups.map(group => `
-    <div class="map-chooser-card" data-selected-unit="${escapeHtml(group.unitValue || group.key)}" role="button" tabindex="0">
-      <div class="hunt-card-title">${escapeHtml(group.unitName)}</div>
-      <div class="map-chooser-meta">${group.hunts.length} matching hunt${group.hunts.length === 1 ? '' : 's'}</div>
-      <div class="map-chooser-meta">${escapeHtml(getSpeciesDisplay(group.hunts[0]))} | ${escapeHtml(getHuntType(group.hunts[0]))}</div>
-    </div>
-  `).join('');
-  mapChooser.classList.add('is-open');
-  mapChooser.setAttribute('aria-hidden', 'false');
-  mapChooserBody.querySelectorAll('[data-selected-unit]').forEach(card => {
-    const select = () => {
-      const unitValue = safe(card.getAttribute('data-selected-unit'));
-      if (unitFilter) unitFilter.value = unitValue;
-      refreshSelectionMatrix();
-      styleBoundaryLayer();
-      renderMatchingHunts();
-      renderSelectedHunt();
-      renderOutfitters();
-      const hunts = getDisplayHunts().filter(h => getUnitValue(h) === unitValue);
-      const unitTitle = firstNonEmpty(hunts[0] && getUnitName(hunts[0]), unitValue);
-      showHuntMatchesChooser(unitTitle, hunts, 'Available Hunts');
-    };
-    card.addEventListener('click', select);
-    card.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        select();
-      }
-    });
-  });
-}
-
-function openSelectedHuntFloat() {
-  if (!selectedHuntFloat || !selectedHunt) {
-    closeSelectedHuntFloat();
-    return;
-  }
-
-  const code = escapeHtml(getHuntCode(selectedHunt) || '');
-  const name = escapeHtml(firstNonEmpty(selectedHunt.hunt_name, getUnitName(selectedHunt), getHuntTitle(selectedHunt), 'Selected Hunt'));
-  const species = escapeHtml(getSpeciesDisplay(selectedHunt) || 'Not loaded');
-  const weapon = escapeHtml(getWeapon(selectedHunt) || 'Not loaded');
-  const huntType = escapeHtml(getHuntType(selectedHunt) || 'Not loaded');
-  const dates = escapeHtml(getDates(selectedHunt) || 'See official hunt details');
-
-  selectedHuntFloat.innerHTML = `
-    <section class="selected-unit-placard">
-      <div class="selected-unit-placard-head">
-        <div>
-          <p class="selected-unit-placard-kicker">Selected Unit</p>
-          <h3 class="selected-unit-placard-title">${code || 'Selected Hunt'}</h3>
-        </div>
-        <button type="button" class="selected-unit-placard-close" data-close-selected-hunt-float aria-label="Close selected hunt">X</button>
-      </div>
-      <div class="selected-unit-placard-body">
-        <div class="selected-unit-placard-top">
-          <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" class="selected-unit-placard-logo">
-          <div>
-            <div class="selected-unit-placard-code">Utah DWR hunt</div>
-            <div class="selected-unit-placard-name">${name}</div>
-            <p class="selected-unit-placard-sub">${species} · ${weapon} · ${huntType}</p>
-          </div>
-        </div>
-        <div class="selected-unit-placard-grid">
-          <div class="selected-unit-placard-pill">
-            <span class="selected-unit-placard-pill-label">Unit</span>
-            <span class="selected-unit-placard-pill-value">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt) || 'Not loaded')}</span>
-          </div>
-          <div class="selected-unit-placard-pill">
-            <span class="selected-unit-placard-pill-label">Dates</span>
-            <span class="selected-unit-placard-pill-value">${dates}</span>
-          </div>
-        </div>
-        <div class="selected-unit-placard-actions">
-          <button type="button" class="secondary hunt-research-ring" data-inline-hunt-research>
-            Hunt Research
-          </button>
-        </div>
-        <div class="selected-unit-placard-note">Built to stay just off the left rail so the map area still breathes.</div>
-      </div>
-    </section>`;
-  selectedHuntFloat.classList.add('is-open');
-  selectedHuntFloat.setAttribute('aria-hidden', 'false');
-  selectedHuntFloat.querySelector('[data-close-selected-hunt-float]')?.addEventListener('click', () => closeSelectedHuntFloat());
-  selectedHuntFloat.querySelector('[data-inline-hunt-research]')?.addEventListener('click', () => {
-    openHuntResearch(getHuntCode(selectedHunt));
-  });
-}
-
-function buildLandInfoCard({ logo, title, subtitle, detailText = '', noticeText = '', detailsLinkText = '', detailsLink = '', logoSize = 46, cardMinWidth = 270, cardMaxWidth = 320 }) {
-  const resolvedLogo = logo ? assetUrl(logo) : '';
-  return `
-    <div style="display:grid;gap:8px;min-width:${Number(cardMinWidth) || 270}px;max-width:${Number(cardMaxWidth) || 320}px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        ${resolvedLogo ? `<img src="${resolvedLogo}" alt="${escapeHtml(subtitle)} logo" style="width:${Number(logoSize) || 46}px;height:${Number(logoSize) || 46}px;object-fit:contain;display:block;flex:0 0 auto;">` : ''}
-        <div>
-          <div style="font-size:15px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:${DNR_ORANGE};line-height:1.05;">${escapeHtml(subtitle)}</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">${escapeHtml(title)}</div>
-        </div>
-      </div>
-      ${detailText ? `<div style="font-size:12px;line-height:1.35;color:#6b5646;">${escapeHtml(detailText)}</div>` : ''}
-      ${noticeText ? `<div style="font-size:12px;line-height:1.4;color:#7b3f1d;font-weight:700;background:#fff4ea;border:1px solid #edc39f;border-radius:10px;padding:8px 10px;">${escapeHtml(noticeText)}</div>` : ''}
-      ${detailsLink ? `<a href="${escapeHtml(detailsLink)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">${escapeHtml(detailsLinkText || 'Open details')}</a>` : ''}
-    </div>`;
-}
-
-function openLandInfoWindow(card, position) {
-  closeSelectedHuntFloat();
-  closeSelectedHuntPopup();
-  closeSelectionInfoWindow();
-  selectionInfoWindow = new google.maps.InfoWindow({
-    content: card,
-    position,
-    pixelOffset: new google.maps.Size(0, -12),
-    maxWidth: 340
-  });
-  selectionInfoWindow.open(googleBaselineMap);
-}
-function openInlineHuntDetails(hunt) {
-  const section = document.getElementById('huntDetailsSection');
-  const frame = document.getElementById('huntDetailsFrame');
-  const title = document.getElementById('huntDetailsTitle');
-  const meta = document.getElementById('huntDetailsMeta');
-  const fallback = document.getElementById('huntDetailsFallbackLink');
-  const link = getBoundaryLink(hunt);
-  if (!section || !frame || !link || !hunt) return;
-  if (title) title.textContent = `${getHuntCode(hunt)} | ${getUnitName(hunt) || getHuntTitle(hunt)}`;
-  if (meta) meta.textContent = `${getSpeciesDisplay(hunt)} | ${getNormalizedSex(hunt)} | ${getHuntType(hunt)} | ${getWeapon(hunt)}`;
-  if (fallback) fallback.href = link;
-  frame.src = link;
-  section.hidden = false;
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  updateStatus('Official Utah DWR hunt details loaded below the map.');
-}
-function closeInlineHuntDetails() {
-  const section = document.getElementById('huntDetailsSection');
-  const frame = document.getElementById('huntDetailsFrame');
-  if (!section || !frame) return;
-  section.hidden = true;
-  frame.src = 'about:blank';
-}
-
-function createGlobeImageryProvider(key) {
-  if (typeof Cesium === 'undefined') return null;
-  const providers = {
-    osm: () => new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
-    osmHot: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-      subdomains: ['a', 'b', 'c']
-    }),
-    openTopo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
-      credit: 'OpenTopoMap'
-    }),
-    cartoLight: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      subdomains: ['a', 'b', 'c', 'd']
-    }),
-    cartoDark: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      subdomains: ['a', 'b', 'c', 'd']
-    }),
-    esriImagery: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-    }),
-    esriTopo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-    }),
-    esriStreet: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
-    }),
-    esriNatGeo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'
-    }),
-    usgsImagery: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'
-    }),
-    usgsTopo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}'
+  return outfitters
+    .filter(o => {
+      const served = slugList(o.unitsServed);
+      return served.includes(codeSlug) || served.includes(nameSlug) || served.includes(valueSlug);
     })
-  };
-  return providers[key]?.() || providers.osm();
-}
-
-function getGlobeBasemapLabel(key) {
-  const labels = {
-    osm: 'OpenStreetMap',
-    osmHot: 'OSM Humanitarian',
-    openTopo: 'OpenTopoMap',
-    cartoLight: 'Carto Light',
-    cartoDark: 'Carto Dark',
-    esriImagery: 'Esri World Imagery',
-    esriTopo: 'Esri World Topo',
-    esriStreet: 'Esri World Street',
-    esriNatGeo: 'Esri NatGeo',
-    usgsImagery: 'USGS Imagery',
-    usgsTopo: 'USGS Topo'
-  };
-  return labels[key] || key;
-}
-
-function syncGlobeBasemapButtons() {
-  if (!globeBasemapGrid) return;
-  globeBasemapGrid.querySelectorAll('[data-globe-basemap]').forEach(btn => {
-    const isActive = btn.getAttribute('data-globe-basemap') === currentGlobeBasemap;
-    btn.classList.toggle('is-active', isActive);
-    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-  });
-}
-
-function applyGlobeBasemap(key = currentGlobeBasemap) {
-  if (!cesiumViewer || typeof Cesium === 'undefined') return;
-  const imageryProvider = createGlobeImageryProvider(key);
-  if (!imageryProvider) return;
-  currentGlobeBasemap = key;
-  cesiumViewer.imageryLayers.removeAll();
-  cesiumViewer.imageryLayers.addImageryProvider(imageryProvider);
-  cesiumViewer.scene.requestRender();
-  if (globeBasemapSelect) {
-    globeBasemapSelect.value = currentGlobeBasemap;
-  }
-  syncGlobeBasemapButtons();
-  const container = document.getElementById('globeMap');
-  if (container) {
-    container.style.background = currentGlobeBasemap === 'cartoDark' ? '#10141d' : '#d7e7f5';
-  }
-}
-
-async function ensureCesiumHuntBoundaries() {
-  if (!cesiumViewer || typeof Cesium === 'undefined' || !huntBoundaryGeoJson) return;
-  if (cesiumHuntDataSource) return cesiumHuntDataSource;
-  cesiumHuntDataSource = await Cesium.GeoJsonDataSource.load(huntBoundaryGeoJson, {
-    clampToGround: true
-  });
-  cesiumViewer.dataSources.add(cesiumHuntDataSource);
-  if (cesiumHuntDataSource?.entities?.values) {
-    cesiumHuntDataSource.entities.values.forEach(entity => {
-      if (entity.polygon) {
-        entity.polygon.fill = true;
-        entity.polygon.outline = false;
-        entity.polygon.material = Cesium.Color.fromCssColorString('#3653b3').withAlpha(0.18);
-      }
-      if (entity.polyline) {
-        entity.polyline.show = false;
-      }
-      entity.show = false;
+    .filter(o => {
+      const servedSpecies = slugList(o.speciesServed || o.species);
+      if (!servedSpecies.length || !huntSpecies.length) return true;
+      return servedSpecies.some(species => huntSpecies.includes(species));
     });
-  }
-  updateCesiumBoundaryStyles();
-  return cesiumHuntDataSource;
 }
 
-async function ensureCesiumUtahOutline() {
-  if (!cesiumViewer || typeof Cesium === 'undefined') return null;
-  if (cesiumUtahOutlineDataSource) return cesiumUtahOutlineDataSource;
-  const geojson = await fetchGeoJson(UTAH_OUTLINE_QUERY_URL);
-  cesiumUtahOutlineDataSource = await Cesium.GeoJsonDataSource.load(geojson, {
-    clampToGround: true,
-    stroke: Cesium.Color.fromCssColorString('#c84f00'),
-    strokeWidth: 8,
-    fill: Cesium.Color.fromCssColorString('#c84f00').withAlpha(0.0)
-  });
-  cesiumViewer.dataSources.add(cesiumUtahOutlineDataSource);
-  if (cesiumUtahOutlineDataSource?.entities?.values) {
-    cesiumUtahOutlineDataSource.entities.values.forEach(entity => {
-      entity.show = true;
-      if (entity.polygon) {
-        entity.polygon.fill = false;
-        entity.polygon.outline = true;
-        entity.polygon.outlineColor = Cesium.Color.fromCssColorString('#c84f00');
-        entity.polygon.outlineWidth = 8;
-      }
-      if (entity.polyline) {
-        entity.polyline.show = true;
-        entity.polyline.width = 8;
-        entity.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
-          color: Cesium.Color.fromCssColorString('#c84f00'),
-          outlineColor: Cesium.Color.fromCssColorString('#6e2a00'),
-          outlineWidth: 2
-        });
-        entity.polyline.clampToGround = true;
-      }
-    });
-  }
-  cesiumViewer?.scene?.requestRender?.();
-  return cesiumUtahOutlineDataSource;
+function getBoundaryFeatureAttributes(feature) {
+  return feature?.attributes || feature?.properties || {};
 }
 
-function getCesiumEntityOutlinePositions(entity) {
-  if (!entity?.polygon?.hierarchy || typeof Cesium === 'undefined') return null;
-  try {
-    const hierarchyValue = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
-    const positions = hierarchyValue?.positions;
-    if (!Array.isArray(positions) || positions.length < 2) return null;
-    const closed = positions.slice();
-    const first = closed[0];
-    const last = closed[closed.length - 1];
-    if (!Cesium.Cartesian3.equals(first, last)) closed.push(first);
-    return closed;
-  } catch (error) {
-    console.error('Cesium outline extraction failed', error);
+function getBoundaryFeatureId(feature) {
+  const attrs = getBoundaryFeatureAttributes(feature);
+  return safe(firstNonEmpty(attrs.BoundaryID, attrs.BOUNDARYID, attrs.boundaryId)).trim();
+}
+
+function getBoundaryFeatureName(feature) {
+  const attrs = getBoundaryFeatureAttributes(feature);
+  return safe(firstNonEmpty(attrs.Boundary_Name, attrs.BOUNDARY_NAME, attrs.boundaryName)).trim();
+}
+
+function getBoundarySourceFeatures() {
+  return Array.isArray(huntBoundaryData?.features) ? huntBoundaryData.features : [];
+}
+
+function extendBoundsFromCoordinates(bounds, coordinates) {
+  if (!Array.isArray(coordinates)) return;
+
+  if (coordinates.length >= 2 && Number.isFinite(Number(coordinates[0])) && Number.isFinite(Number(coordinates[1]))) {
+    const lng = Number(coordinates[0]);
+    const lat = Number(coordinates[1]);
+    if (isLikelyUtahCoordinate(lat, lng)) {
+      bounds.minLat = Math.min(bounds.minLat, lat);
+      bounds.maxLat = Math.max(bounds.maxLat, lat);
+      bounds.minLng = Math.min(bounds.minLng, lng);
+      bounds.maxLng = Math.max(bounds.maxLng, lng);
+    }
+    return;
+  }
+
+  coordinates.forEach(child => extendBoundsFromCoordinates(bounds, child));
+}
+
+function getBoundaryGeometryCenter(feature) {
+  const geometry = feature?.geometry;
+  const bounds = {
+    minLat: Infinity,
+    maxLat: -Infinity,
+    minLng: Infinity,
+    maxLng: -Infinity
+  };
+
+  if (!geometry) return null;
+
+  if (Array.isArray(geometry.coordinates)) {
+    extendBoundsFromCoordinates(bounds, geometry.coordinates);
+  } else if (Array.isArray(geometry.rings)) {
+    extendBoundsFromCoordinates(bounds, geometry.rings);
+  } else if (Array.isArray(geometry.paths)) {
+    extendBoundsFromCoordinates(bounds, geometry.paths);
+  }
+
+  if (![bounds.minLat, bounds.maxLat, bounds.minLng, bounds.maxLng].every(Number.isFinite)) {
     return null;
   }
+
+  return {
+    lat: (bounds.minLat + bounds.maxLat) / 2,
+    lng: (bounds.minLng + bounds.maxLng) / 2
+  };
 }
 
-function getCesiumEntityMatches(entity) {
-  const properties = entity?.properties;
-  const boundaryId = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
-  const boundaryName = normalizeBoundaryKey(
-    properties?.Boundary_Name?.getValue?.()
-    ?? properties?.BOUNDARY_NAME?.getValue?.()
-    ?? properties?.BoundaryName?.getValue?.()
-  );
-  const displaySource = getDisplayHunts();
-  const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
-  return source.filter(h => {
-    const hBoundaryId = safe(getBoundaryId(h));
-    const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
-    const hUnitName = normalizeBoundaryKey(getUnitName(h));
-    return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
+function getSelectedBoundaryCenter(hunt = selectedHunt) {
+  if (!hunt) return null;
+
+  const matchSets = buildBoundaryMatchSets(hunt);
+  const features = getBoundarySourceFeatures().filter(feature => {
+    const featureId = getBoundaryFeatureId(feature);
+    const featureName = getBoundaryFeatureName(feature).trim().toLowerCase();
+    return matchSets.names.has(featureName) || (featureId && matchSets.ids.has(featureId));
   });
-}
 
-function focusCesiumBoundaryEntity(entity) {
-  if (!cesiumViewer || !entity || typeof Cesium === 'undefined') return;
-  cesiumViewer.flyTo(entity, {
-    offset: new Cesium.HeadingPitchRange(0, -0.8, 180000)
-  }).catch?.(() => {});
-}
+  if (!features.length) return null;
 
-function updateCesiumBoundaryStyles() {
-  if (!cesiumHuntDataSource?.entities?.values || typeof Cesium === 'undefined') return;
-  const showBoundaries = shouldShowHuntBoundaries();
-  const showAllUnits = shouldShowAllHuntUnits();
-  const filtered = getDisplayHunts();
-  const matcher = buildBoundaryMatcher(filtered);
-  const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
-  cesiumHuntDataSource.entities.values.forEach(entity => {
-    const properties = entity.properties;
-    const id = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
-    const name = normalizeBoundaryKey(
-      properties?.Boundary_Name?.getValue?.()
-      ?? properties?.BOUNDARY_NAME?.getValue?.()
-      ?? properties?.BoundaryName?.getValue?.()
-    );
-    const isMatch = showAllUnits || matcher.matches(id, name);
-    const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
-    const visible = showBoundaries && isMatch;
-    entity.show = visible;
-    const fillColor = Cesium.Color.fromCssColorString(isSelected ? '#ff8a3d' : '#3653b3').withAlpha(isSelected ? 0.0 : 0.32);
-    if (entity.polygon) {
-      entity.polygon.material = fillColor;
-      entity.polygon.outline = false;
-    }
-    const outlinePositions = isSelected ? getCesiumEntityOutlinePositions(entity) : null;
-    if (outlinePositions?.length >= 2) {
-      entity.polyline = new Cesium.PolylineGraphics({
-        positions: outlinePositions,
-        width: 9,
-        material: new Cesium.PolylineOutlineMaterialProperty({
-          color: Cesium.Color.fromCssColorString('#c84f00'),
-          outlineColor: Cesium.Color.fromCssColorString('#6e2a00'),
-          outlineWidth: 2
-        }),
-        clampToGround: true
-      });
-    } else if (entity.polyline) {
-      entity.polyline = isSelected
-        ? entity.polyline
-        : undefined;
-    }
-    if (entity.polyline) {
-      entity.polyline.show = visible && isSelected;
+  const aggregateBounds = {
+    minLat: Infinity,
+    maxLat: -Infinity,
+    minLng: Infinity,
+    maxLng: -Infinity
+  };
+
+  features.forEach(feature => {
+    const geometry = feature?.geometry;
+    if (!geometry) return;
+    if (Array.isArray(geometry.coordinates)) {
+      extendBoundsFromCoordinates(aggregateBounds, geometry.coordinates);
+    } else if (Array.isArray(geometry.rings)) {
+      extendBoundsFromCoordinates(aggregateBounds, geometry.rings);
+    } else if (Array.isArray(geometry.paths)) {
+      extendBoundsFromCoordinates(aggregateBounds, geometry.paths);
     }
   });
-  cesiumViewer?.scene?.requestRender?.();
-}
-function buildDnrPlate(hunt, compact = false, roomy = false) {
-  const plateUrl = assetUrl(roomy ? LOGO_DNR_ROOMY : LOGO_DNR);
-  const code = escapeHtml(getHuntCode(hunt) || '');
-  const unit = escapeHtml(getUnitName(hunt) || getHuntTitle(hunt));
-  const species = escapeHtml(getSpeciesDisplay(hunt) || 'N/A');
-  const sex = escapeHtml(getNormalizedSex(hunt) || 'N/A');
-  const huntType = escapeHtml(getHuntType(hunt) || 'N/A');
-  const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
-  const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
-  const heading = escapeHtml(getPanelHeading(hunt));
-  const boundaryLink = getBoundaryLink(hunt);
-  const panelWidth = roomy ? 760 : (compact ? 480 : 560);
-  const panelHeight = roomy ? 420 : (compact ? 184 : 214);
-  const wrapperWidth = compact ? `width:${panelWidth}px;max-width:${panelWidth}px;` : `width:${panelWidth}px;max-width:100%;`;
-  const titleSize = roomy ? '24px' : (compact ? '21px' : '23px');
-  const metaSize = roomy ? '15px' : (compact ? '14px' : '15px');
-  const infoTop = roomy ? '108px' : (compact ? '15px' : '17px');
-  const infoLeft = roomy ? '37%' : (compact ? '38%' : '37%');
-  const infoRight = roomy ? '30px' : '18px';
-  const infoBottom = roomy ? '28px' : '16px';
-  const infoGap = roomy ? '10px' : (compact ? '7px' : '9px');
-  const detailGap = roomy ? '6px' : (compact ? '4px' : '6px');
-  const unitSize = roomy ? '18px' : (compact ? '18px' : '19px');
-  const linkSize = roomy ? '16px' : metaSize;
 
-  if (roomy) {
-    return `
-      <div style="position:relative;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;border:1px solid ${DNR_ORANGE};border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
-        <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:contain;border:0;">
-        <div style="position:absolute;left:52px;top:322px;width:220px;display:grid;gap:1px;color:#2b1c12;">
-          <div style="font-size:42px;font-weight:900;line-height:0.98;color:${DNR_BROWN};">${code}</div>
-        </div>
-        <div style="position:absolute;top:140px;left:37%;right:34px;bottom:28px;display:grid;align-content:start;gap:10px;color:#2b1c12;">
-          <div style="display:grid;gap:4px;justify-items:center;text-align:center;">
-            <div style="font-size:28px;font-weight:900;letter-spacing:.01em;text-transform:uppercase;color:${DNR_ORANGE};line-height:1.02;">${heading}</div>
-            <div style="font-size:32px;font-weight:900;line-height:1.02;">${unit}</div>
-          </div>
-          <div style="display:grid;gap:6px;font-size:18px;line-height:1.28;">
-            <div><strong>Species:</strong> ${species}</div>
-            <div><strong>Sex:</strong> ${sex}</div>
-            <div><strong>Hunt Type:</strong> ${huntType}</div>
-            <div><strong>Weapon:</strong> ${weapon}</div>
-            <div><strong>Dates:</strong> ${dates}</div>
-          </div>
-          ${boundaryLink ? `<button type="button" data-inline-hunt-details style="margin-top:4px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:18px;font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
-        </div>
-      </div>`;
+  if (![aggregateBounds.minLat, aggregateBounds.maxLat, aggregateBounds.minLng, aggregateBounds.maxLng].every(Number.isFinite)) {
+    return null;
   }
+
+  return {
+    lat: (aggregateBounds.minLat + aggregateBounds.maxLat) / 2,
+    lng: (aggregateBounds.minLng + aggregateBounds.maxLng) / 2
+  };
+}
+
+function canSelectBoundaryByDoubleClick() {
+  return !toggleUSFS?.checked && !toggleBLM?.checked;
+}
+
+function findMatchingHuntsForBoundaryFeature(feature) {
+  const featureId = getBoundaryFeatureId(feature);
+  const featureName = getBoundaryFeatureName(feature).trim().toLowerCase();
+  const candidates = getFilteredHunts();
+
+  return candidates.filter(hunt => {
+    const matchSets = buildBoundaryMatchSets(hunt);
+    return matchSets.names.has(featureName) || (featureId && matchSets.ids.has(featureId));
+  });
+}
+
+function buildBoundaryChoicePopup(feature, matches) {
+  const boundaryName = escapeHtml(safe(getBoundaryFeatureName(feature)).trim() || 'Selected Hunt Unit');
+  const rows = matches
+    .slice()
+    .sort((a, b) => {
+      const aCode = safe(getHuntCode(a));
+      const bCode = safe(getHuntCode(b));
+      return aCode.localeCompare(bCode);
+    })
+    .map(hunt => {
+      const code = safe(getHuntCode(hunt));
+      const title = escapeHtml(getHuntTitle(hunt) || code || boundaryName);
+      const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
+      const season = escapeHtml(getEffectiveSeasonText(hunt) || 'N/A');
+      const codeEscaped = escapeHtml(code);
+      return `
+        <tr>
+          <td class="hunt-choice-code">${codeEscaped}</td>
+          <td class="hunt-choice-title">${title}</td>
+          <td class="hunt-choice-weapon">${weapon}</td>
+          <td class="hunt-choice-season">${season}</td>
+          <td class="hunt-choice-action">
+            <button type="button" class="hunt-choice-select" data-hunt-code="${codeEscaped}">Select</button>
+          </td>
+        </tr>
+      `;
+    })
+    .join('');
 
   return `
-    <div style="position:relative;${wrapperWidth}height:${panelHeight}px;border:1px solid ${DNR_ORANGE};border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
-      <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
-      <div style="position:absolute;top:${infoTop};left:${infoLeft};right:${infoRight};bottom:${infoBottom};display:grid;align-content:start;gap:${infoGap};color:#2b1c12;">
-        <div style="display:grid;gap:3px;">
-          <div style="font-size:${roomy ? '12px' : '13px'};font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">${heading}</div>
-          <div style="font-size:${titleSize};font-weight:900;line-height:1.05;">${code}</div>
-          <div style="font-size:${unitSize};font-weight:800;line-height:1.12;">${unit}</div>
-        </div>
-        <div style="display:grid;gap:${detailGap};font-size:${metaSize};line-height:1.28;">
-          <div><strong>Species:</strong> ${species}</div>
-          <div><strong>Sex:</strong> ${sex}</div>
-          <div><strong>Hunt Type:</strong> ${huntType}</div>
-          <div><strong>Weapon:</strong> ${weapon}</div>
-          <div><strong>Dates:</strong> ${dates}</div>
-        </div>
-        ${boundaryLink ? `<button type="button" data-inline-hunt-details style="margin-top:2px;padding:0;border:0;background:transparent;color:#2f7fd1;font-size:${linkSize};font-weight:800;text-decoration:none;text-align:left;cursor:pointer;">Official Utah DWR Hunt Details</button>` : ''}
-      </div>
-    </div>`;
-}
-
-window.selectHuntByKey = (key) => {
-  const h = huntData.find(x => getHuntRecordKey(x) === key);
-  if (h) { 
-    selectedHunt = h; 
-    renderSelectedHunt(); 
-    renderOutfitters();
-    closeSelectedHuntPopup();
-    renderMatchingHunts();
-    styleBoundaryLayer(); 
-    zoomToSelectedBoundary(); 
-  }
-};
-window.selectHuntByCode = (code) => {
-  const want = safe(code).trim().toUpperCase();
-  if (!want) return;
-  const h = huntData.find(x => safe(getHuntCode(x)).trim().toUpperCase() === want);
-  if (h) window.selectHuntByKey(getHuntRecordKey(h));
-};
-
-function renderSelectedHunt() {
-  const panel = document.getElementById('selectedHuntPanel');
-  const hunt = selectedHunt;
-
-  if (!panel) return;
-
-  if (!hunt) {
-    panel.innerHTML = '<div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>';
-    closeSelectedHuntFloat();
-    return;
-  }
-
-  const name = escapeHtml(firstNonEmpty(hunt.hunt_name, getUnitName(hunt), getHuntTitle(hunt), 'Unknown Hunt'));
-  const code = escapeHtml(getHuntCode(hunt) || '');
-  const species = escapeHtml(getSpeciesDisplay(hunt) || '');
-  const weapon = escapeHtml(getWeapon(hunt) || '');
-  const huntType = escapeHtml(getHuntType(hunt) || '');
-
-  window.UOGA_UI?.recordRecentHunt?.({
-    hunt_code: getHuntCode(hunt),
-    hunt_name: firstNonEmpty(hunt.hunt_name, getUnitName(hunt), getHuntTitle(hunt), 'Unknown Hunt'),
-    unit: getUnitName(hunt),
-    species: getSpeciesDisplay(hunt),
-    weapon: getWeapon(hunt),
-    updated_at: Date.now()
-  });
-
-  panel.innerHTML = `
-    <div class="selected-hunt-card">
-      <div style="display:grid; gap:10px;">
-        <div><strong>${name}</strong></div>
-        <div><strong>Hunt Code:</strong> ${code}</div>
-        <div><strong>Species:</strong> ${species}</div>
-        <div><strong>Weapon:</strong> ${weapon}</div>
-        <div><strong>Hunt Type:</strong> ${huntType}</div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-          <button
-            type="button"
-            class="secondary hunt-research-ring"
-            id="selectedHuntResearchBtn">
-            Open Hunt Research
-          </button>
-        </div>
+    <div class="hunt-choice-popup">
+      <div class="hunt-choice-kicker">${boundaryName}</div>
+      <div class="hunt-choice-heading">Matching Hunts</div>
+      <div class="hunt-choice-table-wrap">
+        <table class="hunt-choice-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Hunt</th>
+              <th>Weapon</th>
+              <th>Dates</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
       </div>
     </div>
   `;
-
-  document.getElementById('selectedHuntResearchBtn')?.addEventListener('click', () => {
-    openHuntResearch(getHuntCode(hunt));
-  });
-
-  openSelectedHuntFloat();
 }
 
-function getMatchingOutfittersForHunt(hunt) {
-  if (!hunt || !outfitters.length) return [];
-  const publishedCoverage = getFederalCoverageForHunt(hunt);
-  const species = normalizeBoundaryKey(getSpeciesDisplay(hunt));
-  const unitCode = normalizeBoundaryKey(getUnitCode(hunt));
-  const unitName = normalizeBoundaryKey(getUnitName(hunt));
-  const requiredUsfsForests = getRequiredUsfsForestsForHunt(hunt);
-  const evaluated = outfitters.map(o => {
-    const speciesServed = normalizeListValues(o.speciesServed).map(normalizeBoundaryKey);
-    const unitsServed = normalizeListValues(o.unitsServed).map(normalizeBoundaryKey);
-    const usfsForests = normalizeListValues(o.usfsForests).map(normalizeBoundaryKey);
-    const usfsForestIds = normalizeListValues(o.usfsForestIds).map(normalizeBoundaryKey);
-    const speciesMatch = !speciesServed.length || speciesServed.includes(species);
-    const unitMatch = !unitsServed.length
-      || unitsServed.includes(unitCode)
-      || unitsServed.includes(unitName)
-      || unitsServed.some(u => unitName.includes(u) || u.includes(unitName) || unitCode.includes(u));
-    const forestMatch = !requiredUsfsForests.length
-      || requiredUsfsForests.some(required => usfsForestIds.includes(required) || usfsForests.includes(required));
-    const confidence = [
-      speciesMatch ? 1 : 0,
-      unitMatch ? 1 : 0,
-      forestMatch ? 2 : 0,
-      usfsForestIds.length ? 1 : 0
-    ].reduce((sum, value) => sum + value, 0);
-    const matchReasons = [];
-    if (forestMatch && requiredUsfsForests.length) {
-      const forestLabel = requiredUsfsForests[0]
-        .split('-')
-        .map(part => titleCaseWords(part))
-        .join('-');
-      matchReasons.push(`${forestLabel} Permit Match`);
-    }
-    if (unitMatch && unitsServed.length) matchReasons.push('Unit Match');
-    if (speciesMatch && speciesServed.length) matchReasons.push('Species Match');
-    if (o.guidedHunts) matchReasons.push('Guided Hunts');
-    return { outfitter: o, speciesMatch, unitMatch, forestMatch, confidence, matchReasons };
-  });
-
-  const strongMatches = evaluated
-    .filter(row => row.speciesMatch && row.unitMatch && row.forestMatch)
-    .sort((a, b) => b.confidence - a.confidence || a.outfitter.listingName.localeCompare(b.outfitter.listingName))
-    .map(row => ({ ...row.outfitter, matchReasons: row.matchReasons }));
-
-  const speciesOnlyMatches = evaluated
-    .filter(row => row.speciesMatch && row.forestMatch)
-    .sort((a, b) => b.confidence - a.confidence || a.outfitter.listingName.localeCompare(b.outfitter.listingName))
-    .map(row => ({ ...row.outfitter, matchReasons: row.matchReasons }));
-
-  const fallbackMatches = strongMatches.length ? strongMatches : speciesOnlyMatches;
-  if (publishedCoverage && publishedCoverage.federalCoverageEligible !== 'No') {
-    const publishedNames = normalizeListValues(
-      publishedCoverage.federalPermitMatchedOutfitters?.length
-        ? publishedCoverage.federalPermitMatchedOutfitters
-        : publishedCoverage.usfsPermitMatchedOutfitters
-    );
-    if (publishedNames.length) {
-      const lookup = new Map(outfitters.map(o => [safe(o.listingName).trim().toLowerCase(), o]));
-      const publishedMatches = publishedNames
-        .map(name => lookup.get(safe(name).trim().toLowerCase()))
-        .filter(Boolean)
-        .map(o => {
-          const matchReasons = [];
-          if (publishedCoverage.primaryUsfsForestName) {
-            matchReasons.push(`${publishedCoverage.primaryUsfsForestName} Permit Match`);
-          }
-          if (publishedCoverage.primaryBlmDistrictName) {
-            matchReasons.push(`${publishedCoverage.primaryBlmDistrictName} Permit Match`);
-          }
-          return { ...o, matchReasons: [...new Set(matchReasons)] };
-        });
-      const merged = [];
-      const mergedIndex = new Map();
-      const upsert = (candidate) => {
-        const key = safe(firstNonEmpty(candidate.id, candidate.slug, candidate.listingName)).trim().toLowerCase();
-        if (!key) return;
-        const existing = mergedIndex.get(key);
-        if (!existing) {
-          const normalized = {
-            ...candidate,
-            matchReasons: [...new Set(normalizeListValues(candidate.matchReasons))]
-          };
-          mergedIndex.set(key, normalized);
-          merged.push(normalized);
-          return;
-        }
-        existing.matchReasons = [...new Set([
-          ...normalizeListValues(existing.matchReasons),
-          ...normalizeListValues(candidate.matchReasons)
-        ])];
-      };
-      publishedMatches.forEach(upsert);
-      fallbackMatches.forEach(upsert);
-      if (merged.length) return orderOutfitterMatchesForDisplay(hunt, merged, requiredUsfsForests);
-    }
-  }
-  return orderOutfitterMatchesForDisplay(hunt, fallbackMatches, requiredUsfsForests);
-}
-
-function renderOutfitters() {
-  const container = document.getElementById('outfitterResults');
-  if (!container) return;
-  if (!selectedHunt) {
-    container.innerHTML = '<div class="empty-note">Select a hunt to load matching verified outfitters.</div>';
-    clearOutfitterMarkers();
-    return;
-  }
-  const matches = getMatchingOutfittersForHunt(selectedHunt);
-  if (!matches.length) {
-    container.innerHTML = '<div class="empty-note">No verified outfitters matched this hunt yet.</div>';
-    clearOutfitterMarkers();
-    return;
-  }
-  container.innerHTML = matches.map(o => {
-    const website = safe(o.website).trim();
-    const phone = getOutfitterPrimaryPhone(o);
-    const email = getOutfitterPrimaryEmail(o);
-    const logo = safe(o.logoUrl).trim();
-    const location = getOutfitterLocationText(o);
-    const tags = [...normalizeListValues(o.matchReasons), ...getOutfitterSummaryTags(o)].slice(0, 4);
-    return `
-      <div class="outfitter-card" data-outfitter-id="${escapeHtml(firstNonEmpty(o.id, o.slug, o.listingName))}" role="button" tabindex="0" title="Zoom to ${escapeHtml(o.listingName || 'outfitter')}">
-        <div class="outfitter-card-header">
-          ${logo ? `<img class="outfitter-card-logo" src="${escapeHtml(logo)}" alt="${escapeHtml(o.listingName || 'Outfitter logo')}">` : ''}
-          <div class="outfitter-card-title-wrap">
-            <div class="hunt-card-title">${escapeHtml(o.listingName || 'Outfitter')}</div>
-            <div class="outfitter-card-subline">${escapeHtml(normalizeVisibleVerificationLabel(firstNonEmpty(o.verificationStatus, o.certLevel, o.listingType, 'Outfitter')))}</div>
-          </div>
-        </div>
-        ${location ? `<div class="outfitter-card-subline">${escapeHtml(location)}</div>` : ''}
-        ${tags.length ? `<div class="outfitter-card-meta-row">${tags.map(tag => `<span class="outfitter-card-chip">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
-        <div class="outfitter-card-actions">
-          <button type="button" class="outfitter-action-btn primary" data-outfitter-focus="${escapeHtml(firstNonEmpty(o.id, o.slug, o.listingName))}">Map Link</button>
-          ${website ? `<a class="outfitter-action-btn" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer">Website</a>` : ''}
-        </div>
-        ${phone ? `<div class="hunt-card-meta">${escapeHtml(phone)}</div>` : ''}
-        ${email ? `<div class="hunt-card-meta">${escapeHtml(email)}</div>` : ''}
-      </div>`;
-  }).join('');
-  container.querySelectorAll('[data-outfitter-focus]').forEach(button => {
-    const outfitterId = button.getAttribute('data-outfitter-focus');
-    const outfitter = matches.find(item => firstNonEmpty(item.id, item.slug, item.listingName) === outfitterId);
-    if (!outfitter) return;
-    button.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      focusOutfitter(outfitter);
-    });
-  });
-  container.querySelectorAll('[data-outfitter-id]').forEach(card => {
-    const outfitterId = card.getAttribute('data-outfitter-id');
-    const outfitter = matches.find(item => firstNonEmpty(item.id, item.slug, item.listingName) === outfitterId);
-    if (!outfitter) return;
-    const open = () => focusOutfitter(outfitter);
-    card.addEventListener('click', open);
-    card.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        open();
-      }
-    });
-  });
-  updateOutfitterMarkers(matches);
-}
-
-function getOutfitterLocationText(outfitter) {
-  const address = safe(outfitter.address).trim();
-  const hometown = safe(outfitter.hometown).trim();
-  const city = safe(outfitter.city).trim();
-  const region = safe(outfitter.region).trim();
-  const state = safe(outfitter.state).trim() || 'Utah';
-  if (address) return address;
-  if (hometown && city && hometown.toLowerCase() !== city.toLowerCase()) return `${hometown} | ${city}, ${state}`;
-  if (hometown) return hometown;
-  if (city) return `${city}, ${state}`;
-  if (region) return region;
-  return '';
-}
-function getOutfitterPrimaryPhone(outfitter) {
-  return choosePrimaryListValue(outfitter.phonePrimary, outfitter.phone);
-}
-function getOutfitterPrimaryEmail(outfitter) {
-  return choosePrimaryListValue(outfitter.emailPrimary, outfitter.email);
-}
-function getOutfitterSummaryTags(outfitter) {
-  const tags = [];
-  const listingType = normalizeVisibleVerificationLabel(firstNonEmpty(outfitter.verificationStatus, outfitter.certLevel, outfitter.listingType));
-  if (listingType) tags.push(listingType);
-  if (outfitter.guidedHunts) tags.push('Guided Hunts');
-  if (outfitter.packTrips) tags.push('Pack Trips');
-  if (outfitter.lodgingIncluded) tags.push('Lodging');
-  if (outfitter.archery) tags.push('Archery');
-  if (outfitter.muzzleloader) tags.push('Muzzleloader');
-  return Array.from(new Set(tags));
-}
-function getKnownOutfitterCoords(outfitter) {
-  const keys = [
-    firstNonEmpty(outfitter?.id),
-    firstNonEmpty(outfitter?.slug),
-    safe(firstNonEmpty(outfitter?.listingName, outfitter?.displayName, outfitter?.businessName)).toLowerCase().trim()
-  ].filter(Boolean);
-  for (const key of keys) {
-    const coords = KNOWN_OUTFITTER_COORDS.get(key);
-    if (coords && Number.isFinite(coords.lat) && Number.isFinite(coords.lng)) return coords;
-  }
-  return null;
-}
-function isWithinUtahBounds(lat, lng) {
-  return Number.isFinite(lat) && Number.isFinite(lng)
-    && lat >= UTAH_LOCATION_BOUNDS.minLat
-    && lat <= UTAH_LOCATION_BOUNDS.maxLat
-    && lng >= UTAH_LOCATION_BOUNDS.minLng
-    && lng <= UTAH_LOCATION_BOUNDS.maxLng;
-}
-function getLatLngLiteral(value) {
-  if (!value) return null;
-  if (typeof value.lat === 'function' && typeof value.lng === 'function') {
-    return { lat: value.lat(), lng: value.lng() };
-  }
-  if (typeof value.lat === 'number' && typeof value.lng === 'number') {
-    return { lat: value.lat, lng: value.lng };
-  }
-  return null;
-}
-function isUtahGeocodeResult(result) {
-  const location = getLatLngLiteral(result?.geometry?.location);
-  if (!location || !isWithinUtahBounds(location.lat, location.lng)) return false;
-  const components = Array.isArray(result?.address_components) ? result.address_components : [];
-  const stateComponent = components.find(component => Array.isArray(component.types) && component.types.includes('administrative_area_level_1'));
-  if (!stateComponent) return true;
-  const shortName = safe(stateComponent.short_name).toUpperCase();
-  const longName = safe(stateComponent.long_name).toUpperCase();
-  return shortName === 'UT' || longName === 'UTAH';
-}
-function formatUtahAddressPart(value) {
-  return safe(value)
-    .replace(/\bNorth\b/ig, 'N')
-    .replace(/\bSouth\b/ig, 'S')
-    .replace(/\bEast\b/ig, 'E')
-    .replace(/\bWest\b/ig, 'W')
-    .replace(/\bUtah\b/ig, 'UT')
-    .replace(/\s+/g, ' ')
-    .replace(/\s*\.\s*/g, '.')
-    .trim();
-}
-function cleanUtahAddress(rawAddress, city, state) {
-  const raw = safe(rawAddress).trim();
-  if (!raw) return '';
-  const parts = raw.split(',').map(part => formatUtahAddressPart(part)).filter(Boolean);
-  const cityText = formatUtahAddressPart(city);
-  const stateText = formatUtahAddressPart(state) || 'UT';
-  const zip = firstNonEmpty(raw.match(/\b\d{5}(?:-\d{4})?\b/)?.[0], '');
-  const street = parts.find(part => /\d/.test(part) && /\b(?:N|S|E|W|HWY|HIGHWAY|RD|ROAD|ST|STREET|AVE|AVENUE|DR|DRIVE|LN|LANE|BLVD|WAY|CT|COURT|CIR|CIRCLE)\b/i.test(part))
-    || parts.find(part => /\d/.test(part) && !/\b(?:UT|USA|UNITED STATES)\b/i.test(part))
-    || '';
-  const cityCandidate = cityText
-    || parts.find(part => /^[A-Za-z .'-]+$/.test(part) && !/\b(?:UT|USA|UNITED STATES)\b/i.test(part) && !/\d/.test(part))
-    || '';
-  const normalizedState = stateText.toUpperCase() === 'UTAH' ? 'UT' : stateText.toUpperCase();
-  const combined = [street, cityCandidate, normalizedState, zip].filter(Boolean).join(', ');
-  return combined.length >= 8 ? combined : '';
-}
-function getOutfitterGeocodeQueries(outfitter) {
-  const address = safe(outfitter.address).trim();
-  const hometown = safe(outfitter.hometown).trim();
-  const city = safe(outfitter.city).trim();
-  const region = safe(outfitter.region).trim();
-  const state = safe(outfitter.state).trim() || 'Utah';
-  const cleanedAddress = cleanUtahAddress(address, city || hometown, state);
-  const queries = [];
-  const pushQuery = value => {
-    const text = safe(value).trim();
-    if (!text) return;
-    if (/^utah$/i.test(text)) return;
-    if (!queries.includes(text)) queries.push(text);
-  };
-
-  pushQuery(cleanedAddress);
-  pushQuery(address);
-  if (address && !/utah/i.test(address)) pushQuery(`${address}, ${state}`);
-  if (cleanedAddress && !/\bUT\b/i.test(cleanedAddress) && !/utah/i.test(cleanedAddress)) pushQuery(`${cleanedAddress}, UT`);
-  if (hometown && city && hometown.toLowerCase() !== city.toLowerCase()) pushQuery(`${hometown}, ${city}, ${state}`);
-  pushQuery(hometown && !/utah/i.test(hometown) ? `${hometown}, ${state}` : hometown);
-  pushQuery(city ? `${city}, ${state}` : '');
-  pushQuery(region && !/utah/i.test(region) ? `${region}, ${state}` : region);
-  return queries;
-}
-
-function buildOutfitterPopupCard(outfitter) {
-  const logo = safe(outfitter.logoUrl).trim();
-  const name = safe(outfitter.listingName).trim() || 'Outfitter';
-  const website = safe(outfitter.website).trim();
-  const phone = getOutfitterPrimaryPhone(outfitter);
-  const email = getOutfitterPrimaryEmail(outfitter);
-  const location = getOutfitterLocationText(outfitter);
-  const tags = [...normalizeListValues(outfitter.matchReasons), ...getOutfitterSummaryTags(outfitter)].slice(0, 5);
-  return `
-    <div style="display:grid;gap:10px;min-width:280px;max-width:340px;">
-      <div style="display:grid;grid-template-columns:58px minmax(0,1fr);align-items:center;gap:12px;">
-        ${logo ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(name)} logo" style="width:58px;height:58px;object-fit:cover;object-position:center;border-radius:12px;background:#fff;padding:3px;border:1px solid #d6c1ae;box-shadow:0 6px 14px rgba(0,0,0,.14);">` : ''}
-        <div>
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">Verified Outfitter</div>
-          <div style="font-size:17px;font-weight:900;color:#2b1c12;line-height:1.15;">${escapeHtml(name)}</div>
-        </div>
-      </div>
-      ${tags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;">${tags.map(tag => `<span style="display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:rgba(214,106,31,.11);border:1px solid rgba(214,106,31,.2);font-size:12px;font-weight:800;color:#3b2417;">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
-      ${location ? `<div style="font-size:13px;color:#6b5646;line-height:1.35;">${escapeHtml(location)}</div>` : ''}
-      ${phone ? `<div style="font-size:13px;color:#6b5646;">${escapeHtml(phone)}</div>` : ''}
-      ${email ? `<div style="font-size:13px;color:#6b5646;">${escapeHtml(email)}</div>` : ''}
-      ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">Visit website</a>` : ''}
-    </div>`;
-}
-function openOutfitterInfoWindow(outfitter, position) {
-  noteOutfitterInteraction();
-  closeSelectionInfoWindow();
-  selectionInfoWindow = new google.maps.InfoWindow({
-    content: buildOutfitterPopupCard(outfitter),
-    position,
-    pixelOffset: new google.maps.Size(0, -36)
-  });
-  selectionInfoWindow.open(googleBaselineMap);
-}
-function toLatLngLiteral(value) {
-  if (!value) return null;
-  if (typeof value.lat === 'function' && typeof value.lng === 'function') {
-    return { lat: value.lat(), lng: value.lng() };
-  }
-  if (typeof value.lat === 'number' && typeof value.lng === 'number') {
-    return { lat: value.lat, lng: value.lng };
-  }
-  return null;
-}
-function getDistanceMeters(a, b) {
-  const p1 = toLatLngLiteral(a);
-  const p2 = toLatLngLiteral(b);
-  if (!p1 || !p2) return Number.POSITIVE_INFINITY;
-  const toRad = (deg) => deg * Math.PI / 180;
-  const earthRadius = 6371000;
-  const dLat = toRad(p2.lat - p1.lat);
-  const dLng = toRad(p2.lng - p1.lng);
-  const lat1 = toRad(p1.lat);
-  const lat2 = toRad(p2.lat);
-  const h = Math.sin(dLat / 2) ** 2
-    + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-  return 2 * earthRadius * Math.asin(Math.sqrt(h));
-}
-function findNearbyOutfitterMarker(position, maxDistanceMeters = 120) {
-  let nearest = null;
-  let nearestDistance = Number.POSITIVE_INFINITY;
-  outfitterMarkerIndex.forEach(({ position: markerPosition, outfitter }) => {
-    const distance = getDistanceMeters(position, markerPosition);
-    if (distance < nearestDistance && distance <= maxDistanceMeters) {
-      nearest = { outfitter, position: markerPosition, distance };
-      nearestDistance = distance;
-    }
-  });
-  return nearest;
-}
-function resolveOutfitterPriorityClick(position) {
-  const nearby = findNearbyOutfitterMarker(position);
-  if (!nearby) return false;
-  focusOutfitter(nearby.outfitter);
-  return true;
-}
-
-function clearOutfitterMarkers() {
-  outfitterMarkerRunId += 1;
-  outfitterMarkers.forEach(marker => marker?.setMap?.(null));
-  outfitterMarkers = [];
-  outfitterMarkerIndex.clear();
-}
-
-function createOutfitterLogoMarker(position, outfitter) {
-  const marker = new google.maps.OverlayView();
-  marker.position = position;
-  marker.outfitter = outfitter;
-  marker.div = null;
-  marker.onAdd = function() {
-    const div = document.createElement('div');
-    div.className = 'outfitter-logo-pin-shell';
-    const initials = (safe(outfitter.listingName).trim().match(/[A-Z0-9]/ig) || ['O']).slice(0, 2).join('').toUpperCase();
-    const logoMarkup = safe(outfitter.logoUrl).trim()
-      ? `<img src="${escapeHtml(outfitter.logoUrl)}" alt="${escapeHtml(outfitter.listingName || 'Outfitter')}">`
-      : `<span class="outfitter-logo-pin-fallback">${escapeHtml(initials)}</span>`;
-    div.innerHTML = `
-      <div class="outfitter-logo-pin-base"></div>
-      <div class="outfitter-logo-pin-center">
-        ${logoMarkup}
-      </div>`;
-    div.title = safe(outfitter.listingName).trim() || 'Outfitter';
-    div.style.pointerEvents = 'auto';
-    if (google.maps.OverlayView?.preventMapHitsAndGesturesFrom) {
-      google.maps.OverlayView.preventMapHitsAndGesturesFrom(div);
-    }
-    const openOutfitterInfo = (event) => {
-      if (event) {
-        event.preventDefault?.();
-        event.stopPropagation?.();
-      }
-      openOutfitterInfoWindow(outfitter, position);
-    };
-    ['pointerdown', 'mousedown', 'touchstart'].forEach(type => {
-      div.addEventListener(type, event => {
-        event.preventDefault?.();
-        event.stopPropagation?.();
-        noteOutfitterInteraction();
-      }, { passive: false });
-    });
-    div.addEventListener('click', openOutfitterInfo, { passive: false });
-    this.div = div;
-    this.getPanes().overlayMouseTarget.appendChild(div);
-  };
-  marker.draw = function() {
-    if (!this.div) return;
-    const projection = this.getProjection();
-    if (!projection) return;
-    const point = projection.fromLatLngToDivPixel(position);
-    if (!point) return;
-    this.div.style.position = 'absolute';
-    this.div.style.left = `${point.x - 27}px`;
-    this.div.style.top = `${point.y - 82}px`;
-  };
-  marker.onRemove = function() {
-    if (this.div?.parentNode) this.div.parentNode.removeChild(this.div);
-    this.div = null;
-  };
-  return marker;
-}
-
-function geocodeOutfitter(outfitter) {
-  const key = `${safe(outfitter.listingName)}|${getOutfitterLocationText(outfitter)}`;
-  if (outfitterGeocodeCache.has(key)) {
-    return Promise.resolve(outfitterGeocodeCache.get(key));
-  }
-  const knownCoords = getKnownOutfitterCoords(outfitter);
-  if (knownCoords) {
-    const knownLocation = new google.maps.LatLng(knownCoords.lat, knownCoords.lng);
-    outfitterGeocodeCache.set(key, knownLocation);
-    return Promise.resolve(knownLocation);
-  }
-  if (Number.isFinite(outfitter?.latitude) && Number.isFinite(outfitter?.longitude)) {
-    if (isWithinUtahBounds(outfitter.latitude, outfitter.longitude)) {
-      const directLocation = new google.maps.LatLng(outfitter.latitude, outfitter.longitude);
-      outfitterGeocodeCache.set(key, directLocation);
-      return Promise.resolve(directLocation);
-    }
-  }
-  if (!google.maps?.Geocoder) return Promise.resolve(null);
-  const queries = getOutfitterGeocodeQueries(outfitter);
-  if (!queries.length) return Promise.resolve(null);
-  const geocoder = new google.maps.Geocoder();
-  return new Promise(async resolve => {
-    for (const query of queries) {
-      const loc = await new Promise(done => {
-        geocoder.geocode({
-          address: query,
-          componentRestrictions: { country: 'US' }
-        }, (results, status) => {
-          const result = status === 'OK' && Array.isArray(results)
-            ? results.find(entry => isUtahGeocodeResult(entry))
-            : null;
-          const location = result?.geometry?.location || null;
-          done(location);
-        });
-      });
-      if (loc) {
-        outfitterGeocodeCache.set(key, loc);
-        resolve(loc);
-        return;
-      }
-    }
-    outfitterGeocodeCache.set(key, null);
-    resolve(null);
-  });
-}
-async function focusOutfitter(outfitter) {
-  if (!googleBaselineMap || !outfitter) return;
-  const markerKey = firstNonEmpty(outfitter.id, outfitter.slug, outfitter.listingName);
-  const indexed = outfitterMarkerIndex.get(markerKey);
-  let location = indexed?.position || null;
-  if (!location) {
-    location = await geocodeOutfitter(outfitter);
-  }
-  if (!location) {
-    updateStatus(`Couldn't place ${firstNonEmpty(outfitter.listingName, 'that outfitter')} on the map yet.`);
-    return;
-  }
-  noteOutfitterInteraction();
-  if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
-    mapTypeSelect.value = 'terrain';
-    applyMapMode();
-  }
-  googleBaselineMap.panTo(location);
-  if ((googleBaselineMap.getZoom?.() || 0) < 14) {
-    googleBaselineMap.setZoom(14);
-  }
-  openOutfitterInfoWindow(outfitter, location);
-  updateStatus(`${firstNonEmpty(outfitter.listingName, 'Outfitter')} focused on the map.`);
-}
-
-async function updateOutfitterMarkers(matches) {
-  clearOutfitterMarkers();
-  const runId = outfitterMarkerRunId;
-  if (!googleBaselineMap || safe(mapTypeSelect?.value).toLowerCase() === 'globe') return;
-  const unique = [];
-  const seen = new Set();
-  for (const outfitter of matches) {
-    const name = safe(outfitter.listingName).trim();
-    if (!name || seen.has(name)) continue;
-    seen.add(name);
-    unique.push(outfitter);
-  }
-  for (const outfitter of unique) {
-    try {
-      const location = await geocodeOutfitter(outfitter);
-      if (runId !== outfitterMarkerRunId) return;
-      if (!location) continue;
-      const marker = createOutfitterLogoMarker(location, outfitter);
-      marker.setMap(googleBaselineMap);
-      outfitterMarkers.push(marker);
-      outfitterMarkerIndex.set(firstNonEmpty(outfitter.id, outfitter.slug, outfitter.listingName), { marker, position: location });
-    } catch (error) {
-      console.error('Outfitter marker failed', outfitter?.listingName, error);
-    }
-  }
-}
-
-function updateStateLayersSummary() {
-  if (!stateLayersSummary) return;
-  const count = [toggleSITLA, toggleStateParks, toggleWma].filter(el => !!el?.checked).length;
-  stateLayersSummary.innerHTML = count ? `State <span class="toggle-menu-count">(${count})</span>` : 'State';
-}
-function updateFederalLayersSummary() {
-  if (!federalLayersSummary) return;
-  const count = [toggleUSFS, toggleBLM, toggleBLMDetail].filter(el => !!el?.checked).length;
-  federalLayersSummary.innerHTML = count ? `Federal <span class="toggle-menu-count">(${count})</span>` : 'Federal';
-}
-function updatePrivateLayersSummary() {
-  if (!privateLayersSummary) return;
-  const count = [togglePrivate, toggleCwmu].filter(el => !!el?.checked).length;
-  privateLayersSummary.innerHTML = count ? `Private <span class="toggle-menu-count">(${count})</span>` : 'Private';
-}
-
-function openSelectedHuntPopup() {
-  closeSelectedHuntPopup();
-}
-
-function closeSelectedHuntPopup() {
-  if (!mapChooser) return;
-  mapChooser.classList.remove('is-open');
-  mapChooser.setAttribute('aria-hidden', 'true');
-  selectedBoundaryMatches = [];
-  if (mapChooserBody) {
-    mapChooserBody.innerHTML = '<div class="map-chooser-empty">Click a hunt boundary to load matching hunts.</div>';
-  }
-}
-
-function getFeatureMatches(feature) {
-  const boundaryId = safe(feature?.getProperty('BoundaryID'));
-  const boundaryName = normalizeBoundaryKey(feature?.getProperty('Boundary_Name'));
-  const displaySource = getDisplayHunts();
-  const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
-  return source.filter(h => {
-    const hBoundaryId = safe(getBoundaryId(h));
-    const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
-    const hUnitName = normalizeBoundaryKey(getUnitName(h));
-    return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
-  });
-}
-
-function buildPopupCardForHunt(hunt) {
-  return buildDnrPlate(hunt, true);
-}
-
-function buildPopupListForMatches(matches) {
-  return `
-    <div style="display:grid;gap:10px;min-width:320px;max-width:380px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
-        <div>
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">DWR Hunt Unit</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Available Hunts</div>
-        </div>
-      </div>
-      ${matches.slice(0, 8).map(h => `
-        <button type="button" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" style="text-align:left;border:1px solid #d6c1ae;border-radius:10px;background:#fffdf8;padding:10px;cursor:pointer;color:#2b1c12;">
-          <div style="font-weight:900;">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
-          <div style="font-size:12px;color:#6b5646;">${escapeHtml(getSpeciesDisplay(h))} | ${escapeHtml(getNormalizedSex(h))} | ${escapeHtml(getWeapon(h))}</div>
-        </button>
-      `).join('')}
-    </div>`;
-}
-
-function showHuntMatchesChooser(title, matches, kicker = 'Available Hunts') {
-  if (!mapChooser || !mapChooserBody || !mapChooserTitle || !mapChooserKicker) return;
-  closeSelectedHuntFloat();
-  selectedBoundaryMatches = matches.slice();
-  mapChooserKicker.textContent = kicker;
-  mapChooserTitle.textContent = firstNonEmpty(title, 'Available Hunts');
-  mapChooserBody.innerHTML = matches.length ? matches.slice(0, 12).map(h => `
-    <div class="map-chooser-card" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" role="button" tabindex="0">
-      <div class="hunt-card-title">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
-      <div class="map-chooser-meta">${escapeHtml(getSpeciesDisplay(h))} | ${escapeHtml(getNormalizedSex(h))} | ${escapeHtml(getHuntType(h))}</div>
-      <div class="map-chooser-meta">${escapeHtml(getWeapon(h))} | ${escapeHtml(getDates(h) || 'See official hunt details')}</div>
-    </div>
-  `).join('') : '<div class="map-chooser-empty">No matching hunts found for this boundary.</div>';
-  mapChooser.classList.add('is-open');
-  mapChooser.setAttribute('aria-hidden', 'false');
-  mapChooserBody.querySelectorAll('[data-popup-hunt-key]').forEach(card => {
-    const select = () => {
-      closeSelectedHuntPopup();
-      window.selectHuntByKey(card.getAttribute('data-popup-hunt-key'));
-    };
-    card.addEventListener('click', select);
-    card.addEventListener('keydown', evt => {
-      if (evt.key === 'Enter' || evt.key === ' ') {
-        evt.preventDefault();
-        select();
-      }
+function wireBoundaryChoicePopup(popup) {
+  const popupEl = popup?.getElement?.();
+  if (!popupEl) return;
+  const selectionMode = safe(popup?.options?.selectionMode).trim() || 'initial';
+  popupEl.querySelectorAll('.hunt-choice-select').forEach(btn => {
+    btn.addEventListener('click', evt => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      const code = safe(btn.getAttribute('data-hunt-code')).trim();
+      if (!code) return;
+      selectHuntByCode(code, { selectionMode });
+      try { map.closePopup(); } catch (e) {}
     });
   });
 }
-function openMapChooser(feature, matches) {
-  const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
-  showHuntMatchesChooser(boundaryName, matches, hasActiveMatrixSelections() || selectedHunt ? 'Available Hunts' : 'Selected Unit');
-}
 
-function openBoundaryPopup(feature, latLng) {
-  if (!googleBaselineMap || !feature || !latLng) return;
-  const matches = getFeatureMatches(feature);
-  selectedBoundaryFeature = feature;
-  selectedBoundaryMatches = matches.slice();
-  closeSelectionInfoWindow();
-  closeSelectedHuntPopup();
-  fitDataFeatureBounds(feature, 11);
-  const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
-  if (matches.length) {
-    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
-  } else {
-    updateStatus(`Zoomed to ${boundaryName}.`);
-  }
-}
-
-async function loadOutfitters() {
-  outfitters = await loadFirstNormalizedList(OUTFITTERS_DATA_SOURCES, normalizeOutfitterList, []);
-}
-async function loadOutfitterFederalCoverage() {
-  const normalized = await loadFirstNormalizedList(OUTFITTER_FEDERAL_COVERAGE_SOURCES, normalizeOutfitterCoverageList, []);
-  indexOutfitterFederalCoverage(normalized);
-}
-function getLatLngCacheKey(latLng, precision = 4) {
-  if (!latLng) return '';
-  return `${Number(latLng.lat()).toFixed(precision)},${Number(latLng.lng()).toFixed(precision)}`;
-}
-function formatBlmDistrictTitle(attrs) {
-  const name = firstNonEmpty(attrs?.ADMU_NAME, attrs?.DISTRICT_NAME);
-  const parentName = firstNonEmpty(attrs?.PARENT_NAME, attrs?.Parent_Name);
-  const orgType = firstNonEmpty(attrs?.BLM_ORG_TYPE);
-  if (!name) return 'BLM Administrative Unit';
-  if (/field/i.test(orgType) && parentName) {
-    if (/district/i.test(parentName)) return parentName;
-    return `${parentName} District`;
-  }
-  if (/district/i.test(name) || /field/i.test(name)) return name;
-  if (/district/i.test(orgType)) return `${name} District`;
-  if (/field/i.test(orgType)) return `${name} Field Office`;
-  return name;
-}
-async function queryBlmOwnershipAtLatLng(latLng) {
-  if (!latLng) return null;
-  const cacheKey = getLatLngCacheKey(latLng);
-  if (blmOwnershipPointCache.has(cacheKey)) return blmOwnershipPointCache.get(cacheKey);
-  const queryUrl = `${BLM_SURFACE_OWNERSHIP_LAYER_URL}/query?where=${encodeURIComponent("UT_LGD IN ('Bureau of Land Management (BLM)','BLM Wilderness Area')")}&geometry=${encodeURIComponent(`${latLng.lng()},${latLng.lat()}`)}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=UT_LGD,COUNTY,CO_NAME,GIS_ACRES,ACRES,OWNER&returnGeometry=false&f=json`;
-  const promise = fetchJson(queryUrl)
-    .then(json => Array.isArray(json?.features) ? json.features[0]?.attributes || null : null)
-    .catch(error => {
-      console.error('BLM ownership point query failed', error);
-      return null;
-    });
-  blmOwnershipPointCache.set(cacheKey, promise);
-  return promise;
-}
-async function queryBlmDistrictAtLatLng(latLng) {
-  if (!latLng) return null;
-  const cacheKey = getLatLngCacheKey(latLng);
-  if (blmDistrictPointCache.has(cacheKey)) return blmDistrictPointCache.get(cacheKey);
-  const queryUrl = `${BLM_ADMIN_LAYER_URL}/query?where=${encodeURIComponent("BLM_ORG_TYPE IN ('District','Field')")}&geometry=${encodeURIComponent(`${latLng.lng()},${latLng.lat()}`)}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ADMU_NAME,PARENT_NAME,BLM_ORG_TYPE&returnGeometry=false&orderByFields=BLM_ORG_TYPE%20ASC&f=json`;
-  const promise = fetchJson(queryUrl)
-    .then(json => Array.isArray(json?.features) ? json.features[0]?.attributes || null : null)
-    .catch(error => {
-      console.error('BLM district point query failed', error);
-      return null;
-    });
-  blmDistrictPointCache.set(cacheKey, promise);
-  return promise;
-}
-const OWNERSHIP_BUCKET_QUERIES = {
-  sitla: "state_lgd = 'State Trust Lands'",
-  private: "state_lgd = 'Private'",
-  stateLands: "state_lgd IN ('Other State','State Sovereign Land')"
-};
-const ownershipBucketGeoJsonPromises = new Map();
-function getOwnershipBucketGeoJson(bucket) {
-  if (!ownershipBucketGeoJsonPromises.has(bucket)) {
-    const where = OWNERSHIP_BUCKET_QUERIES[bucket] || '1=0';
-    ownershipBucketGeoJsonPromises.set(bucket, fetchArcGisPagedGeoJson(PUBLIC_OWNERSHIP_LAYER_URL, where));
-  }
-  return ownershipBucketGeoJsonPromises.get(bucket);
-}
-let cwmuGeoJsonPromise = null;
-async function getCwmuGeoJson() {
-  if (!cwmuGeoJsonPromise) {
-    cwmuGeoJsonPromise = fetchGeoJson(CWMU_QUERY_URL).catch(async error => {
-      console.error('Live CWMU service failed, falling back to local CWMU GeoJSON', error);
-      try {
-        return await fetchGeoJson(LOCAL_CWMU_BOUNDARIES_PATH);
-      } catch (localError) {
-        console.error('Local CWMU GeoJSON failed, falling back to cached IDs', localError);
-      }
-      const [boundaryIds, boundaryGeoJson] = await Promise.all([
-        fetchJson(CWMU_BOUNDARY_IDS_PATH).then(ids => Array.isArray(ids) ? ids.map(id => String(id)) : []),
-        getHuntBoundaryGeoJson()
-      ]);
-      const allowedIds = new Set(boundaryIds);
-      const features = Array.isArray(boundaryGeoJson?.features)
-        ? boundaryGeoJson.features.filter(feature => allowedIds.has(String(feature?.properties?.BoundaryID ?? '')))
-        : [];
-      return { type: 'FeatureCollection', features };
-    }).catch(async error => {
-      cwmuGeoJsonPromise = null;
-      throw error;
-    });
-  }
-  return cwmuGeoJsonPromise;
-}
-let huntBoundaryGeoJsonPromise = null;
-function getHuntBoundaryGeoJson() {
-  if (huntBoundaryGeoJson) return Promise.resolve(huntBoundaryGeoJson);
-  if (!huntBoundaryGeoJsonPromise) {
-    huntBoundaryGeoJsonPromise = fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES).then(geojson => {
-      huntBoundaryGeoJson = geojson;
-      return geojson;
-    });
-  }
-  return huntBoundaryGeoJsonPromise;
-}
-function createOwnershipLayer(bucket, style, clickBuilder) {
-  const layer = new google.maps.Data();
-  getOwnershipBucketGeoJson(bucket).then(geojson => {
-    layer.addGeoJson(geojson);
-  }).catch(err => console.error('Ownership layer failed', err));
-  layer.setStyle(style);
-  layer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    const card = clickBuilder(event.feature);
-    openLandInfoWindow(card, event.latLng);
-  });
-  return layer;
-}
-function fitDataFeatureBounds(feature, maxZoom = 12) {
-  if (!googleBaselineMap || !feature?.getGeometry) return false;
-  const geometry = feature.getGeometry();
-  if (!geometry?.forEachLatLng) return false;
-  const bounds = new google.maps.LatLngBounds();
-  let found = false;
-  geometry.forEachLatLng(latLng => {
-    bounds.extend(latLng);
-    found = true;
-  });
-  if (!found) return false;
-  googleBaselineMap.fitBounds(bounds);
-  google.maps.event.addListenerOnce(googleBaselineMap, 'bounds_changed', () => {
-    if ((googleBaselineMap.getZoom() || 0) > maxZoom) googleBaselineMap.setZoom(maxZoom);
-  });
-  return true;
-}
-async function ensureSitlaLayer() {
-  if (sitlaLayer || !googleBaselineMap) return sitlaLayer;
-  sitlaLayer = createOwnershipLayer(
-    'sitla',
-    { strokeColor: '#2a78d2', strokeWeight: 2, fillColor: '#6fb3ff', fillOpacity: 0.08, zIndex: 34 },
-    feature => buildLandInfoCard(buildOwnershipDetails('sitla', featureProps(feature)))
-  );
-  setLayerVisibility(sitlaLayer, !!toggleSITLA?.checked);
-  return sitlaLayer;
-}
-function featureProps(feature) {
-  const names = ['label_state','LABEL_STATE','ut_lgd','UT_LGD','desig','DESIG','admin','ADMIN','owner','OWNER','county','COUNTY','gis_acres','GIS_ACRES','acres','ACRES'];
-  const props = {};
-  names.forEach(name => { props[name] = feature.getProperty(name); });
-  return props;
-}
-async function ensureStateLandsLayer() {
-  if (stateLandsLayer || !googleBaselineMap) return stateLandsLayer;
-  stateLandsLayer = createOwnershipLayer(
-    'stateLands',
-    { strokeColor: '#2f8f9a', strokeWeight: 2, fillColor: '#6ac7d2', fillOpacity: 0.08, zIndex: 33 },
-    feature => buildLandInfoCard(buildOwnershipDetails('stateLands', featureProps(feature)))
-  );
-  setLayerVisibility(stateLandsLayer, false);
-  return stateLandsLayer;
-}
-async function ensureStateParksLayer() {
-  if (stateParksLayer || !googleBaselineMap) return stateParksLayer;
-  const geojson = await fetchGeoJson(STATE_PARKS_QUERY_URL);
-  stateParksLayer = new google.maps.Data();
-  stateParksLayer.addGeoJson(geojson);
-  stateParksLayer.setStyle({
-    strokeColor: '#0d6f78',
-    strokeWeight: 2.5,
-    fillColor: '#5ec7d1',
-    fillOpacity: 0.1,
-    zIndex: 35
-  });
-  stateParksLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    const title = firstNonEmpty(
-      event.feature.getProperty('name'),
-      event.feature.getProperty('Name'),
-      event.feature.getProperty('NAME'),
-      event.feature.getProperty('UNIT_NAME'),
-      event.feature.getProperty('UnitName'),
-      event.feature.getProperty('ParkName'),
-      'Utah State Park'
-    );
-    const detailsLink = firstNonEmpty(
-      event.feature.getProperty('weblink1'),
-      event.feature.getProperty('Weblink1'),
-      event.feature.getProperty('WEBLINK1')
-    );
-    const detailText = [
-      firstNonEmpty(event.feature.getProperty('City'), event.feature.getProperty('CITY')),
-      firstNonEmpty(event.feature.getProperty('County'), event.feature.getProperty('COUNTY'))
-    ].filter(Boolean).join(' | ');
-    openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_STATE_PARKS,
-      title,
-      subtitle: 'Utah State Parks',
-      detailText,
-      logoSize: 68,
-      cardMinWidth: 180,
-      cardMaxWidth: 220,
-      detailsLinkText: detailsLink ? 'Park Details' : '',
-      detailsLink
-    }), event.latLng);
-  });
-  setLayerVisibility(stateParksLayer, !!toggleStateParks?.checked);
-  return stateParksLayer;
-}
-async function ensureWmaLayer() {
-  if (wmaLayer || !googleBaselineMap) return wmaLayer;
-  const geojson = await fetchGeoJson(WMA_QUERY_URL);
-  wmaLayer = new google.maps.Data();
-  wmaLayer.addGeoJson(geojson);
-  wmaLayer.setStyle({
-    strokeColor: '#b38a00',
-    strokeWeight: 2.5,
-    fillColor: '#ffd84d',
-    fillOpacity: 0.12,
-    zIndex: 36
-  });
-  wmaLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    fitDataFeatureBounds(event.feature, 12);
-    const title = firstNonEmpty(
-      event.feature.getProperty('Name'),
-      event.feature.getProperty('NAME'),
-      'Wildlife Management Area'
-    );
-    openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_DWR_WMA,
-      title,
-      subtitle: "UT. DWR W.M.A.'s",
-      logoSize: 68,
-      noticeText: "Utah DWR W.M.A.'s do not imply outfitter approval, endorsement, or exclusive access."
-    }), event.latLng);
-  });
-  setLayerVisibility(wmaLayer, !!toggleWma?.checked);
-  return wmaLayer;
-}
-async function ensureCwmuLayer() {
-  if (cwmuLayer || !googleBaselineMap) return cwmuLayer;
-  const geojson = await getCwmuGeoJson();
-  const features = Array.isArray(geojson?.features) ? geojson.features : [];
-  cwmuLayer = new google.maps.Data();
-  cwmuLayer.addGeoJson({ type: 'FeatureCollection', features });
-  cwmuLayer.setStyle({
-    strokeColor: '#b11f1f',
-    strokeWeight: 2,
-    fillColor: '#ff6b6b',
-    fillOpacity: 0.1,
-    zIndex: 37
-  });
-  cwmuLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    fitDataFeatureBounds(event.feature, 12);
-    openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_CWMU,
-      title: firstNonEmpty(
-        event.feature.getProperty('Boundary_Name'),
-        event.feature.getProperty('NAME'),
-        event.feature.getProperty('Name'),
-        'CWMU Area'
-      ),
-      subtitle: 'Cooperative Wildlife Management Unit',
-      logoSize: 68,
-      noticeText: 'No access without the appropriate CWMU permit.'
-    }), event.latLng);
-  });
-  setLayerVisibility(cwmuLayer, !!toggleCwmu?.checked);
-  return cwmuLayer;
-}
-async function ensurePrivateLayer() {
-  if (privateLayer || !googleBaselineMap) return privateLayer;
-  privateLayer = createOwnershipLayer(
-    'private',
-    { strokeColor: '#8f4a3a', strokeWeight: 1.5, fillColor: '#c99284', fillOpacity: 0.05, zIndex: 32 },
-    feature => buildLandInfoCard(buildOwnershipDetails('private', featureProps(feature)))
-  );
-  setLayerVisibility(privateLayer, !!togglePrivate?.checked);
-  return privateLayer;
-}
-
-async function ensureUsfsLayer() {
-  if (usfsLayer || !googleBaselineMap) return usfsLayer;
-  const geojson = await fetchGeoJson(USFS_QUERY_URL);
-  usfsLayer = new google.maps.Data();
-  usfsLayer.addGeoJson(geojson);
-  usfsLayer.setStyle({
-    strokeColor: '#2f6b3b',
-    strokeWeight: 2,
-    fillColor: '#7ea96b',
-    fillOpacity: 0.08,
-    zIndex: 14
-  });
-  usfsLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    if (shouldDeprioritizeFederalClicks()) return;
-    openLandInfoWindow(buildLandInfoCard({
-      logo: LOGO_USFS,
-      title: firstNonEmpty(event.feature.getProperty('FORESTNAME'), 'National Forest'),
-      subtitle: 'US Forest Service',
-      logoSize: 68
-    }), event.latLng);
-  });
-  setLayerVisibility(usfsLayer, !!toggleUSFS?.checked);
-  return usfsLayer;
-}
-
-async function ensureBlmLayer() {
-  if (blmLayer || !googleBaselineMap) return blmLayer;
-  const geojson = await fetchGeoJson(BLM_ADMIN_QUERY_URL);
-  blmLayer = new google.maps.Data();
-  blmLayer.addGeoJson(geojson);
-  blmLayer.setStyle({
-    strokeColor: '#b9722f',
-    strokeWeight: 2,
-    fillColor: '#d8af7b',
-    fillOpacity: 0.04,
-    clickable: false,
-    zIndex: 12
-  });
-  setLayerVisibility(blmLayer, !!toggleBLM?.checked);
-  return blmLayer;
-}
-
-async function ensureBlmDetailLayer() {
-  if (blmDetailLayer || !googleBaselineMap) return blmDetailLayer;
-  const geojson = await fetchArcGisPagedGeoJson(
-    BLM_SURFACE_OWNERSHIP_LAYER_URL,
-    "UT_LGD IN ('Bureau of Land Management (BLM)','BLM Wilderness Area')"
-  );
-  blmDetailLayer = new google.maps.Data();
-  blmDetailLayer.addGeoJson(geojson);
-  applyBlmDetailLayerStyle();
-  blmDetailLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    if (shouldDeprioritizeFederalClicks()) return;
-    queryBlmDistrictAtLatLng(event.latLng).then(districtHit => {
-      const county = firstNonEmpty(
-        event.feature.getProperty('COUNTY'),
-        event.feature.getProperty('county'),
-        event.feature.getProperty('CO_NAME'),
-        event.feature.getProperty('co_name')
-      );
-      const surfaceLabel = firstNonEmpty(
-        event.feature.getProperty('UT_LGD'),
-        event.feature.getProperty('ut_lgd'),
-        event.feature.getProperty('OWNER'),
-        event.feature.getProperty('owner'),
-        'Bureau of Land Management (BLM)'
-      );
-      const detailText = [
-        county ? `${county} County` : '',
-        surfaceLabel
-      ].filter(Boolean).join(' | ');
-      openLandInfoWindow(buildLandInfoCard({
-        logo: LOGO_BLM,
-        title: firstNonEmpty(
-          formatBlmDistrictTitle(districtHit),
-          'BLM District'
-        ),
-        subtitle: 'Bureau of Land Management',
-        detailText,
-        logoSize: 68
-      }), event.latLng);
-    });
-  });
-  setLayerVisibility(blmDetailLayer, !!(toggleBLM?.checked || toggleBLMDetail?.checked));
-  return blmDetailLayer;
-}
-function applyBlmDetailLayerStyle() {
-  if (!blmDetailLayer) return;
-  blmDetailLayer.setStyle(() => {
-    const showVisibleDetail = !!toggleBLMDetail?.checked;
-    return {
-      strokeColor: '#b9722f',
-      strokeWeight: showVisibleDetail ? 1.25 : 0.1,
-      strokeOpacity: showVisibleDetail ? 0.55 : 0,
-      fillColor: '#d8af7b',
-      fillOpacity: showVisibleDetail ? 0.03 : 0,
-      clickable: true,
-      zIndex: 11
-    };
-  });
-}
-async function ensureWildernessLayer() {
-  if (wildernessLayer || !googleBaselineMap) return wildernessLayer;
-  const geojson = await fetchGeoJson(WILDERNESS_QUERY_URL);
-  wildernessLayer = new google.maps.Data();
-  wildernessLayer.addGeoJson(geojson);
-  wildernessLayer.setStyle(feature => {
-    const agency = safe(feature.getProperty('Agency')).toUpperCase();
-    const isUsfs = agency === 'FS';
-    const isVisible = shouldShowWildernessFeature(agency);
-    return {
-      visible: isVisible,
-      clickable: isVisible,
-      strokeColor: isUsfs ? '#1f5130' : '#8a611d',
-      strokeWeight: 2,
-      strokeOpacity: isVisible ? 0.9 : 0,
-      fillColor: isUsfs ? '#7f9f74' : '#c8a76f',
-      fillOpacity: isVisible ? 0.12 : 0,
-      zIndex: 31
-    };
-  });
-  wildernessLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (!shouldShowWildernessFeature(event.feature)) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    fitDataFeatureBounds(event.feature, 11);
-    const agency = safe(event.feature.getProperty('Agency')).toUpperCase();
-    const subtitle = agency === 'FS' ? 'USFS Wilderness' : 'BLM Wilderness';
-    const detailBits = [];
-    const acreage = event.feature.getProperty('Acreage');
-    if (acreage) detailBits.push(`${Number(acreage).toLocaleString()} acres`);
-    openLandInfoWindow(buildLandInfoCard({
-      logo: agency === 'FS' ? LOGO_USFS : LOGO_BLM,
-      title: firstNonEmpty(event.feature.getProperty('NAME'), 'Wilderness Area'),
-      subtitle,
-      detailText: detailBits.join(' | '),
-      detailsLinkText: event.feature.getProperty('URL') ? 'Area Details' : '',
-      detailsLink: firstNonEmpty(event.feature.getProperty('URL')),
-      logoSize: 68
-    }), event.latLng);
-  });
-  updateWildernessOverlayVisibility();
-  return wildernessLayer;
-}
-async function ensureUtahOutlineLayer() {
-  if (utahOutlineLayer || !googleBaselineMap) return utahOutlineLayer;
-  const geojson = await fetchGeoJson(UTAH_OUTLINE_QUERY_URL);
-  utahOutlineLayer = new google.maps.Data();
-  utahOutlineLayer.addGeoJson(geojson);
-  utahOutlineLayer.setStyle({
-    strokeColor: '#c84f00',
-    strokeWeight: 3,
-    strokeOpacity: 0.95,
-    fillOpacity: 0,
-    clickable: false,
-    zIndex: 9
-  });
-  utahOutlineLayer.setMap(googleBaselineMap);
-  return utahOutlineLayer;
-}
-
-function ensureCesiumViewer() {
-  if (cesiumViewer || typeof Cesium === 'undefined') return;
-  const container = document.getElementById('globeMap');
-  if (!container) return;
-  cesiumViewer = new Cesium.Viewer(container, {
-    animation: false,
-    timeline: false,
-    geocoder: false,
-    homeButton: false,
-    sceneModePicker: false,
-    baseLayerPicker: false,
-    navigationHelpButton: false,
-    fullscreenButton: false,
-    selectionIndicator: false,
-    infoBox: false
-  });
-  applyGlobeBasemap(currentGlobeBasemap);
-  cesiumViewer.scene.globe.enableLighting = false;
-  cesiumViewer.scene.globe.showGroundAtmosphere = false;
-  cesiumViewer.scene.globe.depthTestAgainstTerrain = false;
-  cesiumViewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#d7e7f5');
-  if (cesiumViewer.scene.skyBox) cesiumViewer.scene.skyBox.show = false;
-  if (cesiumViewer.scene.skyAtmosphere) cesiumViewer.scene.skyAtmosphere.show = false;
-  if (cesiumViewer.scene.sun) cesiumViewer.scene.sun.show = false;
-  if (cesiumViewer.scene.moon) cesiumViewer.scene.moon.show = false;
-  cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#d7e7f5');
-  cesiumViewer.scene.requestRenderMode = false;
-  cesiumViewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
-  container.style.background = '#d7e7f5';
-  if (huntBoundaryGeoJson) {
-    ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
-  }
-  ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
-  const handler = new Cesium.ScreenSpaceEventHandler(cesiumViewer.scene.canvas);
-  handler.setInputAction((movement) => {
-    const picked = cesiumViewer.scene.pick(movement.position);
-    const entity = picked?.id;
-    if (!entity?.properties) return;
-    const matches = getCesiumEntityMatches(entity);
-    focusCesiumBoundaryEntity(entity);
-    const boundaryName = firstNonEmpty(
-      entity.properties?.Boundary_Name?.getValue?.(),
-      entity.properties?.BOUNDARY_NAME?.getValue?.(),
-      'Selected Unit'
-    );
-    if (matches.length) {
-      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
-    } else {
-      updateStatus(`Zoomed to ${boundaryName}.`);
-    }
-  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-}
-
-function fallbackToGlobeMode(reason = 'Google map unavailable.') {
-  const mapWrap = document.querySelector('.map-wrap');
-  if (!mapWrap) return;
-  if (mapTypeSelect) {
-    mapTypeSelect.value = 'globe';
-  }
-  ensureCesiumViewer();
-  mapWrap.classList.add('is-globe-mode');
-  setTimeout(() => {
-    if (cesiumViewer) {
-      cesiumViewer.resize();
-      cesiumViewer.scene.requestRender();
-    }
-  }, 0);
-  updateStatus(reason);
-}
-
-function applyMapMode() {
-  const value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
-  const mapWrap = document.querySelector('.map-wrap');
-  if (!mapWrap) return;
-
-  if (value === 'globe') {
-    googleBaselineMap?.getStreetView?.()?.setVisible(false);
-    clearOutfitterMarkers();
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
-    ensureCesiumViewer();
-    mapWrap.classList.add('is-globe-mode');
-    setTimeout(() => {
-      if (cesiumViewer) {
-        cesiumViewer.resize();
-        cesiumViewer.scene.requestRender();
-      }
-    }, 0);
-    if (selectedHunt && cesiumViewer) {
-      const boundaryId = firstNonEmpty(selectedHunt.boundaryId, selectedHunt.boundaryID, getUnitCode(selectedHunt));
-      if (boundaryId && huntUnitsLayer) {
-        const bounds = new google.maps.LatLngBounds();
-        let found = false;
-        huntUnitsLayer.forEach(f => {
-          if (safe(f.getProperty('BoundaryID')) === safe(boundaryId)) {
-            f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
-          }
-        });
-        if (found) {
-          const center = bounds.getCenter();
-          cesiumViewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(center.lng(), center.lat(), 250000)
-          });
-        }
-      }
-    }
-    updateCesiumBoundaryStyles();
-    return;
-  }
-
-  if (!googleBaselineMap) {
-    fallbackToGlobeMode('Google map is unavailable. Switched to globe view.');
-    return;
-  }
-
-  mapWrap.classList.remove('is-globe-mode');
-  googleBaselineMap.setMapTypeId(value);
-  googleBaselineMap.getStreetView()?.setVisible(false);
-  styleBoundaryLayer();
-  if (selectedHunt) {
-    updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
-  }
-  updateStatus(`${titleCaseWords(value)} map active.`);
-}
-
-function resetMapView() {
-  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe' && cesiumViewer) {
-    cesiumViewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(GOOGLE_BASELINE_DEFAULT_CENTER.lng, GOOGLE_BASELINE_DEFAULT_CENTER.lat, 850000)
-    });
-    return;
-  }
-  if (googleBaselineMap) {
-    googleBaselineMap.setCenter(GOOGLE_BASELINE_DEFAULT_CENTER);
-    googleBaselineMap.setZoom(GOOGLE_BASELINE_DEFAULT_ZOOM);
-  }
-}
-
-function getSelectedHuntCenter() {
-  if (!selectedHunt || !huntUnitsLayer) return null;
-  const matcher = buildBoundaryMatcher([selectedHunt]);
-  let center = null;
-  huntUnitsLayer.forEach(f => {
-    const id = safe(f.getProperty('BoundaryID'));
-    const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(id, name)) {
-      const bounds = new google.maps.LatLngBounds();
-      f.getGeometry().forEachLatLng(ll => bounds.extend(ll));
-      center = bounds.getCenter();
-    }
-  });
-  return center;
-}
-
-function openStreetViewAtFocus() {
-  if (!googleBaselineMap || typeof google === 'undefined' || !google.maps?.StreetViewService) return;
-  if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
-    mapTypeSelect.value = 'terrain';
-    applyMapMode();
-  }
-  const pano = googleBaselineMap.getStreetView();
-  const target = getSelectedHuntCenter() || googleBaselineMap.getCenter();
-  if (!target) {
-    updateStatus('No Street View location available yet.');
-    return;
-  }
-
-  const streetViewService = new google.maps.StreetViewService();
-  const radii = [5000, 15000, 50000];
-  const tryRadius = (index) => {
-    if (index >= radii.length) {
-      updateStatus('No Street View imagery found near this hunt.');
-      return;
-    }
-    streetViewService.getPanorama({
-      location: target,
-      radius: radii[index],
-      preference: google.maps.StreetViewPreference.NEAREST,
-      source: google.maps.StreetViewSource.OUTDOOR
-    }, (data, status) => {
-      if (status === google.maps.StreetViewStatus.OK && data?.location?.latLng) {
-        googleBaselineMap.setCenter(data.location.latLng);
-        pano.setPosition(data.location.latLng);
-        pano.setPov({ heading: 0, pitch: 0 });
-        pano.setVisible(true);
-        updateStatus('Street View active.');
-        return;
-      }
-      tryRadius(index + 1);
-    });
-  };
-
-  tryRadius(0);
-}
-
-// --- MAP ENGINE ---
-function initGoogleBaseline() {
-  if (googleMapsLoadTimeoutId) {
-    clearTimeout(googleMapsLoadTimeoutId);
-    googleMapsLoadTimeoutId = null;
-  }
-  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
-    mapTypeSelect.value = 'terrain';
-  }
-  googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
-    center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
-    styles: huntPlannerMapStyle,
-    mapTypeId: 'terrain',
-    streetViewControl: true,
-    fullscreenControl: true,
-    mapTypeControl: false
-  });
-  googleApiReady = true;
-  if (huntBoundaryGeoJson) buildBoundaryLayer();
-  ensureUtahOutlineLayer().catch(err => console.error('Utah outline failed', err));
-  if (toggleBLM?.checked) ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
-  if (toggleBLM?.checked || toggleBLMDetail?.checked) ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
-  if (toggleUSFS?.checked) ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
-  if (shouldShowWildernessOverlay()) ensureWildernessLayer().catch(err => console.error('Wilderness layer failed', err));
-  if (toggleSITLA?.checked) ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
-  if (toggleStateParks?.checked) ensureStateParksLayer().catch(err => console.error('State parks layer failed', err));
-  if (toggleWma?.checked) ensureWmaLayer().catch(err => console.error('WMA layer failed', err));
-  if (togglePrivate?.checked) ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
-  if (toggleCwmu?.checked) ensureCwmuLayer().catch(err => console.error('CWMU layer failed', err));
-  updateStateLayersSummary();
-  updateFederalLayersSummary();
-  updatePrivateLayersSummary();
-  applyMapMode();
-  updateStatus('Map ready. Select filters or click a hunt unit.');
-  bindControls();
-}
-
-if (typeof window !== 'undefined') {
-  window.initGoogleBaseline = initGoogleBaseline;
-}
-
-function buildBoundaryLayer() {
-  huntUnitsLayer = new google.maps.Data({ map: googleBaselineMap });
-  if (huntBoundaryGeoJson) {
-      huntUnitsLayer.addGeoJson(huntBoundaryGeoJson);
-      huntUnitsLayer.setStyle({ strokeColor: '#3653b3', strokeWeight: 1, fillOpacity: 0.05 });
-      huntUnitsLayer.addListener('click', event => {
-        openBoundaryPopup(event.feature, event.latLng);
-      });
-      styleBoundaryLayer();
-  }
-}
-
-function styleBoundaryLayer() {
-    if (!huntUnitsLayer) return;
-    const showBoundaries = shouldShowHuntBoundaries();
-    const showAllUnits = shouldShowAllHuntUnits();
-    const filtered = getDisplayHunts();
-    const matcher = buildBoundaryMatcher(filtered);
-    const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
-    huntUnitsLayer.setStyle(f => {
-        const id = safe(f.getProperty('BoundaryID'));
-        const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-        const isMatch = showAllUnits || matcher.matches(id, name);
-        const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
-        return {
-          visible: showBoundaries && isMatch,
-          strokeColor: isSelected ? '#c84f00' : '#3653b3',
-          strokeWeight: isSelected ? 4 : 1.5,
-          fillColor: isSelected ? '#ff8a3d' : '#3653b3',
-          fillOpacity: showBoundaries && isMatch ? (isSelected ? 0.22 : 0.08) : 0
-        };
-    });
-    updateCesiumBoundaryStyles();
-}
-
-function bindControls() {
-  [searchInput, speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
-    el?.addEventListener('change', handleFilterChange);
-    el?.addEventListener('input', handleFilterChange);
-  });
-  applyFiltersBtn?.addEventListener('click', () => {
-    closeSelectedHuntPopup();
-    closeSelectedHuntFloat();
-    closeSelectionInfoWindow();
-    selectedHunt = null;
-    selectedBoundaryFeature = null;
-    if (toggleDwrUnits && hasActiveMatrixSelections()) {
-      toggleDwrUnits.checked = true;
-    }
-    refreshSelectionMatrix();
-    styleBoundaryLayer();
-    renderMatchingHunts();
-    renderSelectedHunt();
-    renderOutfitters();
-    const results = getDisplayHunts();
-    const count = results.length;
-    const selectedUnitValue = safe(unitFilter?.value).trim();
-    const selectedUnitGroups = getSelectedUnitGroups();
-    if (typeof window !== 'undefined' && document.getElementById('matchingHunts')) {
-      document.getElementById('matchingHunts').scrollTop = 0;
-    }
-    if (!count) {
-      updateStatus('No matching hunts found for the current filters.');
-    } else if (selectedUnitGroups.length > 1 && !selectedUnitValue) {
-      zoomToDisplayHuntsBounds();
-      openSelectedUnitsChooser();
-      updateStatus(`${count} matching hunts across ${selectedUnitGroups.length} selected units.`);
-    } else {
-      if (selectedUnitValue && selectedUnitGroups.length === 1) {
-        zoomToDisplayHuntsBounds();
-      } else if (!selectedUnitValue) {
-        zoomToDisplayHuntsBounds();
-      }
-      const chooserTitle = selectedUnitValue
-        ? firstNonEmpty(selectedUnitGroups[0]?.unitName, selectedUnitValue)
-        : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Available Hunts');
-      showHuntMatchesChooser(chooserTitle, results, 'Available Hunts');
-      updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
-    }
-  });
-  clearFiltersBtn?.addEventListener('click', resetAllFilters);
-  document.getElementById('matchingHunts')?.addEventListener('click', event => {
-    const researchBtn = event.target.closest('[data-hunt-research-code]');
-    if (researchBtn) {
-      event.stopPropagation();
-      event.preventDefault();
-      const code = researchBtn.getAttribute('data-hunt-research-code');
-      if (code) openHuntResearch(code);
-      return;
-    }
-    const card = event.target.closest('[data-hunt-key]');
-    if (!card) return;
-    window.selectHuntByKey(card.getAttribute('data-hunt-key'));
-  });
-  document.getElementById('matchingHunts')?.addEventListener('keydown', event => {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    if (event.target.closest('[data-hunt-research-code]')) return;
-    const card = event.target.closest('[data-hunt-key]');
-    if (!card) return;
-    event.preventDefault();
-    window.selectHuntByKey(card.getAttribute('data-hunt-key'));
-  });
-  document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
-  document.getElementById('closeHuntDetailsBtn')?.addEventListener('click', closeInlineHuntDetails);
-  mapTypeSelect?.addEventListener('change', applyMapMode);
-  globeBasemapSelect?.addEventListener('change', () => {
-    currentGlobeBasemap = safe(globeBasemapSelect.value || 'osm');
-    applyGlobeBasemap(currentGlobeBasemap);
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
-  });
-  globeBasemapGrid?.addEventListener('click', event => {
-    const btn = event.target.closest('[data-globe-basemap]');
-    if (!btn) return;
-    currentGlobeBasemap = safe(btn.getAttribute('data-globe-basemap') || currentGlobeBasemap);
-    if (globeBasemapSelect) {
-      globeBasemapSelect.value = currentGlobeBasemap;
-    }
-    if (safe(mapTypeSelect?.value).toLowerCase() !== 'globe' && mapTypeSelect) {
-      mapTypeSelect.value = 'globe';
-      applyMapMode();
-    }
-    applyGlobeBasemap(currentGlobeBasemap);
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
-  });
-  streetViewBtn?.addEventListener('click', openStreetViewAtFocus);
-  resetViewBtn?.addEventListener('click', resetMapView);
-  toggleDwrUnits?.addEventListener('change', () => {
-    if (!toggleDwrUnits.checked) {
-      closeSelectionInfoWindow();
-      closeSelectedHuntPopup();
-      closeSelectedHuntFloat();
-    }
-    styleBoundaryLayer();
-  });
-  toggleUSFS?.addEventListener('change', async () => {
-    if (toggleUSFS.checked) await ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
-    setLayerVisibility(usfsLayer, !!toggleUSFS.checked);
-    if (shouldShowWildernessOverlay()) await ensureWildernessLayer().catch(err => console.error('Wilderness layer failed', err));
-    updateWildernessOverlayVisibility();
-    updateFederalLayersSummary();
-  });
-  toggleBLM?.addEventListener('change', async () => {
-    if (toggleBLM.checked) await ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
-    setLayerVisibility(blmLayer, !!toggleBLM.checked);
-    if (toggleBLM.checked || toggleBLMDetail?.checked) await ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
-    setLayerVisibility(blmDetailLayer, !!(toggleBLM.checked || toggleBLMDetail?.checked));
-    applyBlmDetailLayerStyle();
-    if (shouldShowWildernessOverlay()) await ensureWildernessLayer().catch(err => console.error('Wilderness layer failed', err));
-    updateWildernessOverlayVisibility();
-    if (toggleUSFS?.checked) {
-      setLayerVisibility(usfsLayer, false);
-      setLayerVisibility(usfsLayer, true);
-    }
-    updateFederalLayersSummary();
-  });
-  toggleBLMDetail?.addEventListener('change', async () => {
-    if (toggleBLMDetail.checked) await ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
-    setLayerVisibility(blmDetailLayer, !!(toggleBLM?.checked || toggleBLMDetail.checked));
-    applyBlmDetailLayerStyle();
-    updateFederalLayersSummary();
-  });
-  toggleSITLA?.addEventListener('change', async () => {
-    if (toggleSITLA.checked) await ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
-    setLayerVisibility(sitlaLayer, !!toggleSITLA.checked);
-    updateStateLayersSummary();
-  });
-  toggleStateParks?.addEventListener('change', async () => {
-    if (toggleStateParks.checked) await ensureStateParksLayer().catch(err => console.error('State parks layer failed', err));
-    setLayerVisibility(stateParksLayer, !!toggleStateParks.checked);
-    updateStateLayersSummary();
-  });
-  toggleWma?.addEventListener('change', async () => {
-    if (toggleWma.checked) await ensureWmaLayer().catch(err => console.error('WMA layer failed', err));
-    setLayerVisibility(wmaLayer, !!toggleWma.checked);
-    updateStateLayersSummary();
-  });
-  toggleCwmu?.addEventListener('change', async () => {
-    if (toggleCwmu.checked) await ensureCwmuLayer().catch(err => console.error('CWMU layer failed', err));
-    setLayerVisibility(cwmuLayer, !!toggleCwmu.checked);
-    updatePrivateLayersSummary();
-  });
-  togglePrivate?.addEventListener('change', async () => {
-    if (togglePrivate.checked) await ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
-    setLayerVisibility(privateLayer, !!togglePrivate.checked);
-    updatePrivateLayersSummary();
-  });
-}
-
-function zoomToSelectedBoundary() {
-  if (!huntUnitsLayer || !selectedHunt) return;
-  const bounds = new google.maps.LatLngBounds();
-  let found = false;
-  const matcher = buildBoundaryMatcher([selectedHunt]);
-  
-  huntUnitsLayer.forEach(f => {
-    const featureBoundaryId = safe(f.getProperty('BoundaryID'));
-    const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(featureBoundaryId, featureName)) {
-      f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
-    }
-  });
-  if (found) {
-    googleBaselineMap.fitBounds(bounds);
-    google.maps.event.addListenerOnce(googleBaselineMap, 'bounds_changed', () => {
-      const maxZoom = 9;
-      if ((googleBaselineMap.getZoom?.() || 0) > maxZoom) {
-        googleBaselineMap.setZoom(maxZoom);
-      }
-    });
-  }
-}
-
-function zoomToDisplayHuntsBounds() {
-  if (!huntUnitsLayer || !googleBaselineMap) return false;
-  const filtered = getDisplayHunts();
-  if (!filtered.length) return false;
-  const matcher = buildBoundaryMatcher(filtered);
-  const bounds = new google.maps.LatLngBounds();
-  let found = false;
-  huntUnitsLayer.forEach(f => {
-    const id = safe(f.getProperty('BoundaryID'));
-    const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(id, name)) {
-      f.getGeometry().forEachLatLng(ll => {
-        bounds.extend(ll);
-        found = true;
-      });
-    }
-  });
-  if (found) {
-    googleBaselineMap.fitBounds(bounds);
-    return true;
-  }
+function isLandOverlayPopupOpen() {
   return false;
 }
 
-function bootstrapPendingHuntSelection() {
-  const params = new URLSearchParams(window.location.search || '');
-  const pendingCode = safe(params.get('hunt_code')).trim().toUpperCase();
-  if (!pendingCode) return;
-  const match = huntData.find((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase() === pendingCode);
-  if (!match) return;
-  selectedHunt = match;
-  renderSelectedHunt();
-  renderOutfitters();
-  renderMatchingHunts();
-  styleBoundaryLayer();
-  if (huntUnitsLayer && googleBaselineMap) {
-    zoomToSelectedBoundary();
+function openBoundaryChoicePopup(layer, feature, evt, options = {}) {
+  const matches = findMatchingHuntsForBoundaryFeature(feature);
+  if (!matches.length) return;
+
+  L.DomEvent.stopPropagation(evt);
+  if (evt.originalEvent) {
+    L.DomEvent.preventDefault(evt.originalEvent);
+    L.DomEvent.stopPropagation(evt.originalEvent);
+  }
+
+  suppressNextMapClickInfo = true;
+  const popupLatLng = options.centered && map && typeof map.getCenter === 'function'
+    ? map.getCenter()
+    : evt.latlng;
+  const popup = L.popup({
+    className: 'hunt-choice-popup-wrap',
+    maxWidth: 560,
+    minWidth: 420,
+    autoPan: true,
+    keepInView: true,
+    selectionMode: options.selectionMode || 'initial'
+  })
+    .setLatLng(popupLatLng)
+    .setContent(buildBoundaryChoicePopup(feature, matches));
+  popup.openOn(map);
+  setTimeout(() => wireBoundaryChoicePopup(popup), 0);
+}
+
+function panToSelectedBoundary() {
+  if (!selectedHunt || !map) return;
+  const boundaryCenter = getSelectedBoundaryCenter(selectedHunt);
+  const huntLat = getHuntLat(selectedHunt);
+  const huntLng = getHuntLng(selectedHunt);
+  const trustedCenter = getTrustedUnitCenter(selectedHunt);
+  const center =
+    (boundaryCenter && [boundaryCenter.lat, boundaryCenter.lng]) ||
+    (Number.isFinite(huntLat) && Number.isFinite(huntLng) ? [huntLat, huntLng] : null) ||
+    trustedCenter ||
+    null;
+  if (!center) return;
+  map.panTo(center, {
+    animate: true,
+    duration: 1.2,
+    easeLinearity: 0.22
+  });
+}
+
+function pointInRing(latlng, ring) {
+  const x = Number(latlng.lng);
+  const y = Number(latlng.lat);
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = Number(ring[i][1]);
+    const yi = Number(ring[i][0]);
+    const xj = Number(ring[j][1]);
+    const yj = Number(ring[j][0]);
+    const intersects = ((yi > y) !== (yj > y)) &&
+      (x < ((xj - xi) * (y - yi)) / ((yj - yi) || 1e-12) + xi);
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInPolygon(latlng, polygon) {
+  if (!Array.isArray(polygon) || !polygon.length) return false;
+  if (!pointInRing(latlng, polygon[0] || [])) return false;
+  for (let i = 1; i < polygon.length; i++) {
+    if (pointInRing(latlng, polygon[i] || [])) return false;
+  }
+  return true;
+}
+
+function pointInGeometry(latlng, geometry) {
+  const type = geometry?.type;
+  const coords = geometry?.coordinates;
+  if (type === 'Polygon' && coords) return pointInPolygon(latlng, coords);
+  if (type === 'MultiPolygon' && coords) return coords.some(poly => pointInPolygon(latlng, poly));
+  if (Array.isArray(geometry?.rings)) return pointInPolygon(latlng, geometry.rings);
+  return false;
+}
+
+function findBoundaryLayerAtLatLng(latlng) {
+  if (!liveHuntUnitsLayer || !latlng) return null;
+  let found = null;
+  liveHuntUnitsLayer.eachLayer(layer => {
+    if (found) return;
+    const feature = layer?.feature;
+    if (feature?.geometry && pointInGeometry(latlng, feature.geometry)) {
+      found = layer;
+    }
+  });
+  return found;
+}
+
+function hideBoundaryHoverTooltip() {
+  if (!boundaryHoverTooltip) return;
+  try { map.removeLayer(boundaryHoverTooltip); } catch (e) {}
+  boundaryHoverTooltip = null;
+}
+
+function updateBoundaryHoverTooltip(latlng) {
+  if (!map || !latlng || !liveHuntUnitsLayer || !map.hasLayer(liveHuntUnitsLayer)) {
+    hideBoundaryHoverTooltip();
+    return;
+  }
+
+  const layer = findBoundaryLayerAtLatLng(latlng);
+  const boundaryLabel = safe(getBoundaryFeatureName(layer?.feature)).trim();
+  if (!boundaryLabel) {
+    hideBoundaryHoverTooltip();
+    return;
+  }
+
+  if (!boundaryHoverTooltip) {
+    boundaryHoverTooltip = L.marker(latlng, {
+      pane: 'markerPane',
+      interactive: false,
+      keyboard: false,
+      zIndexOffset: 900,
+      icon: L.divIcon({
+        className: 'hunt-hover-label-marker',
+        iconSize: [1, 1],
+        iconAnchor: [0, 14],
+        html: `<span class="hunt-hover-label-text">${escapeHtml(boundaryLabel)}</span>`
+      })
+    });
+  } else if (boundaryHoverTooltip.setIcon) {
+    boundaryHoverTooltip.setIcon(L.divIcon({
+      className: 'hunt-hover-label-marker',
+      iconSize: [1, 1],
+      iconAnchor: [0, 14],
+      html: `<span class="hunt-hover-label-text">${escapeHtml(boundaryLabel)}</span>`
+    }));
+  }
+
+  boundaryHoverTooltip.setLatLng(latlng);
+  if (!map.hasLayer(boundaryHoverTooltip)) {
+    boundaryHoverTooltip.addTo(map);
   }
 }
 
-// --- BOOTSTRAP ---
-document.addEventListener('DOMContentLoaded', async () => {
-  initSlideBubbleNav();
-  // Load Map
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&callback=initGoogleBaseline`;
-  script.async = true;
-  script.defer = true;
-  script.onerror = () => {
-    console.error('Google Maps API failed to load.');
-    fallbackToGlobeMode('Google map failed to load. Switched to globe view.');
-  };
-  document.head.appendChild(script);
-  googleMapsLoadTimeoutId = setTimeout(() => {
-    if (!googleApiReady) {
-      console.error('Google Maps API load timed out.');
-      fallbackToGlobeMode('Google map timed out. Switched to globe view.');
-    }
-  }, 7000);
-  
-  // Load Data
-  await loadConservationPermitAreas();
-  await loadConservationPermitHuntTable();
-  await loadHuntData();
-  await loadOutfitters();
-  await loadOutfitterFederalCoverage();
-  try {
-      huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
-      if (googleApiReady) buildBoundaryLayer();
-      if (cesiumViewer) {
-        ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
-        ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
+function isBoundaryFeatureSelected(feature) {
+  if (!selectedHunt || !feature) return false;
+  const matchSets = buildBoundaryMatchSets(selectedHunt);
+  const featureId = getBoundaryFeatureId(feature);
+  const featureName = safe(getBoundaryFeatureName(feature)).trim().toLowerCase();
+  return matchSets.names.has(featureName) || (featureId && matchSets.ids.has(featureId));
+}
+
+function getBoundaryFeatureStyle(feature) {
+  if (isBoundaryFeatureSelected(feature)) {
+    return {
+      color: '#6d3bbd',
+      weight: 2.4,
+      fillColor: '#b89af4',
+      fillOpacity: 0.18,
+      opacity: 1
+    };
+  }
+  return getHuntBoundaryStyle();
+}
+
+function updateInteractivePanePriority() {
+  if (!map || !map.getPane) return;
+  const huntPane = map.getPane('huntPane');
+  if (huntPane) {
+    huntPane.style.zIndex = '445';
+  }
+}
+function renderLiveHuntUnitsFeatures(features) {
+  if (!window.L) return;
+
+  if (liveHuntUnitsLayer) {
+    try { map.removeLayer(liveHuntUnitsLayer); } catch (e) {}
+  }
+
+  if (!features.length) {
+    liveHuntUnitsLayer = null;
+    return;
+  }
+
+  liveHuntUnitsLayer = L.geoJSON(
+    { type: 'FeatureCollection', features },
+    {
+      pane: 'huntPane',
+      style: feature => getBoundaryFeatureStyle(feature),
+      onEachFeature: (feature, layer) => {
+        layer.on('click', evt => {
+          if (selectedHunt) return;
+          openBoundaryChoicePopup(layer, feature, evt, { centered: true, selectionMode: 'initial' });
+        });
       }
-  } catch(e) { console.error("GeoJSON load failed", e); }
+    }
+  );
+
+  liveHuntUnitsLayer.eachLayer(layer => {
+    if (isBoundaryFeatureSelected(layer?.feature) && typeof layer.bringToFront === 'function') {
+      layer.bringToFront();
+    }
+  });
+
+  liveLayerSource = 'local-boundary-file';
+  if (toggleLiveUnits?.checked) liveHuntUnitsLayer.addTo(map);
+  updateInteractivePanePriority();
+}
+
+function shouldRenderAllBoundaries() {
+  return false;
+}
+
+function buildLiveHuntUnitsLayer() {
+  const features = getBoundarySourceFeatures();
+  if (!features.length) return;
+  renderLiveHuntUnitsFeatures([]);
+}
+
+function buildUSFSLayer() {
+  if (!window.L || !window.L.esri) return;
+  if (usfsDistrictLayer) {
+    try { map.removeLayer(usfsDistrictLayer); } catch (e) {}
+  }
+  if (usfsBadgeLayer) {
+    try { map.removeLayer(usfsBadgeLayer); } catch (e) {}
+  }
+  usfsBadgeLayer = L.layerGroup();
+  clearFederalBadgeMarkers(usfsBadgeLayer, usfsBadgeMarkers);
+
+  usfsDistrictLayer = L.esri.featureLayer({
+    url: 'https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_ForestSystemBoundaries_01/MapServer/0',
+    pane: 'usfsPane',
+    where: "FORESTNAME IN ('Ashley National Forest','Dixie National Forest','Fishlake National Forest','Manti-La Sal National Forest','Uinta-Wasatch-Cache National Forest')",
+    style: () => ({ color: '#476f2d', weight: 2.5, fillOpacity: 0.02 })
+  });
+
+  usfsDistrictLayer.on('load', () => {
+    rebuildFederalBadgesFromFeatureLayer(usfsDistrictLayer, usfsBadgeLayer, usfsBadgeMarkers, getUsfsLabel, USFS_BADGE_URL);
+  });
+
+  updateContextualLandOverlayVisibility();
+}
+
+function buildBLMLayer() {
+  if (!window.L || !window.L.esri) return;
+  if (blmDistrictLayer) {
+    try { map.removeLayer(blmDistrictLayer); } catch (e) {}
+  }
+  if (blmBadgeLayer) {
+    try { map.removeLayer(blmBadgeLayer); } catch (e) {}
+  }
+  blmBadgeLayer = L.layerGroup();
+  clearFederalBadgeMarkers(blmBadgeLayer, blmBadgeMarkers);
+
+  blmDistrictLayer = L.esri.featureLayer({
+    url: 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0',
+    pane: 'blmPane',
+    style: () => ({ color: '#b9722f', weight: 2.3, fillOpacity: 0.02 })
+  });
+
+  blmDistrictLayer.on('load', () => {
+    rebuildFederalBadgesFromFeatureLayer(blmDistrictLayer, blmBadgeLayer, blmBadgeMarkers, getBlmLabel, BLM_BADGE_URL);
+  });
+
+  updateContextualLandOverlayVisibility();
+}
+
+function applyLiveBoundaryWhere(whereClause) {
+  if (!toggleLiveUnits?.checked) return;
+
+  if (selectedHunt) return;
+  if (!hasActiveHuntFilters()) {
+    renderLiveHuntUnitsFeatures([]);
+    return;
+  }
+
+  renderLiveHuntUnitsFeatures(getFilteredBoundaryFeatures());
+}
+
+function shouldShowContextualLandOverlay() {
+  if (!map) return false;
+  return !!selectedHunt || hasActiveHuntFilters();
+}
+
+function updateContextualLandOverlayVisibility() {
+  const show = shouldShowContextualLandOverlay();
+  const showFederalBadges = !!map && (map.getZoom?.() ?? 0) >= FEDERAL_BADGE_MIN_ZOOM;
+
+  if (usfsDistrictLayer) {
+    if (toggleUSFS?.checked && show) {
+      if (!map.hasLayer(usfsDistrictLayer)) usfsDistrictLayer.addTo(map);
+      if (showFederalBadges) {
+        rebuildFederalBadgesFromFeatureLayer(usfsDistrictLayer, usfsBadgeLayer, usfsBadgeMarkers, getUsfsLabel, USFS_BADGE_URL);
+        setTimeout(() => rebuildFederalBadgesFromFeatureLayer(usfsDistrictLayer, usfsBadgeLayer, usfsBadgeMarkers, getUsfsLabel, USFS_BADGE_URL), 250);
+        if (!map.hasLayer(usfsBadgeLayer)) usfsBadgeLayer.addTo(map);
+      } else if (usfsBadgeLayer && map.hasLayer(usfsBadgeLayer)) {
+        map.removeLayer(usfsBadgeLayer);
+      }
+    } else if (map.hasLayer(usfsDistrictLayer)) {
+      map.removeLayer(usfsDistrictLayer);
+      if (usfsBadgeLayer && map.hasLayer(usfsBadgeLayer)) map.removeLayer(usfsBadgeLayer);
+    }
+  }
+
+  if (blmDistrictLayer) {
+    if (toggleBLM?.checked && show) {
+      if (!map.hasLayer(blmDistrictLayer)) blmDistrictLayer.addTo(map);
+      if (showFederalBadges) {
+        rebuildFederalBadgesFromFeatureLayer(blmDistrictLayer, blmBadgeLayer, blmBadgeMarkers, getBlmLabel, BLM_BADGE_URL);
+        setTimeout(() => rebuildFederalBadgesFromFeatureLayer(blmDistrictLayer, blmBadgeLayer, blmBadgeMarkers, getBlmLabel, BLM_BADGE_URL), 250);
+        if (!map.hasLayer(blmBadgeLayer)) blmBadgeLayer.addTo(map);
+      } else if (blmBadgeLayer && map.hasLayer(blmBadgeLayer)) {
+        map.removeLayer(blmBadgeLayer);
+      }
+    } else if (map.hasLayer(blmDistrictLayer)) {
+      map.removeLayer(blmDistrictLayer);
+      if (blmBadgeLayer && map.hasLayer(blmBadgeLayer)) map.removeLayer(blmBadgeLayer);
+    }
+  }
+}
+
+function clearSelectedBoundaryLayer() {
+  if (!selectedBoundaryLayer) return;
+  try { map.removeLayer(selectedBoundaryLayer); } catch (e) {}
+  selectedBoundaryLayer = null;
+}
+
+async function renderSelectedBoundaryOnly(whereClause) {
+  clearSelectedBoundaryLayer();
+  return true;
+}
+
+function renderUtahOutline() {
+  utahOutlineLayer.clearLayers();
+
+  const utahBounds = [
+    [37.0, -114.05],
+    [42.0, -114.05],
+    [42.0, -111.05],
+    [41.0, -111.05],
+    [41.0, -109.04],
+    [37.0, -109.04],
+    [37.0, -114.05]
+  ];
+
+  L.polygon(utahBounds, {
+    color: '#a36a2f',
+    weight: 2,
+    fill: false,
+    opacity: 0.85
+  }).addTo(utahOutlineLayer);
+}
+
+function chunk(items, size) {
+  const out = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+}
+
+function titleCaseWords(value) {
+  return safe(value)
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function getBoundaryNameCandidates(hunt) {
+  const names = new Set();
+  const unitName = safe(getUnitName(hunt)).trim();
+  const unitCode = safe(getUnitCode(hunt)).trim();
+
+  function addNameVariants(value) {
+    const base = safe(value).trim();
+    if (!base) return;
+    names.add(base);
+    names.add(titleCaseWords(base));
+    names.add(base.toUpperCase());
+  }
+
+  if (unitName) {
+    addNameVariants(unitName);
+    addNameVariants(unitName.replace(/\s*\/\s*/g, '/'));
+    addNameVariants(unitName.replace(/\s*\/\s*/g, ', '));
+    addNameVariants(unitName.replace(/\s*\/\s*/g, ' '));
+  }
+
+  if (unitCode) {
+    const codeName = titleCaseWords(unitCode.replace(/-/g, ' '));
+    if (codeName) {
+      addNameVariants(codeName);
+      addNameVariants(codeName.replace(/\s+East$/i, ', East'));
+      addNameVariants(codeName.replace(/\s+West$/i, ', West'));
+      addNameVariants(codeName.replace(/\s+North$/i, ', North'));
+      addNameVariants(codeName.replace(/\s+South$/i, ', South'));
+    }
+  }
+
+  return new Set(Array.from(names).filter(Boolean));
+}
+
+async function queryBoundaryNamesAndIds(hunt) {
+  const huntCode = safe(getHuntCode(hunt)).trim();
+  const names = new Set();
+  const ids = new Set();
+
+  const overrideNames = HUNT_BOUNDARY_NAME_OVERRIDES[huntCode] || [];
+  overrideNames.forEach(name => names.add(name));
+
+  getBoundaryNameCandidates(hunt).forEach(name => names.add(name));
+
+  if (huntCode) {
+    try {
+      const url =
+        `${DWR_HUNT_INFO_TABLE}?` +
+        `where=${encodeURIComponent(`HUNT_NUMBER='${huntCode.replace(/'/g, "''")}'`)}` +
+        '&outFields=BOUNDARY_NAME,BOUNDARYID' +
+        '&returnGeometry=false' +
+        '&f=json';
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Hunt info table query failed: ${response.status}`);
+      }
+
+      const payload = await response.json();
+      const features = Array.isArray(payload?.features) ? payload.features : [];
+
+      features.forEach(feature => {
+        const attrs = feature?.attributes || {};
+        const boundaryName = safe(attrs.BOUNDARY_NAME).trim();
+        const boundaryId = safe(attrs.BOUNDARYID).trim();
+        if (boundaryName) names.add(boundaryName);
+        if (boundaryId) ids.add(boundaryId);
+      });
+    } catch (err) {
+      console.warn('Hunt info table lookup failed, using local boundary name matching only.', err);
+    }
+  }
+
+  return { names, ids };
+}
+
+async function zoomToSelectedBoundary() {
+  const token = ++boundaryZoomToken;
+
+  if (!selectedHunt) {
+    map.setView([39.3, -111.7], 7);
+    return;
+  }
+
+  try {
+    const localFeatures = getSelectedBoundaryFeaturesForHunt(selectedHunt);
+    if (Array.isArray(localFeatures) && localFeatures.length) {
+      const tempLayer = L.geoJSON(localFeatures);
+      const localBounds = tempLayer.getBounds();
+      if (localBounds && localBounds.isValid()) {
+        const looserBounds = localBounds.pad(0.16);
+        const mapWidth = map.getSize ? map.getSize().x : window.innerWidth;
+        const isDesktopLayout = mapWidth >= 1100;
+        const paddingTopLeft = isDesktopLayout ? [260, 70] : [12, 12];
+        const paddingBottomRight = isDesktopLayout ? [360, 170] : [12, 12];
+
+        if (typeof map.flyToBounds === 'function') {
+          map.flyToBounds(looserBounds.isValid() ? looserBounds : localBounds, {
+            paddingTopLeft,
+            paddingBottomRight,
+            maxZoom: 8,
+            duration: 2.8,
+            easeLinearity: 0.18
+          });
+        } else {
+          map.fitBounds(looserBounds.isValid() ? looserBounds : localBounds, {
+            paddingTopLeft,
+            paddingBottomRight,
+            maxZoom: 8
+          });
+        }
+        return;
+      }
+    }
+
+    const huntCode = getHuntCode(selectedHunt);
+    if (!huntCode) {
+      map.setView([39.3, -111.7], 7);
+      return;
+    }
+
+    const { names, ids } = await queryBoundaryNamesAndIds(selectedHunt);
+    if (token !== boundaryZoomToken) return;
+
+    const where = buildBoundaryFilterSql(names, ids);
+    console.log('selected hunt', getHuntCode(selectedHunt), Array.from(names), Array.from(ids), where);
+    if (!where || where === '1=0') {
+      map.setView([39.3, -111.7], 7);
+      return;
+    }
+
+    const url =
+      `${DWR_HUNT_BOUNDARY_LAYER}/query?` +
+      `where=${encodeURIComponent(where)}` +
+      '&returnExtentOnly=true' +
+      '&outSR=4326' +
+      '&f=json';
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Boundary extent query failed: ${response.status}`);
+    }
+
+    const payload = await response.json();
+    if (token !== boundaryZoomToken) return;
+
+    const extent = payload?.extent;
+    const xmin = Number(extent?.xmin);
+    const ymin = Number(extent?.ymin);
+    const xmax = Number(extent?.xmax);
+    const ymax = Number(extent?.ymax);
+
+    const validUtahExtent =
+      [xmin, ymin, xmax, ymax].every(Number.isFinite) &&
+      xmin >= -114.75 &&
+      xmax <= -108.25 &&
+      ymin >= 36.5 &&
+      ymax <= 42.5 &&
+      xmin < xmax &&
+      ymin < ymax;
+
+    if (!validUtahExtent) {
+      map.setView([39.3, -111.7], 7);
+      return;
+    }
+
+    const bounds = [
+      [ymin, xmin],
+      [ymax, xmax]
+    ];
+    const mapWidth = map.getSize ? map.getSize().x : window.innerWidth;
+    const isDesktopLayout = mapWidth >= 1100;
+    const paddingTopLeft = isDesktopLayout ? [260, 70] : [12, 12];
+    const paddingBottomRight = isDesktopLayout ? [360, 170] : [12, 12];
+
+    if (typeof map.flyToBounds === 'function') {
+      map.flyToBounds(bounds, {
+        paddingTopLeft,
+        paddingBottomRight,
+        maxZoom: 8,
+        duration: 2.8,
+        easeLinearity: 0.18
+      });
+    } else {
+      map.fitBounds(bounds, {
+        paddingTopLeft,
+        paddingBottomRight,
+        maxZoom: 8
+      });
+    }
+  } catch (err) {
+    console.error('Boundary zoom failed:', err);
+    map.setView([39.3, -111.7], 7);
+  }
+}
+
+function buildBoundaryFilterSql(names, ids) {
+  const clauses = [];
+
+  if (names.size) {
+    const list = Array.from(names)
+      .map(n => `'${safe(n).trim().replace(/'/g, "''")}'`)
+      .join(',');
+    clauses.push(`Boundary_Name IN (${list})`);
+  }
+
+  if (ids.size) {
+    const values = Array.from(ids);
+    const allNum = values.every(v => /^-?\d+$/.test(v));
+    if (allNum) clauses.push(`BOUNDARYID IN (${values.map(v => Number(v)).join(',')})`);
+    else clauses.push(`BOUNDARYID IN (${values.map(v => `'${safe(v).replace(/'/g, "''")}'`).join(',')})`);
+  }
+
+  if (!clauses.length) return '1=0';
+  if (clauses.length === 1) return clauses[0];
+  return `(${clauses.join(' OR ')})`;
+}
+
+function buildBoundaryMatchSets(hunt) {
+  const names = new Set();
+  const ids = new Set();
+
+  const huntCode = safe(getHuntCode(hunt)).trim();
+  const overrideNames = HUNT_BOUNDARY_NAME_OVERRIDES[huntCode] || [];
+  overrideNames.forEach(name => names.add(name.trim().toLowerCase()));
+
+  getBoundaryNameCandidates(hunt).forEach(name => names.add(safe(name).trim().toLowerCase()));
+
+  getBoundarySourceFeatures().forEach(feature => {
+    const featureId = getBoundaryFeatureId(feature);
+    const featureName = getBoundaryFeatureName(feature).toLowerCase();
+    if (overrideNames.some(name => safe(name).trim().toLowerCase() === featureName)) {
+      if (featureId) ids.add(featureId);
+    }
+  });
+
+  return { names, ids };
+}
+
+function filterBoundaryFeatures(names, ids) {
+  const nameSet = new Set(Array.from(names).map(name => safe(name).trim().toLowerCase()));
+  const idSet = new Set(Array.from(ids).map(id => safe(id).trim()));
+
+  return getBoundarySourceFeatures().filter(feature => {
+    const featureName = getBoundaryFeatureName(feature).toLowerCase();
+    const featureId = getBoundaryFeatureId(feature);
+    return nameSet.has(featureName) || idSet.has(featureId);
+  });
+}
+
+function getFilteredBoundaryFeatures() {
+  const mergedNames = new Set();
+  const mergedIds = new Set();
+
+  getFilteredHunts().forEach(hunt => {
+    const matchSets = buildBoundaryMatchSets(hunt);
+    matchSets.names.forEach(name => mergedNames.add(name));
+    matchSets.ids.forEach(id => mergedIds.add(id));
+  });
+
+  if (!mergedNames.size && !mergedIds.size) return [];
+  return filterBoundaryFeatures(mergedNames, mergedIds);
+}
+
+async function refreshLiveBoundaryFilter() {
+  const token = ++liveFilterToken;
+
+  if (!toggleLiveUnits?.checked) {
+    clearSelectedBoundaryLayer();
+    if (liveHuntUnitsLayer && map.hasLayer(liveHuntUnitsLayer)) {
+      map.removeLayer(liveHuntUnitsLayer);
+    }
+    return;
+  }
+
+  if (!liveHuntUnitsLayer) buildLiveHuntUnitsLayer();
+  if (liveHuntUnitsLayer && !map.hasLayer(liveHuntUnitsLayer)) {
+    liveHuntUnitsLayer.addTo(map);
+  }
+
+  if (!selectedHunt) {
+    clearSelectedBoundaryLayer();
+    applyLiveBoundaryWhere('1=1');
+    return;
+  }
+
+  try {
+    const remote = await queryBoundaryNamesAndIds(selectedHunt);
+    if (token !== liveFilterToken) return;
+
+    const filtered = getFilteredBoundaryFeatures();
+    renderLiveHuntUnitsFeatures(filtered);
+    await renderSelectedBoundaryOnly();
+  } catch (err) {
+    console.error('Boundary filter failed:', err);
+    renderLiveHuntUnitsFeatures(getFilteredBoundaryFeatures());
+    await renderSelectedBoundaryOnly();
+  }
+}
+  
+function renderOwnershipPlaceholders() {
+  sitlaLayer.clearLayers();
+  stateLayer.clearLayers();
+  privateLayer.clearLayers();
+
+  if (toggleSITLA?.checked) {
+    L.circleMarker([39.05, -111.9], { radius: 7, color: '#4f9d62', fillColor: '#4f9d62', fillOpacity: 0.35, weight: 2 })
+      .addTo(sitlaLayer)
+      .bindPopup('<b>SITLA</b><br>U.O.G.A. reference layer for trust lands.');
+  }
+  if (toggleState?.checked) {
+    L.circleMarker([40.1, -111.9], { radius: 7, color: '#2b8f9a', fillColor: '#2b8f9a', fillOpacity: 0.35, weight: 2 })
+      .addTo(stateLayer)
+      .bindPopup('<b>State Lands</b><br>U.O.G.A. reference layer for state-managed land context.');
+  }
+  if (togglePrivate?.checked) {
+    L.circleMarker([38.9, -111.2], { radius: 7, color: '#9a3e3e', fillColor: '#9a3e3e', fillOpacity: 0.35, weight: 2 })
+      .addTo(privateLayer)
+      .bindPopup('<b>Private Lands</b><br>U.O.G.A. reference layer for private-land awareness.');
+  }
+}
+
+function renderUnitCenters() {
+  unitCenterLayer.clearLayers();
+  return;
+}
+
+function renderHuntResults() {
+  if (!huntResultsEl && !huntResultsMobileEl) return;
+  const selectedCode = selectedHunt ? getHuntCode(selectedHunt) : '';
+  const filtered = getFilteredHunts().filter(h => {
+    if (!selectedCode) return true;
+    return getHuntCode(h) !== selectedCode;
+  });
+  const total = filtered.length;
+  const shown = Math.min(huntResultsLimit, total);
+
+  setText([huntCountEl, huntCountMobileEl], String(total));
+
+  if (!total) {
+    setHtml([huntResultsEl, huntResultsMobileEl], '<div class="empty">No hunts match the current filters.</div>');
+    return;
+  }
+
+  const html = filtered.slice(0, shown).map(h => {
+    const code = getHuntCode(h);
+    const title = getHuntTitle(h) || getUnitName(h) || code || 'Untitled Hunt';
+    const unitName = getUnitName(h) || getUnitValue(h) || 'N/A';
+    return `
+      <div class="result-card">
+        <h3>${escapeHtml(title)}</h3>
+        <div>${escapeHtml(unitName)}</div>
+        <div>${escapeHtml(code)}</div>
+        <div>${escapeHtml(getNormalizedSex(h) || 'N/A')}</div>
+        <div>${escapeHtml(getSpeciesDisplay(h) || 'N/A')}</div>
+        <div>${escapeHtml(getWeapon(h) || 'N/A')}</div>
+        <div>${escapeHtml(getHuntType(h) || 'N/A')}<br><span style="color:var(--muted);">${escapeHtml(getDates(h))}</span></div>
+        <div class="result-actions">
+          <button type="button" class="btn-primary" data-action="select-hunt" data-hunt-code="${escapeHtml(code)}">Select Hunt</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const more = shown < total
+    ? `<div class="result-actions"><button type="button" class="btn-secondary" data-action="show-more-hunts">Show more hunts (${shown} of ${total})</button></div>`
+    : '';
+
+  setHtml(
+    [huntResultsEl, huntResultsMobileEl],
+    `${html}<div class="result-meta-row">Showing ${shown} of ${total} matching hunts.</div>${more}`
+  );
+}
+
+function renderAreaInfo(remoteInfo = null) {
+  if (!areaInfoMapEl && !areaInfoMobileEl) return;
+
+  if (!selectedHunt) {
+    setHtml([areaInfoMapEl, areaInfoMobileEl], 'Click a hunt unit or select one from the filter.');
+    return;
+  }
+
+  const officialNote = getProvisionalNote(selectedHunt);
+  const seasonText = getEffectiveSeasonText(selectedHunt, remoteInfo);
+  const huntCode = escapeHtml(getHuntCode(selectedHunt) || '');
+  const species = escapeHtml(getSpeciesDisplay(selectedHunt) || 'N/A');
+  const sex = escapeHtml(getNormalizedSex(selectedHunt) || 'N/A');
+  const weapon = escapeHtml(getWeapon(selectedHunt) || 'N/A');
+  const huntType = escapeHtml(getHuntTypeLabel(getHuntType(selectedHunt)) || 'N/A');
+  const seasonEscaped = escapeHtml(seasonText || 'N/A');
+
+  setHtml([areaInfoMapEl, areaInfoMobileEl], `
+    <div class="hunt-official-card">
+      <div class="hunt-official-shell">
+        <div class="hunt-official-main">
+          <div class="hunt-official-grid">
+            <div><strong>Hunt Number:</strong><br>${huntCode || 'N/A'}</div>
+            <div><strong>Species:</strong><br>${species}</div>
+            <div><strong>Sex:</strong><br>${sex}</div>
+            <div><strong>Hunt Type:</strong><br>${huntType}</div>
+          </div>
+          <div class="hunt-official-bar">Weapon Type</div>
+          <div class="hunt-official-block">${weapon}</div>
+          <div class="hunt-official-bar">Season Dates</div>
+          <div class="hunt-official-block">${seasonEscaped}</div>
+          <div class="hunt-official-bar">Notes</div>
+          <div class="hunt-official-block">
+            This is the active hunt on your U.O.G.A. planner map. Boundary highlighting and vetted outfitter matching follow this selection.
+            ${officialNote ? `<br><br>${escapeHtml(officialNote)}` : ''}
+          </div>
+        </div>
+        <div class="hunt-official-side">
+          <div class="hunt-official-actions">
+            <button type="button" class="btn-primary" data-action="load-dwr-map-here" data-hunt-code="${huntCode}">Hunt Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function renderOutfitters() {
+  outfitterLayer.clearLayers();
+  if (toggleOutfitters && !toggleOutfitters.checked) return;
+  if (!selectedHunt || !isSelectedHuntInCurrentMatrix(selectedHunt)) return;
+
+  const matches = getSelectedOutfitters();
+  const baseLat = getHuntLat(selectedHunt);
+  const baseLng = getHuntLng(selectedHunt);
+  const trustedCenter = getTrustedUnitCenter(selectedHunt);
+  const centerLat = isLikelyUtahCoordinate(baseLat, baseLng) ? baseLat : trustedCenter?.[0];
+  const centerLng = isLikelyUtahCoordinate(baseLat, baseLng) ? baseLng : trustedCenter?.[1];
+  if (!Number.isFinite(centerLat) || !Number.isFinite(centerLng)) return;
+
+  const cityOffsets = new Map();
+
+  matches.forEach((o, i) => {
+    const cityCenter = getOutfitterCityCenter(o);
+    const cityKey = safe(o.city).trim().toLowerCase() || `fallback-${i}`;
+    const cityIndex = cityOffsets.get(cityKey) || 0;
+    cityOffsets.set(cityKey, cityIndex + 1);
+
+    const useLat = cityCenter?.[0] ?? centerLat;
+    const useLng = cityCenter?.[1] ?? centerLng;
+    const markerLat = useLat + cityIndex * 0.012;
+    const markerLng = useLng + cityIndex * 0.012;
+    const customIcon = createOutfitterMarkerIcon(o);
+    const marker = L.marker([markerLat, markerLng], customIcon ? { icon: customIcon } : undefined).addTo(outfitterLayer);
+    marker.bindPopup(`
+      <b>${escapeHtml(o.listingName)}</b><br>
+      ${escapeHtml(o.certLevel)} | ${escapeHtml(o.verificationStatus)}<br>
+      ${escapeHtml(o.city)}<br>
+      <a href="${escapeHtml(normalizeUrl(o.website))}" target="_blank" rel="noopener noreferrer">Visit Website</a>
+    `);
+  });
+}
+
+function renderOutfitterResults() {
+  if (!resultsEl && !resultsMobileEl) return;
+
+  if (!selectedHunt || !isSelectedHuntInCurrentMatrix(selectedHunt)) {
+    setHtml([resultsEl, resultsMobileEl], '<div class="empty">Select a hunt or unit to load outfitter results.</div>');
+    return;
+  }
+
+  const matches = getSelectedOutfitters();
+  if (!matches.length) {
+    setHtml(
+      [resultsEl, resultsMobileEl],
+      `<div class="empty">No outfitters currently loaded for ${escapeHtml(getUnitName(selectedHunt) || getUnitValue(selectedHunt))}.</div>`
+    );
+    return;
+  }
+
+  setHtml([resultsEl, resultsMobileEl], matches.map(o => `
+    <div class="result-card">
+      <h3>${escapeHtml(o.listingName)}</h3>
+      <div class="pill-row">
+        <span class="pill cert">${escapeHtml(o.certLevel || 'Member')}</span>
+        <span class="pill verified">${escapeHtml(o.verificationStatus || 'Listed')}</span>
+      </div>
+      <div class="meta">
+        <div><strong>City:</strong> ${escapeHtml(o.city)}</div>
+        <div><strong>Species:</strong> ${escapeHtml(o.speciesServed || o.species || 'N/A')}</div>
+        <div><strong>Phone:</strong> ${escapeHtml(formatPhoneList(o.phone) || 'N/A')}</div>
+        <div><strong>Hunt Units:</strong> ${escapeHtml(listify(o.unitsServed).join(', ') || 'N/A')}</div>
+        <div><strong>BLM Districts:</strong> ${escapeHtml(listify(o.blmDistricts).join(', ') || 'N/A')}</div>
+        <div><strong>USFS Forests:</strong> ${escapeHtml(listify(o.usfsForests || o.forestDistricts).join(', ') || 'N/A')}</div>
+      </div>
+      <div class="result-actions">
+        <a href="${escapeHtml(normalizeUrl(o.website))}" target="_blank" rel="noopener noreferrer">
+          <button type="button" class="btn-primary">Visit Website</button>
+        </a>
+      </div>
+    </div>
+  `).join(''));
+}
+
+function selectUnitByValue(unitValue, options = {}) {
+  const hunt = huntData.find(h => {
+    return getUnitValue(h) === unitValue || getUnitName(h) === unitValue || getUnitCode(h) === unitValue;
+  });
+
+  if (!hunt) return;
+
+  selectedHunt = hunt;
+  selectedUnit = unitValue;
+
+  if (unitFilter) unitFilter.value = unitValue;
+  setSelectedDisplay(
+    getUnitName(hunt) || unitValue,
+    [
+      getSpeciesDisplay(hunt),
+      getUnitName(hunt) || getUnitCode(hunt),
+      getRegion(hunt)
+    ].filter(Boolean).join(' • '),
+    getHuntCode(hunt) || 'Reference'
+  );
+
+  renderAreaInfo();
+  renderOutfitters();
+  renderOutfitterResults();
+  renderHuntResults();
+  updateCesiumView(hunt);
+  updateDwrBoundaryEmbed(hunt);
+  refreshLiveBoundaryFilter();
+  updateInteractivePanePriority();
+  refreshSelectedHuntOfficialInfo(hunt);
+}
+
+function selectHuntByCode(huntCode, options = {}) {
+  const hunt = huntData.find(h => getHuntCode(h) === huntCode);
+  if (!hunt) return;
+
+  selectedHunt = hunt;
+  selectedUnit = getUnitValue(hunt);
+  setSelectedDisplay(
+    getHuntTitle(hunt) || getUnitName(hunt) || huntCode,
+    [
+      getSpeciesDisplay(hunt),
+      getUnitName(hunt) || getUnitCode(hunt),
+      getRegion(hunt)
+    ].filter(Boolean).join(' • '),
+    getHuntCode(hunt) || huntCode || 'Reference'
+  );
+
+  renderAreaInfo();
+  renderOutfitters();
+  renderOutfitterResults();
+  renderHuntResults();
+  updateCesiumView(hunt);
+  updateDwrBoundaryEmbed(hunt);
+  refreshLiveBoundaryFilter();
+  updateInteractivePanePriority();
+  refreshSelectedHuntOfficialInfo(hunt);
+}
+
+window.selectUnitByValue = selectUnitByValue;
+window.selectHuntByCode = selectHuntByCode;
+
+function resetPlanner() {
+  selectedHunt = null;
+  selectedUnit = null;
+  huntResultsLimit = 100;
+
+  if (searchInput) searchInput.value = '';
+  if (speciesFilter) speciesFilter.value = 'All Species';
+  if (sexFilter) sexFilter.value = 'All';
+  if (weaponFilter) weaponFilter.value = 'All';
+  if (huntTypeFilter) huntTypeFilter.value = 'All';
+  if (huntCategoryFilter) huntCategoryFilter.value = 'All';
+  if (unitFilter) unitFilter.value = '';
 
   refreshSelectionMatrix();
-  renderMatchingHunts();
-  bootstrapPendingHuntSelection();
-  applyMapMode();
+
+  setBuildMarker();
+
+  map.setView([39.3, -111.7], 6);
+
+  renderUnitCenters();
+  renderOwnershipPlaceholders();
+  renderAreaInfo();
+  renderOutfitters();
+  renderOutfitterResults();
+  renderHuntResults();
+  updateCesiumView();
+  updateDwrBoundaryEmbed();
+  refreshLiveBoundaryFilter();
+}
+
+[searchInput, speciesFilter, sexFilter, weaponFilter, huntTypeFilter, huntCategoryFilter].forEach(el => {
+  if (!el) return;
+  const handler = () => {
+    huntResultsLimit = 100;
+    refreshSelectionMatrix();
+    renderUnitCenters();
+    renderHuntResults();
+    refreshLiveBoundaryFilter();
+  };
+  el.addEventListener('input', handler);
+  el.addEventListener('change', handler);
 });
 
-function sortWithPreferredOrder(arr, pref) {
-    const map = new Map(pref.map((v, i) => [v, i]));
-    return arr.sort((a, b) => (map.has(a) ? map.get(a) : 99) - (map.has(b) ? map.get(b) : 99));
+if (unitFilter) {
+  unitFilter.addEventListener('change', () => {
+    huntResultsLimit = 100;
+    if (!unitFilter.value) {
+      selectedHunt = null;
+      selectedUnit = null;
+      setBuildMarker();
+      renderAreaInfo();
+      renderOutfitters();
+      renderOutfitterResults();
+      renderHuntResults();
+      updateCesiumView();
+      updateDwrBoundaryEmbed();
+      refreshLiveBoundaryFilter();
+      return;
+    }
+    selectUnitByValue(unitFilter.value);
+  });
 }
+
+if (basemapSelect) {
+  basemapSelect.value = 'usgs';
+  updateMapAppearance();
+  basemapSelect.addEventListener('change', () => {
+    Object.values(basemaps).forEach(layer => {
+      if (map.hasLayer(layer)) map.removeLayer(layer);
+    });
+    (basemaps[basemapSelect.value] || basemaps.usgs).addTo(map);
+    updateMapAppearance();
+    updateCesiumView(selectedHunt);
+
+    if (toggleLiveUnits?.checked && !liveHuntUnitsLayer) buildLiveHuntUnitsLayer();
+    if (toggleLiveUnits?.checked && liveHuntUnitsLayer) liveHuntUnitsLayer.addTo(map);
+    updateContextualLandOverlayVisibility();
+    if (selectedBoundaryLayer && typeof selectedBoundaryLayer.bringToFront === 'function') {
+      selectedBoundaryLayer.bringToFront();
+    }
+  });
+}
+
+if (toggleLiveUnits) {
+  toggleLiveUnits.addEventListener('change', () => {
+    if (toggleLiveUnits.checked) {
+      if (!liveHuntUnitsLayer) buildLiveHuntUnitsLayer();
+      if (liveHuntUnitsLayer) liveHuntUnitsLayer.addTo(map);
+      refreshLiveBoundaryFilter();
+    } else {
+      if (liveHuntUnitsLayer && map.hasLayer(liveHuntUnitsLayer)) {
+        map.removeLayer(liveHuntUnitsLayer);
+      }
+    }
+  });
+}
+
+if (toggleUSFS) {
+  toggleUSFS.addEventListener('change', () => {
+    if (!usfsDistrictLayer) return;
+    updateContextualLandOverlayVisibility();
+  });
+}
+
+if (toggleBLM) {
+  toggleBLM.addEventListener('change', () => {
+    if (!blmDistrictLayer) return;
+    updateContextualLandOverlayVisibility();
+  });
+}
+
+[toggleSITLA, toggleState, togglePrivate].forEach(el => {
+  if (!el) return;
+  el.addEventListener('change', renderOwnershipPlaceholders);
+});
+
+if (toggleOutfitters) {
+  toggleOutfitters.addEventListener('change', () => {
+    renderOutfitters();
+    renderOutfitterResults();
+  });
+}
+
+if (openBoundaryBtn) {
+  openBoundaryBtn.addEventListener('click', () => {
+    updateDwrBoundaryEmbed(selectedHunt, { scrollIntoView: true });
+  });
+}
+
+if (openAboutBtn) {
+  openAboutBtn.addEventListener('click', () => {
+    setAboutModalOpen(true);
+  });
+}
+
+if (closeAboutBtn) {
+  closeAboutBtn.addEventListener('click', () => {
+    setAboutModalOpen(false);
+  });
+}
+
+if (aboutOkBtn) {
+  aboutOkBtn.addEventListener('click', () => {
+    setAboutModalOpen(false);
+    try {
+      localStorage.setItem('uogaHuntPlannerInfoSeen', '1');
+    } catch (e) {}
+  });
+}
+
+if (toggleDwrPanelBtn) {
+  toggleDwrPanelBtn.addEventListener('click', () => {
+    toggleEmbeddedPanel(toggleDwrPanelBtn, dwrBoundaryEmbed);
+  });
+}
+
+if (toggleCesiumPanelBtn) {
+  toggleCesiumPanelBtn.addEventListener('click', () => {
+    toggleEmbeddedPanel(toggleCesiumPanelBtn, cesiumContainer);
+    if (cesiumViewer) {
+      window.setTimeout(() => cesiumViewer.resize(), 200);
+    }
+  });
+}
+
+if (cesiumZoomBtn) {
+  cesiumZoomBtn.addEventListener('click', () => {
+    zoomCesiumToSelectedHunt();
+  });
+}
+
+if (cesiumTiltBtn) {
+  cesiumTiltBtn.addEventListener('click', () => {
+    toggleCesiumTilt();
+  });
+}
+
+if (cesiumResetBtn) {
+  cesiumResetBtn.addEventListener('click', () => {
+    resetCesiumView();
+  });
+}
+
+if (cesiumTerrainBtn) {
+  cesiumTerrainBtn.addEventListener('click', async () => {
+    await enableCesiumTerrainRelief();
+  });
+}
+
+if (resetBtn) resetBtn.addEventListener('click', resetPlanner);
+
+if (toggleResultsTrayBtn && resultsTrayEl) {
+  toggleResultsTrayBtn.addEventListener('click', () => {
+    resultsTrayEl.classList.toggle('collapsed');
+    toggleResultsTrayBtn.textContent = resultsTrayEl.classList.contains('collapsed') ? '˄' : '˅';
+  });
+}
+
+attachHuntResultsInteraction(huntResultsEl);
+attachHuntResultsInteraction(huntResultsMobileEl);
+
+document.addEventListener('click', e => {
+  const target = e.target;
+  if (!(target instanceof HTMLElement)) return;
+  if (target === aboutModal) {
+    setAboutModalOpen(false);
+    return;
+  }
+  const unitBtn = target.closest('.js-select-unit');
+  if (unitBtn) {
+    const unitValue = safe(unitBtn.getAttribute('data-unit')).trim();
+    if (unitValue) selectUnitByValue(unitValue);
+    return;
+  }
+  const dwrBtn = target.closest('[data-action="load-dwr-map-here"]');
+  if (dwrBtn) {
+    updateDwrBoundaryEmbed(selectedHunt, { forceFrame: true, scrollIntoView: true });
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && aboutModal?.classList.contains('is-open')) {
+    setAboutModalOpen(false);
+  }
+});
+
+map.on('mousemove', e => {
+  updateBoundaryHoverTooltip(e.latlng);
+});
+
+map.on('mouseout', () => {
+  hideBoundaryHoverTooltip();
+});
+
+map.on('dblclick', evt => {
+  if (!selectedHunt || isLandOverlayPopupOpen()) return;
+  const layer = findBoundaryLayerAtLatLng(evt.latlng);
+  if (!layer?.feature) return;
+  openBoundaryChoicePopup(layer, layer.feature, evt, { centered: true, selectionMode: 'switch' });
+});
+
+map.on('zoomend', () => {
+  hideBoundaryHoverTooltip();
+  refreshLiveBoundaryFilter();
+  updateContextualLandOverlayVisibility();
+  if (selectedBoundaryLayer && typeof selectedBoundaryLayer.setStyle === 'function') {
+    selectedBoundaryLayer.setStyle({
+      color: '#6d3bbd',
+      weight: 2.4,
+      fillColor: '#b89af4',
+      fillOpacity: 0.18,
+      opacity: 1
+    });
+  }
+});
+
+(async function init() {
+  try {
+    forcePageTop();
+    clearSearchInputOnLoad();
+
+    if (speciesFilter) speciesFilter.innerHTML = '<option value="All Species">Loading...</option>';
+    if (unitFilter) unitFilter.innerHTML = '<option value="">Loading...</option>';
+    if (toggleUSFS) toggleUSFS.checked = true;
+    if (toggleBLM) toggleBLM.checked = true;
+    setBuildMarker();
+
+    await loadHuntData();
+    await loadOutfittersData();
+    await loadBoundaryData();
+
+    refreshSelectionMatrix();
+
+    buildLiveHuntUnitsLayer();
+    buildUSFSLayer();
+    buildBLMLayer();
+
+    await refreshLiveBoundaryFilter();
+
+    renderUtahOutline();
+    renderUnitCenters();
+    renderOwnershipPlaceholders();
+    renderAreaInfo();
+    renderOutfitters();
+    renderOutfitterResults();
+    renderHuntResults();
+    initCesiumViewer();
+    updateCesiumView();
+    updateDwrBoundaryEmbed();
+    try {
+      if (!localStorage.getItem('uogaHuntPlannerInfoSeen')) {
+        setAboutModalOpen(true);
+      }
+    } catch (e) {
+      setAboutModalOpen(true);
+    }
+    window.setTimeout(() => map.invalidateSize(), 0);
+    if (cesiumViewer) {
+      window.setTimeout(() => cesiumViewer.resize(), 0);
+    }
+  } catch (err) {
+    console.error('Init failed:', err);
+
+    if (speciesFilter) speciesFilter.innerHTML = '<option value="All Species">Load Failed</option>';
+    if (unitFilter) unitFilter.innerHTML = '<option value="">Load Failed</option>';
+
+    setHtml([huntResultsEl, huntResultsMobileEl], `<div class="empty">Failed to load hunt data: ${escapeHtml(err.message || String(err))}</div>`);
+    setHtml([resultsEl, resultsMobileEl], `<div class="empty">Initialization error: ${escapeHtml(err.message || String(err))}</div>`);
+    setHtml([areaInfoMapEl, areaInfoMobileEl], 'App failed to initialize. Open browser console for details.');
+    setBuildMarker();
+    window.setTimeout(() => map.invalidateSize(), 0);
+  }
+  window.addEventListener('load', () => {
+    forcePageTop();
+    clearSearchInputOnLoad();
+    setTimeout(forcePageTop, 0);
+    setTimeout(clearSearchInputOnLoad, 0);
+    setTimeout(forcePageTop, 150);
+    setTimeout(clearSearchInputOnLoad, 150);
+  });
+
+  window.addEventListener('pageshow', () => {
+    forcePageTop();
+    clearSearchInputOnLoad();
+    setTimeout(forcePageTop, 0);
+    setTimeout(clearSearchInputOnLoad, 0);
+    setTimeout(forcePageTop, 150);
+    setTimeout(clearSearchInputOnLoad, 150);
+  });
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+

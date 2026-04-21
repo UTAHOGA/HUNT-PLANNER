@@ -3,537 +3,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
-  <title>U.O.G.A. Hunt Planner | Hard Data</title>
-  <link rel="stylesheet" href="./style.css?v=20260420-hardcopy-1" />
+  <title>U.O.G.A. Hard Data</title>
   <style>
-    .hardcopy-shell {
-      display: grid;
-      grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
-      gap: 18px;
-      padding: 18px;
-      min-height: 0;
+    :root {
+      --bg: #f6efe4;
+      --panel: rgba(255, 250, 243, 0.96);
+      --line: #c89a6d;
+      --text: #26170f;
+      --muted: #5a4334;
+      --accent: #ff8e1f;
+      --shadow: 0 14px 32px rgba(77, 50, 21, 0.14);
+      --display: Georgia, "Times New Roman", serif;
+      --ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     }
-    .hardcopy-panel,
-    .report-card {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(255, 197, 129, 0.24), transparent 30%),
+        linear-gradient(180deg, #faf3e8, #f2e2cc);
+      color: var(--text);
+      font-family: var(--ui);
+    }
+    a { color: inherit; text-decoration: none; }
+    .shell { min-height: 100%; padding: 16px; }
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: 22px;
+      background: rgba(24, 18, 13, 0.94);
+      color: #fff8f0;
       box-shadow: var(--shadow);
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
     }
-    .hardcopy-panel {
-      padding: 16px;
-      align-self: start;
-      position: sticky;
-      top: 18px;
-    }
-    .hardcopy-panel h2,
-    .report-head h1 {
+    .brand h1 {
       margin: 0;
-      font-family: var(--font-display);
-      line-height: 1;
+      font-family: var(--display);
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.02;
     }
-    .hardcopy-panel h2 {
-      font-size: 28px;
+    .brand p {
+      margin: 6px 0 0;
+      color: #d8c2a8;
+      font-size: 13px;
+      font-weight: 600;
     }
-    .hardcopy-panel p,
-    .report-copy,
-    .source-note {
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    .hardcopy-controls {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .hardcopy-controls .hunt-input {
-      width: 100%;
-    }
-    .hardcopy-actions {
+    .pill-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      justify-content: flex-end;
     }
-    .hardcopy-actions a,
-    .hardcopy-actions button {
-      flex: 1 1 120px;
-      justify-content: center;
-      text-align: center;
-    }
-    .report-card {
+    .page-nav-wrap {
       display: grid;
-      min-width: 0;
+      place-items: center;
+      margin-top: -4px;
+      padding: 0 18px;
     }
-    .report-head {
-      padding: 18px 20px;
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #fff6ed;
+    .page-nav-case {
       display: grid;
+      grid-template-columns: repeat(4, minmax(132px, 1fr));
       gap: 10px;
+      width: min(920px, calc(100vw - 80px));
+      margin: -10px auto 0;
+      padding: 10px;
+      border-radius: 26px;
+      border: 1px solid rgba(255, 164, 80, 0.22);
+      background: linear-gradient(180deg, rgba(33, 25, 18, 0.96), rgba(18, 13, 10, 0.98));
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
     }
-    .report-kicker {
-      margin: 0;
-      font-size: 12px;
+    .page-nav-pill {
+      appearance: none;
+      border: 1px solid rgba(255, 170, 88, 0.24);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(74, 55, 37, 0.97), rgba(40, 30, 22, 0.98));
+      color: #fff7ee;
+      padding: 10px 12px 11px;
+      font-size: 13px;
       font-weight: 900;
-      letter-spacing: .1em;
+      letter-spacing: 0.03em;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 3px 8px rgba(0, 0, 0, 0.18);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+    .page-nav-pill:not(.is-active) {
+      background: linear-gradient(180deg, rgba(67, 50, 34, 0.98), rgba(38, 28, 20, 0.98));
+      color: #fff5ea;
+      border-color: rgba(255, 166, 87, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .page-nav-pill.is-active {
+      background: linear-gradient(180deg, #ff9f2d 0%, #da670e 100%);
+      color: #fffef9;
+      border-color: rgba(255, 194, 109, 0.95);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        0 10px 18px rgba(168, 83, 15, 0.22);
+      transform: translateY(-1px);
+    }
+    .page-nav-title {
+      display: block;
+      font-size: 14px;
+      line-height: 1.08;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.82);
+      font-weight: 900;
     }
-    .report-head h1 {
-      font-size: clamp(26px, 2.8vw, 38px);
+    .page-nav-pill:hover,
+    .page-nav-pill:focus-visible {
+      outline: 2px solid #ffbd6f;
+      outline-offset: 2px;
+      transform: translateY(2px);
+      border-color: rgba(255, 184, 106, 0.95);
+      box-shadow:
+        0 0 0 3px rgba(255, 170, 84, 0.14),
+        0 10px 18px rgba(0, 0, 0, 0.22);
     }
-    .report-copy {
-      color: rgba(255,255,255,0.88);
-      max-width: 72ch;
-      margin: 0;
+    .page-nav-case:hover,
+    .page-nav-case:focus-within {
+      border-color: rgba(255, 174, 87, 0.95);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 160, 62, 0.18);
+      transform: translateY(-1px);
     }
-    .report-body {
-      padding: 18px 20px 22px;
-      display: grid;
-      gap: 18px;
-      background: var(--panel2);
-    }
-    .summary-grid {
+    .content {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .card {
+      border: 1px solid rgba(171, 118, 63, 0.15);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-family: var(--display);
+      font-size: 22px;
+    }
+    .card p { margin: 0 0 12px; color: var(--muted); line-height: 1.5; }
+    .link-grid {
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 10px;
     }
-    .summary-chip {
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      display: grid;
-      gap: 4px;
-    }
-    .summary-chip span {
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .summary-chip strong {
-      font-size: 15px;
-      line-height: 1.25;
-    }
-    .report-section {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
-      overflow: hidden;
-    }
-    .report-section h2 {
-      margin: 0;
-      padding: 12px 14px;
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #fff6ed;
-      font-family: var(--font-display);
-      font-size: 18px;
-      line-height: 1.05;
-    }
-    .report-section-body {
-      padding: 14px;
-    }
-    .kv-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .kv-item {
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.03);
-    }
-    .kv-item small {
+    .link-btn {
       display: block;
-      margin-bottom: 4px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--accent);
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(190, 130, 73, 0.2);
+      background: linear-gradient(180deg, #fff9f0, #f3e4d2);
+      font-weight: 800;
+      color: #4c3424;
     }
-    .kv-item div {
-      font-size: 14px;
-      line-height: 1.35;
-      color: var(--text);
-      word-break: break-word;
+    .link-btn:hover,
+    .link-btn:focus-visible {
+      outline: 2px solid #ffae57;
+      outline-offset: 2px;
+      background: linear-gradient(180deg, #fff3e2, #f9e3c0);
     }
-    .raw-table {
-      display: grid;
-      gap: 8px;
-    }
-    .raw-row {
-      display: grid;
-      grid-template-columns: minmax(160px, 240px) minmax(0, 1fr);
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.03);
-    }
-    .raw-row strong {
-      color: var(--accent);
-      font-size: 12px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-    .raw-row span {
-      font-size: 14px;
-      line-height: 1.35;
-      word-break: break-word;
-    }
-    .lookup-status {
-      margin-top: 12px;
-      padding: 10px 12px;
-      border: 1px dashed var(--accent);
-      border-radius: 12px;
-      background: var(--panel2);
-      color: var(--text);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .lookup-status strong {
-      color: var(--accent);
-    }
-    .source-note {
+    .source-list {
       margin: 0;
+      padding-left: 18px;
+      color: #4a392c;
+      line-height: 1.6;
     }
-    @media (max-width: 980px) {
-      .hardcopy-shell {
-        grid-template-columns: 1fr;
-      }
-      .hardcopy-panel {
-        position: static;
-      }
-      .summary-grid,
-      .kv-grid,
-      .raw-row {
-        grid-template-columns: 1fr;
-      }
+    .note {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff7ed, #f4e2c8);
+      border: 1px solid rgba(188, 126, 70, 0.2);
+      color: #5a4334;
     }
-    @media print {
-      .topbar,
-      .hardcopy-panel,
-      .hardcopy-actions {
-        display: none !important;
-      }
-      body {
-        background: #fff !important;
-        color: #000 !important;
-      }
-      .hardcopy-shell {
-        display: block;
-        padding: 0;
-      }
-      .report-card,
-      .report-section,
-      .summary-chip,
-      .kv-item,
-      .raw-row {
-        box-shadow: none !important;
-        background: #fff !important;
-        color: #000 !important;
-      }
-      .report-head,
-      .report-section h2 {
-        background: #f2f2f2 !important;
-        color: #000 !important;
-      }
-      .report-copy,
-      .source-note,
-      .summary-chip span,
-      .kv-item small,
-      .raw-row strong {
-        color: #444 !important;
-      }
+    @media (max-width: 920px) {
+      .content { grid-template-columns: 1fr; }
+      .page-nav-case { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
-<body class="theme-dark">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-logo-lockup">
-        <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
-          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
-        </a>
-        <div>
-          <h1>U.O.G.A. Hunt Planner</h1>
-          <p>Hard Copy Data</p>
-        </div>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <h1>U.O.G.A. Hard Data</h1>
+        <p>Source-first page for PDFs, reference maps, and the data pages we have built.</p>
       </div>
-    </div>
-    <div class="controls">
-      <nav class="utility-nav" aria-label="Site sections">
-        <a class="utility-link" href="./index.html">Hunt Planner</a>
-        <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
-        <a class="utility-link active" href="./hard-copy.html" aria-current="page">Hard Data</a>
-        <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
-      </nav>
-      <button id="printBtnTop" type="button" class="secondary">Print</button>
-    </div>
-  </header>
+    </header>
 
-  <main class="hardcopy-shell">
-    <aside class="hardcopy-panel">
-      <h2>Lookup</h2>
-        <p>Open the selected hunt as a printable field sheet. We keep you inside the site and send you back to the planner on close or back.</p>
-      <div class="hardcopy-controls">
-        <div class="field">
-          <label for="huntCodeInput">Hunt code</label>
-          <input id="huntCodeInput" class="hunt-input" type="text" placeholder="DB1041, LE0031, etc." />
+    <nav class="page-nav-case" aria-label="Page navigation">
+      <button class="page-nav-pill" type="button" data-href="index.html">
+        <span class="page-nav-title">Locate</span>
+      </button>
+      <button class="page-nav-pill" type="button" data-href="hunt-research.html">
+        <span class="page-nav-title">Research</span>
+      </button>
+      <button class="page-nav-pill" type="button" data-href="vetting.html">
+        <span class="page-nav-title">Verify</span>
+      </button>
+      <button class="page-nav-pill is-active" type="button" data-href="hard-copy.html" aria-pressed="true">
+        <span class="page-nav-title">Hard Data</span>
+      </button>
+    </nav>
+
+    <main class="content">
+      <section class="card">
+        <h2>Official Source</h2>
+        <p>Use this page to keep the raw source family visible without mixing it into the planner itself.</p>
+        <div class="note">
+          <strong>Best practice:</strong> keep DWR PDFs, source indexes, and validation notes grouped here so the live planner can stay clean.
         </div>
-        <div class="hardcopy-actions">
-          <button id="backBtn" type="button" class="secondary">Back to Planner</button>
-          <button id="loadBtn" type="button">Load Sheet</button>
-          <button id="printBtn" type="button" class="secondary">Print Sheet</button>
-          <a class="outfitter-action-btn" href="./index.html">Planner Home</a>
+      </section>
+
+      <section class="card">
+        <h2>Data Pages</h2>
+        <div class="link-grid">
+          <a class="link-btn" href="source_truth_map.md">Source Truth Map</a>
+          <a class="link-btn" href="page_data_map.md">Page Data Map</a>
+          <a class="link-btn" href="year_file_map.md">Year File Map</a>
+          <a class="link-btn" href="build_order.md">Build Order</a>
         </div>
-      </div>
-      <div id="lookupStatus" class="lookup-status"><strong>Status:</strong> Waiting for a hunt code.</div>
-    </aside>
+      </section>
 
-    <section class="report-card" aria-label="Hard copy report">
-      <header class="report-head">
-        <p class="report-kicker">Printable Hunt Sheet</p>
-        <h1 id="reportTitle">Select a hunt to build the sheet</h1>
-        <p id="reportCopy" class="report-copy">This report pulls from the current canonical hunt data and prints cleanly for desk review or field notes.</p>
-      </header>
-      <div class="report-body">
-        <section class="summary-grid" id="summaryGrid"></section>
+      <section class="card">
+        <h2>Validation</h2>
+        <ul class="source-list">
+          <li>Keep raw files separate from delivery files.</li>
+          <li>Review-only rows stay out of the publish layer.</li>
+          <li>Use this page for hard copy and offline review flow.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
 
-        <section class="report-section">
-          <h2>Core Details</h2>
-          <div class="report-section-body">
-            <div id="coreGrid" class="kv-grid"></div>
-          </div>
-        </section>
-
-        <section class="report-section">
-          <h2>Source Notes</h2>
-          <div class="report-section-body">
-            <div id="sourceGrid" class="kv-grid"></div>
-          </div>
-        </section>
-
-        <section class="report-section">
-          <h2>Raw Fields</h2>
-          <div class="report-section-body">
-            <div id="rawTable" class="raw-table"></div>
-          </div>
-        </section>
-      </div>
-    </section>
-  </main>
-
-  <script src="./config.js?v=20260420-hardcopy-1"></script>
-  <script src="./data.js?v=20260420-hardcopy-1"></script>
   <script>
-    (async () => {
-      const huntCodeInput = document.getElementById('huntCodeInput');
-      const backBtn = document.getElementById('backBtn');
-      const loadBtn = document.getElementById('loadBtn');
-      const printBtn = document.getElementById('printBtn');
-      const printBtnTop = document.getElementById('printBtnTop');
-      const lookupStatus = document.getElementById('lookupStatus');
-      const reportTitle = document.getElementById('reportTitle');
-      const reportCopy = document.getElementById('reportCopy');
-      const summaryGrid = document.getElementById('summaryGrid');
-      const coreGrid = document.getElementById('coreGrid');
-      const sourceGrid = document.getElementById('sourceGrid');
-      const rawTable = document.getElementById('rawTable');
-      const plannerUrl = './index.html';
-
-      const normalize = (value) => String(value ?? '').trim().toUpperCase();
-      const firstNonEmpty = (...values) => {
-        for (const value of values) {
-          const text = String(value ?? '').trim();
-          if (text) return text;
-        }
-        return '';
-      };
-      const escapeHtml = (value) => String(value ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-
-      async function fetchFirstJson(candidates) {
-        for (const candidate of candidates) {
-          try {
-            const resp = await fetch(candidate, { cache: 'no-store' });
-            if (!resp.ok) continue;
-            return await resp.json();
-          } catch (error) {
-            console.warn('Hard copy source failed:', candidate, error);
-          }
-        }
-        return null;
-      }
-
-      async function loadCanonicalRecords() {
-        const candidateGroups = Array.isArray(window.UOGA_CONFIG?.HUNT_DATA_SOURCES)
-          ? window.UOGA_CONFIG.HUNT_DATA_SOURCES
-          : [{ candidates: ['./data/hunt-master-canonical.json', './data/utah-hunt-planner-master-all.json'] }];
-        for (const group of candidateGroups) {
-          const json = await fetchFirstJson(group.candidates || []);
-          const records = Array.isArray(json?.records) ? json.records : (Array.isArray(json) ? json : []);
-          if (records.length) return records;
-        }
-        return [];
-      }
-
-      function returnToPlanner() {
-        window.location.replace(plannerUrl);
-      }
-
-      function getCode(record) {
-        return normalize(firstNonEmpty(record.hunt_code, record.huntCode, record.hunt_number, record.Hunt_Number, record.code));
-      }
-
-      function getField(record, ...keys) {
-        for (const key of keys) {
-          const value = record?.[key];
-          if (String(value ?? '').trim()) return value;
-        }
-        return '';
-      }
-
-      function chip(label, value) {
-        return `<div class="summary-chip"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value || 'Not listed')}</strong></div>`;
-      }
-
-      function kvItem(label, value) {
-        return `<div class="kv-item"><small>${escapeHtml(label)}</small><div>${escapeHtml(value || 'Not listed')}</div></div>`;
-      }
-
-      function rawRow(label, value) {
-        return `<div class="raw-row"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(value || 'Not listed')}</span></div>`;
-      }
-
-      function render(record, sourceLabel = '') {
-        const code = getCode(record);
-        const name = firstNonEmpty(getField(record, 'hunt_name', 'huntName', 'title', 'huntTitle'), code || 'Select a hunt');
-        const species = firstNonEmpty(getField(record, 'species', 'Species'), 'Not listed');
-        const unit = firstNonEmpty(getField(record, 'unit', 'unitName', 'unit_name', 'dwr_unit_name'), 'Not listed');
-        const weapon = firstNonEmpty(getField(record, 'weapon', 'Weapon'), 'Not listed');
-        const huntType = firstNonEmpty(getField(record, 'hunt_type', 'huntType'), 'Not listed');
-        const huntClass = firstNonEmpty(getField(record, 'hunt_class', 'huntClass'), 'Not listed');
-        const access = firstNonEmpty(getField(record, 'access_type', 'accessType'), 'Not listed');
-        const residency = firstNonEmpty(getField(record, 'residency', 'Residency'), 'Not listed');
-        const permits = firstNonEmpty(getField(record, 'permits_2026_total', 'permits', 'public_permits_2026', 'public_permits_2025'), 'Not listed');
-        const harvest = firstNonEmpty(getField(record, 'harvest_2025', 'harvest', 'hunters_2025'), 'Not listed');
-        const success = firstNonEmpty(getField(record, 'success_percent_2025', 'success_rate', 'odds_2025'), 'Not listed');
-        const sourceFile = firstNonEmpty(getField(record, 'source_file_2026', 'source_pdf', 'sourceFile', 'sourceGuide'), sourceLabel);
-        const sourcePage = firstNonEmpty(getField(record, 'sourcePage', 'source_page', 'page_ref'), 'Not listed');
-        const dataStatus = firstNonEmpty(getField(record, 'data_status', 'status', 'record_status'), 'Not listed');
-        const drawFamily = firstNonEmpty(getField(record, 'draw_family', 'drawFamily'), 'Not listed');
-        const boundaryLink = firstNonEmpty(getField(record, 'boundaryLink', 'boundary_link'), 'Not listed');
-
-        reportTitle.textContent = code ? `${code} - ${name}` : 'Select a hunt to build the sheet';
-        reportCopy.textContent = code
-          ? `${species} · ${unit} · ${weapon} · ${huntType}`
-          : 'This report pulls from the current canonical hunt data and prints cleanly for desk review or field notes.';
-
-        summaryGrid.innerHTML = [
-          chip('Hunt Code', code || 'Not listed'),
-          chip('Species', species),
-          chip('Unit', unit),
-          chip('Weapon', weapon),
-          chip('Type', huntType),
-          chip('Residency', residency)
-        ].join('');
-
-        coreGrid.innerHTML = [
-          kvItem('Hunt Name', name),
-          kvItem('Hunt Class', huntClass),
-          kvItem('Access Type', access),
-          kvItem('Draw Family', drawFamily),
-          kvItem('Permits', permits),
-          kvItem('Harvest / Hunters', harvest),
-          kvItem('Success / Odds', success),
-          kvItem('Data Status', dataStatus)
-        ].join('');
-
-        sourceGrid.innerHTML = [
-          kvItem('Source File', sourceFile),
-          kvItem('Source Page', sourcePage),
-          kvItem('Boundary Link', boundaryLink),
-          kvItem('Source Label', sourceLabel || 'Canonical hunt data')
-        ].join('');
-
-        const orderedKeys = Object.keys(record || {}).sort((a, b) => a.localeCompare(b));
-        rawTable.innerHTML = orderedKeys.map((key) => rawRow(key, record[key])).join('');
-        lookupStatus.innerHTML = `<strong>Status:</strong> ${code ? `Loaded ${escapeHtml(code)} from ${escapeHtml(sourceLabel || 'canonical source')}.` : 'Waiting for a hunt code.'}`;
-      }
-
-      function resolveInitialCode() {
-        const params = new URLSearchParams(window.location.search || '');
-        return normalize(params.get('hunt_code') || localStorage.getItem('selected_hunt_code') || '');
-      }
-
-      async function loadSheet() {
-        const code = normalize(huntCodeInput.value || resolveInitialCode());
-        if (code) huntCodeInput.value = code;
-        const records = await loadCanonicalRecords();
-        if (!records.length) {
-          lookupStatus.innerHTML = '<strong>Status:</strong> Unable to load canonical hunt data.';
-          reportTitle.textContent = 'No data loaded';
-          reportCopy.textContent = 'Check the source paths or refresh the year files before printing.';
-          return;
-        }
-        const match = records.find((record) => getCode(record) === code) || records.find((record) => getCode(record));
-        if (!match) {
-          lookupStatus.innerHTML = `<strong>Status:</strong> No matching hunt was found for <strong>${escapeHtml(code || 'blank')}</strong>.`;
-          reportTitle.textContent = 'No matching hunt found';
-          reportCopy.textContent = 'Try a different hunt code from the planner or use the selected hunt already in local storage.';
-          summaryGrid.innerHTML = '';
-          coreGrid.innerHTML = '';
-          sourceGrid.innerHTML = '';
-          rawTable.innerHTML = '';
-          return;
-        }
-        if (code) localStorage.setItem('selected_hunt_code', code);
-        render(match, 'Canonical hunt master');
-      }
-
-      loadBtn.addEventListener('click', loadSheet);
-      backBtn.addEventListener('click', returnToPlanner);
-      printBtn.addEventListener('click', () => window.print());
-      printBtnTop.addEventListener('click', () => window.print());
-      huntCodeInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          loadSheet();
-        }
+    document.querySelectorAll('.page-nav-pill[data-href]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const href = button.getAttribute('data-href');
+        if (href) window.location.href = href;
       });
-
-      history.replaceState({ hardData: true }, '', window.location.href);
-      history.pushState({ hardData: true }, '', window.location.href);
-      window.addEventListener('popstate', () => returnToPlanner());
-      window.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          returnToPlanner();
-        }
-      });
-      if (new URLSearchParams(window.location.search || '').get('mode') === 'print') {
-        setTimeout(() => window.print(), 250);
-      }
-
-      const initialCode = resolveInitialCode();
-      if (initialCode) huntCodeInput.value = initialCode;
-      await loadSheet();
-    })().catch((error) => {
-      console.error('Hard copy page failed to load.', error);
-      const status = document.getElementById('lookupStatus');
-      if (status) status.innerHTML = '<strong>Status:</strong> The hard copy page could not load the hunt data.';
     });
   </script>
 </body>

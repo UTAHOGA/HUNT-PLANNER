@@ -1,10 +1,14 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const HOST = '127.0.0.1';
+const HOST = '0.0.0.0';
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4173;
 const ROOT = __dirname;
+const CERT_DIR = path.join(ROOT, 'certs');
+const CERT_KEY_PATH = path.join(CERT_DIR, 'localhost.key');
+const CERT_CRT_PATH = path.join(CERT_DIR, 'localhost.crt');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -35,7 +39,7 @@ function resolvePath(urlPath) {
   return path.join(ROOT, target);
 }
 
-const server = http.createServer((req, res) => {
+function requestHandler(req, res) {
   const filePath = resolvePath(req.url || '/');
 
   if (!filePath.startsWith(ROOT)) {
@@ -61,8 +65,29 @@ const server = http.createServer((req, res) => {
       send(res, 200, data, contentType);
     });
   });
-});
+}
 
-server.listen(PORT, HOST, () => {
-  console.log(`UOGA Hunt Planner local server running at http://${HOST}:${PORT}`);
-});
+function startHttpServer() {
+  const server = http.createServer(requestHandler);
+  server.listen(PORT, HOST, () => {
+    console.log(`UOGA Hunt Planner local server running at http://${HOST}:${PORT}`);
+  });
+}
+
+function startHttpsServer() {
+  const tlsOptions = {
+    key: fs.readFileSync(CERT_KEY_PATH),
+    cert: fs.readFileSync(CERT_CRT_PATH)
+  };
+  const httpsServer = https.createServer(tlsOptions, requestHandler);
+  httpsServer.listen(PORT, HOST, () => {
+    console.log(`UOGA Hunt Planner local server running at https://${HOST}:${PORT}`);
+  });
+}
+
+const hasCert = fs.existsSync(CERT_KEY_PATH) && fs.existsSync(CERT_CRT_PATH);
+if (hasCert) {
+  startHttpsServer();
+} else {
+  startHttpServer();
+}
