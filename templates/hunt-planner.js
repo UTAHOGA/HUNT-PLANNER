@@ -1,0 +1,196 @@
+/**
+ * UOGA Hunt Planner Page Template
+ * Full markup for the Hunt Planner (/) route.
+ */
+window.UOGA_TEMPLATES = window.UOGA_TEMPLATES || {};
+
+window.UOGA_TEMPLATES.huntPlanner = function huntPlanner() {
+  const topbarControls = `
+    <button id="themeToggleBtn" type="button" class="secondary">Light Mode</button>
+    <div class="control-group">
+      <label for="mapTypeSelect">Map</label>
+      <select id="mapTypeSelect">
+        <option value="terrain" selected>Terrain</option>
+        <option value="roadmap">Roadmap</option>
+        <option value="hybrid">Hybrid</option>
+        <option value="satellite">Satellite</option>
+        <option value="globe">Globe</option>
+      </select>
+    </div>
+    <div class="toggle-row">
+      <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+      <details class="toggle-menu">
+        <summary id="federalLayersSummary">Federal</summary>
+        <div class="toggle-menu-panel">
+          <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+          <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+          <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+        </div>
+      </details>
+      <details class="toggle-menu">
+        <summary id="stateLayersSummary">State</summary>
+        <div class="toggle-menu-panel">
+          <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+          <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+          <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+        </div>
+      </details>
+      <details class="toggle-menu">
+        <summary id="privateLayersSummary">Private</summary>
+        <div class="toggle-menu-panel">
+          <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+          <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+        </div>
+      </details>
+    </div>
+    <button id="streetViewBtn" type="button" class="secondary">Street View</button>
+    <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
+  `;
+
+  return `
+    ${window.UOGA_TEMPLATES.topbar('planner', { extraControls: topbarControls })}
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Find a Hunt</h2>
+          <div class="panel-body">
+            <div class="field">
+              <label for="searchInput">Search by hunt number</label>
+              <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
+            </div>
+            <div class="field">
+              <label for="speciesFilter">Species</label>
+              <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
+            </div>
+            <div class="field">
+              <label for="sexFilter">Sex</label>
+              <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="huntTypeFilter">Hunt Type</label>
+              <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="huntCategoryFilter">Hunt Class</label>
+              <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="weaponFilter">Weapon Type</label>
+              <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
+            </div>
+            <div class="field">
+              <label for="unitFilter">DWR Hunt Units</label>
+              <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
+            </div>
+            <div class="filter-actions">
+              <button id="applyFiltersBtn" type="button">Apply Filters</button>
+              <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
+            </div>
+            <div id="status" class="status">Loading map...</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Matching Hunts</h2>
+          <div class="panel-body">
+            <div id="matchingHunts" class="hunt-list">
+              <div class="empty-note">Use filters or click a unit to load hunts.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Selected Hunt</h2>
+          <div class="panel-body" id="selectedHuntPanel">
+            <div class="empty-note">No hunt selected yet.</div>
+          </div>
+        </section>
+      </aside>
+
+      <section class="map-wrap">
+        <div class="map-stage">
+          <div id="map" aria-label="Google DWR mirror map"></div>
+          <div id="globeMap" aria-label="Cesium globe view"></div>
+        </div>
+
+        <div id="mapChooser" class="map-chooser" aria-hidden="true">
+          <div class="map-chooser-head">
+            <div>
+              <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
+              <h3 id="mapChooserTitle" class="map-chooser-title">Matching Hunts</h3>
+            </div>
+            <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
+          </div>
+          <div id="mapChooserBody" class="map-chooser-body">
+            <div class="map-chooser-empty">Click a boundary to load hunts.</div>
+          </div>
+        </div>
+
+        <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
+        <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
+          <div class="globe-basemap-title">Globe Basemap</div>
+          <p class="globe-basemap-note">Switch globe backgrounds.</p>
+          <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
+            <option value="osm">OpenStreetMap</option>
+            <option value="esriImagery">Esri World Imagery</option>
+            <option value="esriTopo">Esri World Topo</option>
+            <option value="esriStreet">Esri World Street</option>
+            <option value="esriNatGeo">Esri NatGeo</option>
+            <option value="usgsImagery">USGS Imagery</option>
+            <option value="usgsTopo">USGS Topo</option>
+            <option value="openTopo">OpenTopoMap</option>
+            <option value="cartoLight">Carto Light</option>
+            <option value="cartoDark">Carto Dark</option>
+          </select>
+          <div id="globeBasemapGrid" class="globe-basemap-grid">
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriStreet">Esri Street</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriNatGeo">Esri NatGeo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="openTopo">OpenTopoMap</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="osm">OpenStreetMap</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoLight">Carto Light</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoDark">Carto Dark</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="rightbar">
+        <div class="rightbar-header">
+          <h2 class="rightbar-header-title">U.O.G.A.</h2>
+          <p class="rightbar-header-subtitle">Verified Outfitters</p>
+        </div>
+        <section class="panel">
+          <h2>Outfitters</h2>
+          <div class="panel-body">
+            <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="#/vetting" data-spa-link="/vetting">See how verification works</a>.</p>
+            <div id="outfitterResults" class="outfitter-list">
+              <div class="empty-note">Select a hunt to load outfitters.</div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <section id="huntDetailsSection" class="hunt-details-section" hidden>
+      <div class="hunt-details-head">
+        <div>
+          <p class="hunt-details-kicker">Official Utah DWR Hunt Details</p>
+          <h2 id="huntDetailsTitle" class="hunt-details-title">Selected Hunt Details</h2>
+          <p id="huntDetailsMeta" class="hunt-details-meta"></p>
+        </div>
+        <button id="closeHuntDetailsBtn" type="button" class="secondary">Close</button>
+      </div>
+      <div class="hunt-details-body">
+        <p class="hunt-details-note">
+          Official details are loaded below so visitors can stay on U.O.G.A. If the DWR page blocks embedding, use
+          <a id="huntDetailsFallbackLink" href="#" target="_blank" rel="noopener noreferrer">this fallback link</a>.
+        </p>
+        <iframe id="huntDetailsFrame" class="hunt-details-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </section>
+  `;
+};
