@@ -75,8 +75,8 @@ window.UOGA_CONFIG = (() => {
       required: true,
       authoritative: true,
       candidates: [
-        `./data/canonical/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
         `./data/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
+        `./data/canonical/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
         `${CLOUDFLARE_BASE}/canonical/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
         `${CLOUDFLARE_BASE}/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
       ],

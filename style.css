@@ -16,7 +16,7 @@
       --shadow: 0 10px 28px rgba(58, 37, 18, 0.16);
       --font-display: Georgia, "Times New Roman", serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-      --bg-image: url('./assets/logos/backgrounds/topo-black-with-hills.jpg');
+      --bg-image: url('./assets/logos/gray-white-topo.png');
     }
 
     /* --- DARK MODE (U.O.G.A. WEBSITE MATCH) VARIABLES --- */
@@ -36,7 +36,7 @@
       --selected-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
       --shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
       --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
-      --bg-image: url('./assets/logos/backgrounds/topo-black-with-hills.jpg');
+      --bg-image: url('./assets/logos/gray-white-topo.png');
     }
 
     * { box-sizing: border-box; }
