@@ -565,7 +565,7 @@ window.UOGA_UI = (() => {
         </span>
         <span class="uoga-backpack-labels">
           <span class="uoga-backpack-title">Hunt Pack</span>
-          <span class="uoga-backpack-subtitle">Recent + packed hunts</span>
+          <span class="uoga-backpack-subtitle">Recent + saved hunts</span>
         </span>
         <span class="uoga-backpack-badge" hidden>0</span>
       </button>

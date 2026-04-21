@@ -60,7 +60,7 @@
     .page-nav-wrap {
       display: grid;
       place-items: center;
-      margin-top: -4px;
+      margin-top: clamp(2.25rem, 12vh, 5rem);
       padding: 0 18px;
     }
     .page-nav-case {
@@ -68,7 +68,7 @@
       grid-template-columns: repeat(4, minmax(132px, 1fr));
       gap: 10px;
       width: min(920px, calc(100vw - 80px));
-      margin: -10px auto 0;
+      margin: 0 auto;
       padding: 10px;
       border-radius: 26px;
       border: 1px solid rgba(255, 164, 80, 0.22);
@@ -200,20 +200,22 @@
       </div>
     </header>
 
-    <nav class="page-nav-case" aria-label="Page navigation">
-      <button class="page-nav-pill" type="button" data-href="index.html">
-        <span class="page-nav-title">Locate</span>
-      </button>
-      <button class="page-nav-pill" type="button" data-href="hunt-research.html">
-        <span class="page-nav-title">Research</span>
-      </button>
+    <div class="page-nav-wrap">
+      <nav class="page-nav-case" aria-label="Page navigation">
+        <button class="page-nav-pill" type="button" data-href="index.html">
+          <span class="page-nav-title">Locate</span>
+        </button>
+        <button class="page-nav-pill" type="button" data-href="hunt-research.html">
+          <span class="page-nav-title">Research</span>
+        </button>
         <button class="page-nav-pill" type="button" data-href="vetting.html">
           <span class="page-nav-title">Verify</span>
         </button>
         <button class="page-nav-pill is-active" type="button" data-href="hard-copy.html" aria-pressed="true">
           <span class="page-nav-title">Contact</span>
         </button>
-    </nav>
+      </nav>
+    </div>
 
     <main class="content">
       <section class="card">
