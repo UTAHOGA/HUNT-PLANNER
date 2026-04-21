@@ -139,6 +139,18 @@ function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
   window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
 }
 
+function initSlideBubbleNav() {
+  document.querySelectorAll('[data-slide-target]').forEach(link => {
+    link.addEventListener('click', event => {
+      const targetId = safe(link.getAttribute('data-slide-target'));
+      const target = targetId ? document.getElementById(targetId) : null;
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    });
+  });
+}
+
 // --- DATA NORMALIZATION ---
 function normalizeSpeciesLabel(value) {
   const text = safe(value).trim().toLowerCase();
@@ -3268,6 +3280,7 @@ function bootstrapPendingHuntSelection() {
 
 // --- BOOTSTRAP ---
 document.addEventListener('DOMContentLoaded', async () => {
+  initSlideBubbleNav();
   // Load Map
   const script = document.createElement('script');
   script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&callback=initGoogleBaseline`;

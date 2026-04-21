@@ -24,6 +24,7 @@
       <nav class="utility-nav" aria-label="Site sections">
         <a class="utility-link active" href="./index.html" aria-current="page">Hunt Planner</a>
         <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
+        <a class="utility-link" href="./hard-copy.html">Hard Data</a>
         <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
       </nav>
       <button id="themeToggleBtn" type="button" class="secondary">Light Mode</button>
@@ -74,15 +75,15 @@
     <p>Then map it, analyze it, and hunt it right.</p>
   </section>
 
-  <section class="quick-start" aria-label="Quick start steps">
-    <div class="qs-step">1. Select a hunt unit or filter</div>
-    <div class="qs-step">2. Choose a hunt</div>
-    <div class="qs-step">3. Analyze draw odds</div>
-    <div class="qs-step">4. Match with outfitters</div>
+  <section class="quick-start" aria-label="Site sections">
+    <a class="qs-step" href="#build-hunt-panel" data-slide-target="build-hunt-panel">Hunt Planner</a>
+    <a class="qs-step" href="./hunt-research.html">Hunt Research</a>
+    <a class="qs-step" href="./vetting.html">Outfitters</a>
+    <a class="qs-step" href="./hard-copy.html">Hard Data</a>
   </section>
 
   <main class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar planner-slide" id="build-hunt-panel">
       <section class="panel">
         <h2>Build Your Hunt</h2>
         <div class="panel-body">
@@ -122,7 +123,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" id="available-hunts">
         <h2>Available Hunts</h2>
         <div class="panel-body">
           <div id="matchingHunts" class="hunt-list">
@@ -130,25 +131,9 @@
           </div>
         </div>
       </section>
-
-      <section class="panel">
-        <h2>Hunt Analysis</h2>
-        <div class="panel-body" id="selectedHuntPanel">
-          <div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h2>Saved Hunts</h2>
-        <div class="panel-body">
-          <div id="huntBasket" class="hunt-list">
-            <div class="empty-note">Save hunts to compare them here.</div>
-          </div>
-        </div>
-      </section>
     </aside>
 
-    <section class="map-wrap">
+    <section class="map-wrap planner-slide" id="slide-map">
       <div class="map-stage">
         <div id="map" aria-label="Google DWR mirror map"></div>
         <div id="globeMap" aria-label="Cesium globe view"></div>
@@ -198,7 +183,25 @@
       </div>
     </section>
 
-    <aside class="rightbar">
+    <aside class="analysis-column planner-slide" id="hunt-analysis">
+      <section class="panel">
+        <h2>Hunt Analysis</h2>
+        <div class="panel-body" id="selectedHuntPanel">
+          <div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Saved Hunts</h2>
+        <div class="panel-body">
+          <div id="huntBasket" class="hunt-list">
+            <div class="empty-note">Save hunts to compare them here.</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <aside class="rightbar planner-slide" id="outfitters-panel">
       <div class="rightbar-header">
         <h2 class="rightbar-header-title">U.O.G.A.</h2>
         <p class="rightbar-header-subtitle">Verified Outfitters</p>
@@ -209,6 +212,16 @@
           <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="./vetting.html">See how verification works</a>.</p>
           <div id="outfitterResults" class="outfitter-list">
             <div class="empty-note">Select a hunt to load outfitters.</div>
+          </div>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Hard Data</h2>
+        <div class="panel-body">
+          <p class="helper" style="margin-bottom:12px;">Open a print-friendly field sheet for the current hunt. Good for desk review, notes, and quick offline sharing.</p>
+          <div class="hard-copy-actions">
+            <a class="outfitter-action-btn primary" href="./hard-copy.html">Open Hard Data Page</a>
+            <a class="outfitter-action-btn" href="./hard-copy.html?mode=print">Print View</a>
           </div>
         </div>
       </section>
@@ -242,4 +255,3 @@
   <script src="app.js?v=20260404-selection-matrix-fix-1"></script>
 </body>
 </html>
-
