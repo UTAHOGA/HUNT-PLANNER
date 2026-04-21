@@ -3,393 +3,195 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>U.O.G.A. | Outfitter Verification</title>
+  <title>U.O.G.A. Outfitter Verification</title>
   <style>
     :root {
-      --bg: #141414;
-      --panel: rgba(35, 30, 26, 0.9);
-      --panel-strong: rgba(28, 24, 20, 0.96);
-      --panel2: #2b231d;
-      --line: #5c412d;
-      --line-soft: rgba(244, 239, 228, 0.12);
-      --text: #f4efe4;
-      --muted: #b39c88;
-      --accent: #ff6600;
-      --accent-dark: #cc5200;
-      --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
-      --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
-      --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --bg: #f6efe4;
+      --panel: rgba(255, 250, 243, 0.96);
+      --line: #c89a6d;
+      --text: #26170f;
+      --muted: #5a4334;
+      --accent: #ff8e1f;
+      --shadow: 0 14px 32px rgba(77, 50, 21, 0.14);
+      --display: Georgia, "Times New Roman", serif;
+      --ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     }
-
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-
+    html, body { height: 100%; margin: 0; }
     body {
       background:
-        linear-gradient(180deg, rgba(17, 15, 13, 0.82), rgba(17, 15, 13, 0.90)),
-        url('./assets/logos/gray-white-topo.png') center top / 100% auto repeat-y;
+        radial-gradient(circle at top left, rgba(255, 197, 129, 0.24), transparent 30%),
+        linear-gradient(180deg, #faf3e8, #f2e2cc);
       color: var(--text);
-      font-family: var(--font-ui);
+      font-family: var(--ui);
     }
-
-    a { color: #7cbcf7; }
-
-    .shell {
-      width: min(1200px, calc(100vw - 28px));
-      margin: 0 auto;
-      padding: 20px 0 40px;
-    }
-
+    a { color: inherit; text-decoration: none; }
+    .shell { min-height: 100%; padding: 16px; }
     .topbar {
       display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      padding: 16px 18px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .brand img {
-      height: 72px;
-      width: auto;
-      background: #fff;
-      border-radius: 6px;
-      padding: 2px;
-    }
-
-    .brand-copy h1 {
-      margin: 0;
-      font-family: var(--font-display);
-      font-size: 32px;
-      line-height: .98;
-      text-transform: uppercase;
-    }
-
-    .brand-copy p {
-      margin: 6px 0 0;
-      color: var(--accent);
-      font-size: 22px;
-      font-family: var(--font-display);
-      line-height: 1.08;
-      text-transform: none;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .nav a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 800;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      font-size: 12px;
-    }
-
-    .nav a.active,
-    .nav a:hover {
-      border-color: var(--accent);
-      background: rgba(255, 102, 0, 0.16);
-    }
-
-    .nav-icon-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      box-shadow: none;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .nav-icon-link img {
-      display: block;
-      width: auto;
-      height: 54px;
-      border-radius: 8px;
-      background: #fff;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
-      transition: transform 0.14s ease, box-shadow 0.14s ease;
-    }
-
-    .nav-icon-link:hover img,
-    .nav-icon-link:focus-visible img {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
-    }
-
-    .hero {
-      margin-top: 18px;
-      padding: 30px 28px;
-      border: 1px solid var(--line);
+      padding: 14px 16px;
       border-radius: 22px;
-      background:
-        linear-gradient(135deg, rgba(255, 102, 0, 0.14), rgba(255, 102, 0, 0) 44%),
-        var(--panel-strong);
+      background: rgba(24, 18, 13, 0.94);
+      color: #fff8f0;
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
     }
-
-    .hero h2 {
+    .brand h1 {
       margin: 0;
-      max-width: 980px;
-      font-family: var(--font-display);
-      font-size: clamp(30px, 4.5vw, 52px);
-      line-height: 1.06;
-      color: var(--accent);
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-      text-transform: none;
+      font-family: var(--display);
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.02;
     }
-
-    .hero-sub {
-      margin: 14px auto 0;
-      max-width: 760px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.5;
+    .brand p {
+      margin: 6px 0 0;
+      color: #d8c2a8;
+      font-size: 13px;
+      font-weight: 600;
     }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 22px;
-      justify-content: center;
-    }
-
-    .hero-actions a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 800;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      font-size: 12px;
-      background: var(--panel2);
-    }
-
-    .hero-actions a.primary {
-      border-color: transparent;
-      color: #fff6ed;
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-    }
-
-    .hero-actions a:hover {
-      border-color: var(--accent);
-    }
-
-    .status-chips {
+    .pill-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 18px;
-      justify-content: center;
+      justify-content: flex-end;
     }
-
-    .status-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 102, 0, 0.28);
-      background: rgba(255, 102, 0, 0.12);
-      color: var(--text);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-    .layout {
+    .page-nav-wrap {
       display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 18px;
+      place-items: center;
+      margin-top: clamp(2.25rem, 12vh, 5rem);
+      padding: 0 18px;
     }
-
-    .card {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+    .page-nav-case {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(132px, 1fr));
+      gap: 10px;
+      width: min(920px, calc(100vw - 80px));
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 26px;
+      border: 1px solid rgba(255, 164, 80, 0.22);
+      background: linear-gradient(180deg, rgba(33, 25, 18, 0.96), rgba(18, 13, 10, 0.98));
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
     }
-
-    .card h4 {
-      margin: 0 0 8px;
-      color: var(--accent);
+    .page-nav-pill {
+      appearance: none;
+      border: 1px solid rgba(255, 170, 88, 0.24);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(74, 55, 37, 0.97), rgba(40, 30, 22, 0.98));
+      color: #fff7ee;
+      padding: 10px 12px 11px;
       font-size: 13px;
       font-weight: 900;
-      letter-spacing: .1em;
-      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 3px 8px rgba(0, 0, 0, 0.18);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
     }
-
-    .card h3 {
-      margin: 0 0 14px;
-      font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1.05;
+    .page-nav-pill:not(.is-active) {
+      background: linear-gradient(180deg, rgba(67, 50, 34, 0.98), rgba(38, 28, 20, 0.98));
+      color: #fff5ea;
+      border-color: rgba(255, 166, 87, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
     }
-
-    .card p,
-    .card li {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 15px;
+    .page-nav-pill.is-active {
+      background: linear-gradient(180deg, #ff9f2d 0%, #da670e 100%);
+      color: #fffef9;
+      border-color: rgba(255, 194, 109, 0.95);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        0 10px 18px rgba(168, 83, 15, 0.22);
+      transform: translateY(-1px);
     }
-
-    .card ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .span-4 { grid-column: span 4; }
-    .span-5 { grid-column: span 5; }
-    .span-6 { grid-column: span 6; }
-    .span-7 { grid-column: span 7; }
-    .span-8 { grid-column: span 8; }
-    .span-12 { grid-column: span 12; }
-
-    .definition-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .definition {
-      padding: 18px;
-      border: 1px solid var(--line-soft);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .definition strong {
+    .page-nav-title {
       display: block;
-      margin-bottom: 10px;
-      color: var(--text);
-      font-size: 18px;
-      letter-spacing: .02em;
+      font-size: 14px;
+      line-height: 1.08;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 900;
     }
-
-    .callout {
-      padding: 18px 20px;
-      border-radius: 18px;
-      border: 1px solid rgba(255, 102, 0, 0.32);
-      background: rgba(255, 102, 0, 0.12);
+    .page-nav-pill:hover,
+    .page-nav-pill:focus-visible {
+      outline: 2px solid #ffbd6f;
+      outline-offset: 2px;
+      transform: translateY(2px);
+      border-color: rgba(255, 184, 106, 0.95);
+      box-shadow:
+        0 0 0 3px rgba(255, 170, 84, 0.14),
+        0 10px 18px rgba(0, 0, 0, 0.22);
     }
-
-    .callout p,
-    .callout li {
-      margin: 0;
-      color: var(--text);
-      line-height: 1.6;
+    .page-nav-case:hover,
+    .page-nav-case:focus-within {
+      border-color: rgba(255, 174, 87, 0.95);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 160, 62, 0.18);
+      transform: translateY(-1px);
     }
-
-    .callout ul {
-      margin: 0;
-      padding-left: 18px;
+    .content {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      margin-top: 16px;
     }
-
-    .footer-note {
-      margin-top: 18px;
-      padding: 20px 22px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
+    .card {
+      border: 1px solid rgba(171, 118, 63, 0.15);
+      border-radius: 22px;
       background: var(--panel);
       box-shadow: var(--shadow);
+      padding: 18px;
     }
-
-    .footer-note h3 {
+    .card h2 {
       margin: 0 0 10px;
-      font-family: var(--font-display);
-      font-size: 24px;
-      line-height: 1.05;
+      font-family: var(--display);
+      font-size: 22px;
     }
-
-    .footer-note ul {
+    .card p { margin: 0 0 12px; color: var(--muted); line-height: 1.5; }
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .link-btn {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(190, 130, 73, 0.2);
+      background: linear-gradient(180deg, #fff9f0, #f3e4d2);
+      font-weight: 800;
+      color: #4c3424;
+    }
+    .link-btn:hover,
+    .link-btn:focus-visible {
+      outline: 2px solid #ffae57;
+      outline-offset: 2px;
+      background: linear-gradient(180deg, #fff3e2, #f9e3c0);
+    }
+    .source-list {
       margin: 0;
       padding-left: 18px;
-    }
-
-    .footer-note li {
-      color: var(--muted);
+      color: #4a392c;
       line-height: 1.6;
     }
-
-    @media (max-width: 980px) {
-      .definition-grid { grid-template-columns: 1fr; }
-      .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+    .status-box {
+      border-radius: 18px;
+      padding: 14px;
+      background: linear-gradient(180deg, #fff7ed, #f4e2c8);
+      border: 1px solid rgba(188, 126, 70, 0.2);
     }
-
-    @media (max-width: 760px) {
-      .shell {
-        width: min(100vw - 20px, 1200px);
-        padding-top: 14px;
-      }
-
-      .topbar, .hero, .card, .footer-note {
-        padding: 18px;
-      }
-
-      .brand {
-        align-items: flex-start;
-      }
-
-      .brand img {
-        height: 58px;
-      }
-
-      .brand-copy h1 {
-        font-size: 26px;
-      }
-
-      .brand-copy p {
-        font-size: 18px;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-      }
-
-      .hero-actions a {
-        width: 100%;
-      }
+    .status-box strong { display: block; margin-bottom: 6px; }
+    .footer-note {
+      margin-top: 16px;
+      color: #6c5140;
+      font-size: 12px;
+    }
+    @media (max-width: 920px) {
+      .content, .link-grid { grid-template-columns: 1fr; }
+      .page-nav-case { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -397,196 +199,58 @@
   <div class="shell">
     <header class="topbar">
       <div class="brand">
-        <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. logo">
-        <div class="brand-copy">
-          <h1>U.O.G.A. Outfitter Verification</h1>
-          <p>Professional standards. Clear public trust.</p>
-        </div>
+        <h1>U.O.G.A. Outfitters</h1>
+        <p>Separate verification page for outfitter discovery and trust checks.</p>
       </div>
-
-      <nav class="nav">
-        <a href="./index.html">Hunt Planner</a>
-        <a href="./hunt-research.html">Hunt Research</a>
-        <a href="./vetting.html" class="active">Outfitter Verification</a>
-        <a
-          href="#dwr-registration-floor"
-          class="nav-icon-link"
-          title="Jump to Utah DWR registration note"
-          aria-label="Jump to Utah DWR registration note"
-        >
-          <img src="./assets/logos/DWR-CWMU-LOGO.png" alt="Utah DWR" />
-        </a>
-      </nav>
     </header>
 
-    <section class="hero">
-      <h2>Reviewed outfitters. Clearer trust signal.</h2>
-      <p class="hero-sub">Verified identity. Reviewed operations. Public standing.</p>
+    <div class="page-nav-wrap">
+      <nav class="page-nav-case" aria-label="Page navigation">
+        <button class="page-nav-pill" type="button" data-href="index.html">
+          <span class="page-nav-title">Locate</span>
+        </button>
+        <button class="page-nav-pill" type="button" data-href="hunt-research.html">
+          <span class="page-nav-title">Research</span>
+        </button>
+        <button class="page-nav-pill is-active" type="button" data-href="vetting.html" aria-pressed="true">
+          <span class="page-nav-title">Verify</span>
+        </button>
+        <button class="page-nav-pill" type="button" data-href="hard-copy.html">
+          <span class="page-nav-title">Contact</span>
+        </button>
+      </nav>
+    </div>
 
-      <div class="status-chips">
-        <span class="status-chip">Verified</span>
-        <span class="status-chip">Verified</span>
-        <span class="status-chip">C.P.O.</span>
-      </div>
-
-      <div class="hero-actions">
-        <a class="primary" href="./index.html">Return to Hunt Planner</a>
-        <a href="./hunt-research.html">Open Hunt Research</a>
-      </div>
-    </section>
-
-    <section class="layout">
-      <article class="card span-12">
-        <h4>At a Glance</h4>
-        <h3>What it means</h3>
-        <ul>
-          <li>Only reviewed outfitters are publicly listed</li>
-          <li>Designation is meant to create a trust signal</li>
-          <li>Not every outfitter qualifies for public listing</li>
-          <li>Higher designation requires stronger standing</li>
-        </ul>
-      </article>
-
-      <article class="card span-12">
-        <h4>Designation Levels</h4>
-        <h3>Public designation levels</h3>
-        <div class="definition-grid">
-          <div class="definition">
-            <strong>Verified</strong>
-            <ul>
-              <li>Baseline public review designation</li>
-              <li>Identity and business profile reviewed</li>
-              <li>Source data compared</li>
-              <li>Suitable for public listing</li>
-            </ul>
-          </div>
-
-          <div class="definition">
-            <strong>Certified Professional Outfitter (C.P.O.)</strong>
-            <ul>
-              <li>Higher internal designation</li>
-              <li>All Verified standards already satisfied</li>
-              <li>Stronger overall readiness and standing</li>
-              <li>Reserved for higher-confidence operators</li>
-            </ul>
-          </div>
-
-          <div class="definition">
-            <strong>Unpublished / Hold</strong>
-            <ul>
-              <li>Incomplete record</li>
-              <li>Unresolved conflict</li>
-              <li>Not review ready</li>
-              <li>Not publicly designated</li>
-            </ul>
-          </div>
+    <main class="content">
+      <section class="card">
+        <h2>Verification</h2>
+        <p>This page stays separate from the planner, but it still feels like part of the same site flow.</p>
+        <div class="status-box">
+          <strong>Current focus</strong>
+          Match outfitters by unit, species, and service region. Keep the planner as the main home page and use this as the verification layer.
         </div>
-      </article>
+      </section>
 
-      <article class="card span-5">
-        <h4>Why It Exists</h4>
-        <h3>Why it exists</h3>
-        <ul>
-          <li>Filters weak or unreliable listings</li>
-          <li>Creates professional distinction for outfitters</li>
-          <li>Gives hunters a stronger trust signal</li>
-          <li>Raises the standard above a raw list of names</li>
-        </ul>
-      </article>
-
-      <article class="card span-7">
-        <h4>Verified Means</h4>
-        <h3>Baseline trust for listing</h3>
-        <ul>
-          <li>Business identity is sufficiently confirmed</li>
-          <li>Contact information is usable</li>
-          <li>Operating relevance is clear enough to publish</li>
-          <li>Available source data is reasonably consistent</li>
-          <li>No major unresolved conflict remains</li>
-        </ul>
-      </article>
-
-      <article class="card span-6">
-        <h4>Verified Standard</h4>
-        <h3>Verified standard</h3>
-        <ul>
-          <li>Identity and business information reviewed</li>
-          <li>Contact information current enough to list</li>
-          <li>Registration or licensure identified where applicable</li>
-          <li>Services and authority claims are clear</li>
-          <li>No major inconsistency blocks publication</li>
-        </ul>
-      </article>
-
-      <article class="card span-6">
-        <h4>C.P.O. Standard</h4>
-        <h3>Higher professional standing</h3>
-        <ul>
-          <li>All Verified requirements already met</li>
-          <li>Stronger business completeness and reliability</li>
-          <li>Stronger responsiveness and readiness</li>
-          <li>Cleaner regulatory and operating standing where applicable</li>
-          <li>No material concern that undercuts higher designation</li>
-        </ul>
-      </article>
-
-      <article class="card span-7">
-        <h4>How Review Works</h4>
-        <h3>How review works</h3>
-        <ul>
-          <li>Outfitter submits business and operating information</li>
-          <li>U.O.G.A. compares it against available sources</li>
-          <li>Record is reviewed for clarity, consistency, and standing</li>
-          <li>Result: Verified, C.P.O., or not published</li>
-        </ul>
-      </article>
-
-      <article class="card span-5">
-        <h4>What Gets Reviewed</h4>
-        <h3>Sources used</h3>
-        <ul>
-          <li>Submitted outfitter information</li>
-          <li>Public business presence and contact data</li>
-          <li>Website and social-business identity</li>
-          <li>Government-source information where available</li>
-          <li>Federal and state permit-reference information where available</li>
-        </ul>
-      </article>
-
-      <article class="card span-12" id="dwr-registration-floor">
-        <h4>Regulatory Floor</h4>
-        <h3>Utah DWR registration matters</h3>
-        <div class="callout">
-          <ul>
-            <li>Where Utah DWR registration is required, that status matters in review</li>
-            <li>U.O.G.A. does not replace DWR authority</li>
-            <li>Public designation should reflect whether that baseline is addressed</li>
-          </ul>
+      <section class="card">
+        <h2>Reference Links</h2>
+        <div class="link-grid">
+          <a class="link-btn" href="source_truth_map.md">Source Truth Map</a>
+          <a class="link-btn" href="page_data_map.md">Page Data Map</a>
+          <a class="link-btn" href="year_file_map.md">Year File Map</a>
+          <a class="link-btn" href="OFFLINE_WORKSPACE_MAP.md">Workspace Map</a>
         </div>
-      </article>
-
-      <article class="card span-12">
-        <h4>Important Limitation</h4>
-        <h3>What designation does not mean</h3>
-        <ul>
-          <li>Not a license</li>
-          <li>Not a permit grant</li>
-          <li>Not a land-access guarantee</li>
-          <li>Not an agency authorization</li>
-          <li>Not a legal determination</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="footer-note">
-      <h3>Ongoing review still applies</h3>
-      <ul>
-        <li>Designation may require updated information</li>
-        <li>U.O.G.A. may re-review records over time</li>
-        <li>Designation may be removed if information becomes incomplete, inconsistent, outdated, or unreliable</li>
-      </ul>
-    </section>
+        <p class="footer-note">When this page is opened from the planner deck, the back button slides you back to the planner panel.</p>
+      </section>
+    </main>
   </div>
-  <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
+
+  <script>
+    document.querySelectorAll('.page-nav-pill[data-href]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const href = button.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+    });
+  </script>
 </body>
 </html>

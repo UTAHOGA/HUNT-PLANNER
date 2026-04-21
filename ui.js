@@ -158,7 +158,7 @@ window.UOGA_UI = (() => {
       const emptyTitle = sectionType === 'saved' ? 'No saved hunts yet' : 'No recent hunts yet';
       const emptyCopy = sectionType === 'saved'
         ? 'Save a hunt from Hunt Research to keep a field-ready short list for clients.'
-        : 'Open hunts in Planner or Hunt Research and they will start appearing in your Hunt Backpack.';
+        : 'Open hunts in Planner or Hunt Research and they will start appearing in your Hunt Pack.';
       return `
         <div class="uoga-backpack-empty">
           <strong>${emptyTitle}</strong>
@@ -198,58 +198,6 @@ window.UOGA_UI = (() => {
     `;
   }
 
-  function renderHuntBasketSidebar() {
-    const el = document.getElementById('huntBasket');
-    if (!el) return;
-    const basket = getBasket();
-    if (!basket.length) {
-      el.innerHTML = '<div class="empty-note">Save hunts to compare them here.</div>';
-      return;
-    }
-    el.innerHTML = basket.map((item) => `
-      <article class="hunt-basket-card" data-hunt-code="${escapeHtml(item.hunt_code)}">
-        <div class="hunt-basket-card-head">
-          <span class="hunt-basket-code">${escapeHtml(item.hunt_code)}</span>
-          <button type="button" class="secondary hunt-basket-remove" aria-label="Remove from saved hunts" data-basket-sidebar-remove="${escapeHtml(item.hunt_code)}">Remove</button>
-        </div>
-        <div class="hunt-basket-name">${escapeHtml(item.hunt_name || item.hunt_code)}</div>
-        ${itemMeta(item) ? `<div class="hunt-basket-meta">${escapeHtml(itemMeta(item))}</div>` : ''}
-        <div class="hunt-basket-sub">${escapeHtml(itemSubvalue(item))}</div>
-        <div class="hunt-basket-actions">
-          <button type="button" class="hunt-basket-open" data-basket-sidebar-open="${escapeHtml(item.hunt_code)}">View in planner</button>
-          <a href="./hunt-research.html?hunt_code=${encodeURIComponent(item.hunt_code)}">Research</a>
-        </div>
-      </article>
-    `).join('');
-
-    el.querySelectorAll('[data-basket-sidebar-remove]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const code = normalizeKey(btn.getAttribute('data-basket-sidebar-remove'));
-        if (!code) return;
-        const next = getBasket().filter((item) => normalizeKey(item.hunt_code) !== code);
-        setBasket(next);
-      });
-    });
-
-    el.querySelectorAll('[data-basket-sidebar-open]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const code = normalizeKey(btn.getAttribute('data-basket-sidebar-open'));
-        if (!code) return;
-        if (typeof window.selectHuntByCode === 'function') {
-          window.selectHuntByCode(code);
-          document.getElementById('selectedHuntPanel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          window.location.href = `./index.html?hunt_code=${encodeURIComponent(code)}`;
-        }
-      });
-    });
-  }
-
-  function refreshBackpackUI() {
-    renderBackpackTray();
-    renderHuntBasketSidebar();
-  }
-
   function closeBackpackTray() {
     if (!trayShell || !trayButton || !trayPanel) return;
     trayOpen = false;
@@ -258,23 +206,9 @@ window.UOGA_UI = (() => {
     trayPanel.setAttribute('aria-hidden', 'true');
   }
 
-  function positionBackpackTray() {
-    if (!trayButton || !trayPanel) return;
-    const rect = trayButton.getBoundingClientRect();
-    const panelWidth = Math.min(430, Math.max(320, window.innerWidth - 28));
-    const right = Math.max(14, window.innerWidth - rect.right);
-    const left = Math.min(window.innerWidth - panelWidth - 14, Math.max(14, rect.right - panelWidth));
-    trayPanel.style.top = `${rect.bottom + 12}px`;
-    trayPanel.style.left = `${left}px`;
-    trayPanel.style.right = 'auto';
-    trayPanel.style.width = `min(430px, calc(100vw - 28px))`;
-    trayPanel.style.maxHeight = `min(72vh, 760px)`;
-  }
-
   function openBackpackTray() {
     if (!trayShell || !trayButton || !trayPanel) return;
     renderBackpackTray();
-    positionBackpackTray();
     trayOpen = true;
     trayShell.classList.add('is-open');
     trayButton.setAttribute('aria-expanded', 'true');
@@ -300,14 +234,10 @@ window.UOGA_UI = (() => {
       <div class="uoga-backpack-hero">
         <div>
           <p class="uoga-backpack-hero-kicker">Field-ready shortlist</p>
-          <h3>Hunt Backpack</h3>
+          <h3>Hunt Pack</h3>
         </div>
-        <div class="uoga-backpack-hero-media" aria-hidden="true">
-          <div class="uoga-backpack-hero-badge">
-            <span class="uoga-backpack-hero-badge-kicker">U.O.G.A.</span>
-            <span class="uoga-backpack-hero-badge-title">Hunt Backpack</span>
-            
-          </div>
+        <div class="uoga-backpack-hero-media">
+          <img src="./assets/hunt-pack.png" alt="Hunt Pack" class="uoga-backpack-hero-image">
         </div>
         <p>Keep a short list in motion across Planner, Hunt Research, and verification without losing your place.</p>
       </div>
@@ -329,6 +259,7 @@ window.UOGA_UI = (() => {
         if (!huntCode) return;
         const next = getBasket().filter((item) => normalizeKey(item.hunt_code) !== huntCode);
         setBasket(next);
+        renderBackpackTray();
       });
     });
   }
@@ -361,26 +292,19 @@ window.UOGA_UI = (() => {
         cursor: pointer;
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
       }
-        .uoga-backpack-shell.is-open .uoga-backpack-toggle {
-          border-color: #d1ab83;
-          background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
-          color: #2f1d12;
-          box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
-        }
-        .uoga-backpack-toggle:hover {
-          transform: translateY(-2px);
-          border-color: var(--accent);
-          box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
-        }
+      .uoga-backpack-shell.is-open .uoga-backpack-toggle {
+        border-color: var(--accent);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+      }
+      .uoga-backpack-toggle:hover { transform: translateY(-1px); }
       .uoga-backpack-mark-wrap {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 176px;
-        height: 38px;
-        padding: 0 16px;
-        border-radius: 999px;
-        border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
+        width: 48px;
+        height: 34px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.14);
         background:
           radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
           linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
@@ -388,17 +312,12 @@ window.UOGA_UI = (() => {
         overflow: hidden;
       }
       .uoga-backpack-mark {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--accent);
-        font-size: 14px;
-        font-weight: 900;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        line-height: 1;
-        white-space: nowrap;
-        opacity: 0.98;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center center;
+        opacity: 0.96;
       }
       .uoga-backpack-labels { display: grid; gap: 2px; text-align: left; }
       .uoga-backpack-title {
@@ -415,22 +334,19 @@ window.UOGA_UI = (() => {
         line-height: 1;
       }
       .uoga-backpack-badge {
-        min-width: 28px;
-        padding: 5px 8px;
+        min-width: 24px;
+        padding: 4px 7px;
         border-radius: 999px;
-        background: color-mix(in srgb, var(--accent) 18%, transparent);
-        border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
-        color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 22%, transparent);
+        color: var(--text);
         font-size: 12px;
         font-weight: 900;
         line-height: 1;
-        text-align: center;
       }
       .uoga-backpack-panel {
-        position: fixed;
-        top: 78px;
-        left: calc(100vw - 444px);
-        right: auto;
+        position: absolute;
+        top: calc(100% + 12px);
+        right: -10px;
         width: min(430px, calc(100vw - 28px));
         max-height: min(72vh, 760px);
         display: none;
@@ -442,16 +358,16 @@ window.UOGA_UI = (() => {
           linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--panel2) 98%, transparent));
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
-        z-index: 2000;
+        z-index: 30;
         transform-origin: top right;
       }
       .uoga-backpack-panel::before {
-          content: "";
-          position: absolute;
-          top: -16px;
-          right: 36px;
-          width: 132px;
-          height: 28px;
+        content: "";
+        position: absolute;
+        top: -16px;
+        right: 52px;
+        width: 132px;
+        height: 28px;
         border: 1px solid var(--line);
         border-bottom: 0;
         border-radius: 18px 18px 0 0;
@@ -478,36 +394,6 @@ window.UOGA_UI = (() => {
         background:
           radial-gradient(circle at top left, rgba(255,255,255,0.16), transparent 34%),
           linear-gradient(180deg, rgba(51, 39, 31, 0.94), rgba(25, 19, 15, 0.98));
-      }
-      .uoga-backpack-hero-badge {
-        display: grid;
-        place-items: center;
-        gap: 6px;
-        width: 100%;
-        min-height: 118px;
-        padding: 16px;
-        text-align: center;
-      }
-      .uoga-backpack-hero-badge-kicker {
-        color: rgba(255,255,255,0.72);
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-      .uoga-backpack-hero-badge-title {
-        color: var(--accent);
-        font-size: 28px;
-        font-weight: 900;
-        line-height: 1;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      }
-      .uoga-backpack-hero-badge-subtitle {
-        color: rgba(255,255,255,0.78);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
       }
       .uoga-backpack-hero-image {
         display: block;
@@ -634,12 +520,13 @@ window.UOGA_UI = (() => {
           justify-content: space-between;
         }
         .uoga-backpack-panel {
-          left: 14px;
+          right: auto;
+          left: 0;
           width: min(100%, calc(100vw - 28px));
         }
         .uoga-backpack-panel::before {
-          left: auto;
-          right: 36px;
+          left: 32px;
+          right: auto;
           width: 120px;
         }
       }
@@ -660,7 +547,7 @@ window.UOGA_UI = (() => {
 
   function initBackpackTray() {
     if (trayShell) {
-      refreshBackpackUI();
+      renderBackpackTray();
       return;
     }
 
@@ -673,8 +560,12 @@ window.UOGA_UI = (() => {
     trayShell.className = 'uoga-backpack-shell';
     trayShell.innerHTML = `
       <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
-        <span class="uoga-backpack-mark-wrap" aria-hidden="true">
-          <span class="uoga-backpack-mark">Hunt Backpack</span>
+        <span class="uoga-backpack-mark-wrap">
+          <img src="./assets/hunt-pack.png" alt="Hunt Pack" class="uoga-backpack-mark">
+        </span>
+        <span class="uoga-backpack-labels">
+          <span class="uoga-backpack-title">Hunt Pack</span>
+          <span class="uoga-backpack-subtitle">Recent + saved hunts</span>
         </span>
         <span class="uoga-backpack-badge" hidden>0</span>
       </button>
@@ -694,32 +585,24 @@ window.UOGA_UI = (() => {
       toggleBackpackTray();
     });
 
-      document.addEventListener('click', (event) => {
-        if (!trayShell || trayShell.contains(event.target)) return;
-        closeBackpackTray();
-      });
+    document.addEventListener('click', (event) => {
+      if (!trayShell || trayShell.contains(event.target)) return;
+      closeBackpackTray();
+    });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') closeBackpackTray();
     });
 
-      window.addEventListener('storage', (event) => {
-        if ([BASKET_KEY, LEGACY_BASKET_KEY, RECENTS_KEY, SELECTED_HUNT_KEY].includes(event.key || '')) {
-          refreshBackpackUI();
-        }
-      });
+    window.addEventListener('storage', (event) => {
+      if ([BASKET_KEY, LEGACY_BASKET_KEY, RECENTS_KEY, SELECTED_HUNT_KEY].includes(event.key || '')) {
+        renderBackpackTray();
+      }
+    });
 
-      window.addEventListener('resize', () => {
-        if (trayOpen) positionBackpackTray();
-      });
-
-      window.addEventListener('scroll', () => {
-        if (trayOpen) positionBackpackTray();
-      }, { passive: true });
-
-      document.addEventListener(BACKPACK_CHANGED_EVENT, refreshBackpackUI);
-      refreshBackpackUI();
-    }
+    document.addEventListener(BACKPACK_CHANGED_EVENT, renderBackpackTray);
+    renderBackpackTray();
+  }
 
   function notifyBackpackChanged() {
     document.dispatchEvent(new CustomEvent(BACKPACK_CHANGED_EVENT));
@@ -732,7 +615,6 @@ window.UOGA_UI = (() => {
     }
     initThemeToggle();
     initBackpackTray();
-    renderHuntBasketSidebar();
   }
 
   return {
