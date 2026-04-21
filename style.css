@@ -427,7 +427,7 @@
       transform: translateY(-2px);
     }
     .hunt-card.is-selected:hover {
-      border-color: var(--accent);
+      border-color: var(--selected-outline);
       box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.22), var(--selected-shadow);
     }
     .hunt-card.is-selected .hunt-card-title,
@@ -483,8 +483,8 @@
       box-shadow: var(--selected-shadow);
     }
     .outfitter-action-btn.primary:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16), var(--selected-shadow);
+      border-color: var(--selected-outline);
+      box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.22), var(--selected-shadow);
       transform: translateY(-2px);
     }
     
@@ -540,7 +540,7 @@
     .selected-unit-placard-logo { width: 52px; height: 52px; border-radius: 12px; object-fit: contain; background: #fff; padding: 5px; border: 1px solid rgba(255, 214, 185, 0.5); box-shadow: 0 6px 16px rgba(0,0,0,0.24); }
     .selected-unit-placard-code { font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: #ffc99b; }
     .selected-unit-placard-name { margin: 4px 0 0; font-size: 22px; font-weight: 900; line-height: 1.02; color: #fff9f3; }
-    .selected-unit-placard-sub { margin: 6px 0 0; font-size: 13px; line-height: 1.4; color: #e0c4ad; }
+    .selected-unit-placard-sub { margin: 6px 0 0; font-size: 13px; line-height: 1.4; color: rgba(255, 255, 255, 0.84); }
     .selected-unit-placard-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px; }
     .selected-unit-placard-pill {
       display:grid;
@@ -561,7 +561,7 @@
     .selected-unit-placard-pill-label { font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.86); }
     .selected-unit-placard-pill-value { font-size: 14px; font-weight: 800; line-height: 1.25; color: var(--selected-text); }
     .selected-unit-placard-actions { display:flex; gap:10px; flex-wrap:wrap; }
-    .selected-unit-placard-note { font-size: 12px; line-height: 1.4; color: #caa98d; }
+    .selected-unit-placard-note { font-size: 12px; line-height: 1.4; color: rgba(255, 255, 255, 0.78); }
     .globe-basemap-panel {
       position: absolute;
       top: 18px;
@@ -627,7 +627,7 @@
         box-shadow: var(--selected-shadow);
       }
     .globe-basemap-btn.is-active:hover {
-        border-color: var(--accent);
+        border-color: var(--selected-outline);
         box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.22), var(--selected-shadow);
         transform: translateY(-2px);
       }
