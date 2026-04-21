@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
-  <title>U.O.G.A. Hunt Planner | Hard Copy</title>
+  <title>U.O.G.A. Hunt Planner | Hard Data</title>
   <link rel="stylesheet" href="./style.css?v=20260420-hardcopy-1" />
   <style>
     .hardcopy-shell {
@@ -274,7 +274,7 @@
       <nav class="utility-nav" aria-label="Site sections">
         <a class="utility-link" href="./index.html">Hunt Planner</a>
         <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
-        <a class="utility-link active" href="./hard-copy.html" aria-current="page">Hard Copy</a>
+        <a class="utility-link active" href="./hard-copy.html" aria-current="page">Hard Data</a>
         <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
       </nav>
       <button id="printBtnTop" type="button" class="secondary">Print</button>
@@ -284,16 +284,17 @@
   <main class="hardcopy-shell">
     <aside class="hardcopy-panel">
       <h2>Lookup</h2>
-      <p>Open the selected hunt as a printable field sheet. We use the current hunt code from the planner unless you override it here.</p>
+        <p>Open the selected hunt as a printable field sheet. We keep you inside the site and send you back to the planner on close or back.</p>
       <div class="hardcopy-controls">
         <div class="field">
           <label for="huntCodeInput">Hunt code</label>
           <input id="huntCodeInput" class="hunt-input" type="text" placeholder="DB1041, LE0031, etc." />
         </div>
         <div class="hardcopy-actions">
+          <button id="backBtn" type="button" class="secondary">Back to Planner</button>
           <button id="loadBtn" type="button">Load Sheet</button>
           <button id="printBtn" type="button" class="secondary">Print Sheet</button>
-          <a class="outfitter-action-btn" href="./index.html">Back to Planner</a>
+          <a class="outfitter-action-btn" href="./index.html">Planner Home</a>
         </div>
       </div>
       <div id="lookupStatus" class="lookup-status"><strong>Status:</strong> Waiting for a hunt code.</div>
@@ -337,6 +338,7 @@
   <script>
     (async () => {
       const huntCodeInput = document.getElementById('huntCodeInput');
+      const backBtn = document.getElementById('backBtn');
       const loadBtn = document.getElementById('loadBtn');
       const printBtn = document.getElementById('printBtn');
       const printBtnTop = document.getElementById('printBtnTop');
@@ -347,6 +349,7 @@
       const coreGrid = document.getElementById('coreGrid');
       const sourceGrid = document.getElementById('sourceGrid');
       const rawTable = document.getElementById('rawTable');
+      const plannerUrl = './index.html';
 
       const normalize = (value) => String(value ?? '').trim().toUpperCase();
       const firstNonEmpty = (...values) => {
@@ -385,6 +388,10 @@
           if (records.length) return records;
         }
         return [];
+      }
+
+      function returnToPlanner() {
+        window.location.replace(plannerUrl);
       }
 
       function getCode(record) {
@@ -498,6 +505,7 @@
       }
 
       loadBtn.addEventListener('click', loadSheet);
+      backBtn.addEventListener('click', returnToPlanner);
       printBtn.addEventListener('click', () => window.print());
       printBtnTop.addEventListener('click', () => window.print());
       huntCodeInput.addEventListener('keydown', (event) => {
@@ -506,6 +514,18 @@
           loadSheet();
         }
       });
+
+      history.replaceState({ hardData: true }, '', window.location.href);
+      history.pushState({ hardData: true }, '', window.location.href);
+      window.addEventListener('popstate', () => returnToPlanner());
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          returnToPlanner();
+        }
+      });
+      if (new URLSearchParams(window.location.search || '').get('mode') === 'print') {
+        setTimeout(() => window.print(), 250);
+      }
 
       const initialCode = resolveInitialCode();
       if (initialCode) huntCodeInput.value = initialCode;
