@@ -1,0 +1,11 @@
+{
+  "dataset": "projected_bonus_draw_2026_simulated",
+  "source_corrected_projection": "C:\\UOGA HUNTS\\processed_data\\projected_bonus_draw_2026.csv",
+  "output_csv": "C:\\UOGA HUNTS\\HUNT-PLANNER-CLEAN\\data\\uoga_projected_bonus_draw_2026_simulated\\projected_bonus_draw_2026_simulated.csv",
+  "random_method": "monte_carlo_utah",
+  "base_seed": 20260401,
+  "standard_iterations": 20000,
+  "oil_iterations": 50000,
+  "published_output_path": "C:\\UOGA HUNTS\\processed_data\\projected_bonus_draw_2026_simulated.csv",
+  "published_year_output_path": "C:\\UOGA HUNTS\\processed_data\\2026\\projected_bonus_draw_2026_simulated.csv"
+}

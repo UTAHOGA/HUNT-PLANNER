@@ -1,0 +1,9 @@
+{
+  "name": "uoga-hunt-planner",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local static server for the U.O.G.A. Hunt Planner",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

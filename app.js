@@ -1186,7 +1186,7 @@ function openSelectedUnitsChooser() {
       renderOutfitters();
       const hunts = getDisplayHunts().filter(h => getUnitValue(h) === unitValue);
       const unitTitle = firstNonEmpty(hunts[0] && getUnitName(hunts[0]), unitValue);
-      showHuntMatchesChooser(unitTitle, hunts, 'Matching Hunts');
+      showHuntMatchesChooser(unitTitle, hunts, 'Available Hunts');
     };
     card.addEventListener('click', select);
     card.addEventListener('keydown', event => {
@@ -1626,7 +1626,9 @@ window.selectHuntByKey = (key) => {
   }
 };
 window.selectHuntByCode = (code) => {
-  const h = huntData.find(x => getHuntCode(x) === code);
+  const want = safe(code).trim().toUpperCase();
+  if (!want) return;
+  const h = huntData.find(x => safe(getHuntCode(x)).trim().toUpperCase() === want);
   if (h) window.selectHuntByKey(getHuntRecordKey(h));
 };
 
@@ -1637,7 +1639,7 @@ function renderSelectedHunt() {
   if (!panel) return;
 
   if (!hunt) {
-    panel.innerHTML = '<div class="empty-note">No hunt selected yet.</div>';
+    panel.innerHTML = '<div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>';
     closeSelectedHuntFloat();
     return;
   }
@@ -2266,7 +2268,7 @@ function buildPopupListForMatches(matches) {
         <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
         <div>
           <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">DWR Hunt Unit</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Matching Hunts</div>
+          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Available Hunts</div>
         </div>
       </div>
       ${matches.slice(0, 8).map(h => `
@@ -2278,12 +2280,12 @@ function buildPopupListForMatches(matches) {
     </div>`;
 }
 
-function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {
+function showHuntMatchesChooser(title, matches, kicker = 'Available Hunts') {
   if (!mapChooser || !mapChooserBody || !mapChooserTitle || !mapChooserKicker) return;
   closeSelectedHuntFloat();
   selectedBoundaryMatches = matches.slice();
   mapChooserKicker.textContent = kicker;
-  mapChooserTitle.textContent = firstNonEmpty(title, 'Matching Hunts');
+  mapChooserTitle.textContent = firstNonEmpty(title, 'Available Hunts');
   mapChooserBody.innerHTML = matches.length ? matches.slice(0, 12).map(h => `
     <div class="map-chooser-card" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" role="button" tabindex="0">
       <div class="hunt-card-title">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
@@ -2309,7 +2311,7 @@ function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {
 }
 function openMapChooser(feature, matches) {
   const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
-  showHuntMatchesChooser(boundaryName, matches, hasActiveMatrixSelections() || selectedHunt ? 'Matching Hunts' : 'Selected Unit');
+  showHuntMatchesChooser(boundaryName, matches, hasActiveMatrixSelections() || selectedHunt ? 'Available Hunts' : 'Selected Unit');
 }
 
 function openBoundaryPopup(feature, latLng) {
@@ -2322,7 +2324,7 @@ function openBoundaryPopup(feature, latLng) {
   fitDataFeatureBounds(feature, 11);
   const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
   if (matches.length) {
-    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Matching Hunts to choose one.`);
+    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
   } else {
     updateStatus(`Zoomed to ${boundaryName}.`);
   }
@@ -2823,7 +2825,7 @@ function ensureCesiumViewer() {
       'Selected Unit'
     );
     if (matches.length) {
-      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Matching Hunts to choose one.`);
+      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
     } else {
       updateStatus(`Zoomed to ${boundaryName}.`);
     }
@@ -3087,8 +3089,8 @@ function bindControls() {
       }
       const chooserTitle = selectedUnitValue
         ? firstNonEmpty(selectedUnitGroups[0]?.unitName, selectedUnitValue)
-        : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Matching Hunts');
-      showHuntMatchesChooser(chooserTitle, results, 'Matching Hunts');
+        : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Available Hunts');
+      showHuntMatchesChooser(chooserTitle, results, 'Available Hunts');
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
     }
   });

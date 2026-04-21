@@ -198,6 +198,58 @@ window.UOGA_UI = (() => {
     `;
   }
 
+  function renderHuntBasketSidebar() {
+    const el = document.getElementById('huntBasket');
+    if (!el) return;
+    const basket = getBasket();
+    if (!basket.length) {
+      el.innerHTML = '<div class="empty-note">Save hunts to compare them here.</div>';
+      return;
+    }
+    el.innerHTML = basket.map((item) => `
+      <article class="hunt-basket-card" data-hunt-code="${escapeHtml(item.hunt_code)}">
+        <div class="hunt-basket-card-head">
+          <span class="hunt-basket-code">${escapeHtml(item.hunt_code)}</span>
+          <button type="button" class="secondary hunt-basket-remove" aria-label="Remove from saved hunts" data-basket-sidebar-remove="${escapeHtml(item.hunt_code)}">Remove</button>
+        </div>
+        <div class="hunt-basket-name">${escapeHtml(item.hunt_name || item.hunt_code)}</div>
+        ${itemMeta(item) ? `<div class="hunt-basket-meta">${escapeHtml(itemMeta(item))}</div>` : ''}
+        <div class="hunt-basket-sub">${escapeHtml(itemSubvalue(item))}</div>
+        <div class="hunt-basket-actions">
+          <button type="button" class="hunt-basket-open" data-basket-sidebar-open="${escapeHtml(item.hunt_code)}">View in planner</button>
+          <a href="./hunt-research.html?hunt_code=${encodeURIComponent(item.hunt_code)}">Research</a>
+        </div>
+      </article>
+    `).join('');
+
+    el.querySelectorAll('[data-basket-sidebar-remove]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const code = normalizeKey(btn.getAttribute('data-basket-sidebar-remove'));
+        if (!code) return;
+        const next = getBasket().filter((item) => normalizeKey(item.hunt_code) !== code);
+        setBasket(next);
+      });
+    });
+
+    el.querySelectorAll('[data-basket-sidebar-open]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const code = normalizeKey(btn.getAttribute('data-basket-sidebar-open'));
+        if (!code) return;
+        if (typeof window.selectHuntByCode === 'function') {
+          window.selectHuntByCode(code);
+          document.getElementById('selectedHuntPanel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          window.location.href = `./index.html?hunt_code=${encodeURIComponent(code)}`;
+        }
+      });
+    });
+  }
+
+  function refreshBackpackUI() {
+    renderBackpackTray();
+    renderHuntBasketSidebar();
+  }
+
   function closeBackpackTray() {
     if (!trayShell || !trayButton || !trayPanel) return;
     trayOpen = false;
@@ -277,7 +329,6 @@ window.UOGA_UI = (() => {
         if (!huntCode) return;
         const next = getBasket().filter((item) => normalizeKey(item.hunt_code) !== huntCode);
         setBasket(next);
-        renderBackpackTray();
       });
     });
   }
@@ -609,7 +660,7 @@ window.UOGA_UI = (() => {
 
   function initBackpackTray() {
     if (trayShell) {
-      renderBackpackTray();
+      refreshBackpackUI();
       return;
     }
 
@@ -654,7 +705,7 @@ window.UOGA_UI = (() => {
 
       window.addEventListener('storage', (event) => {
         if ([BASKET_KEY, LEGACY_BASKET_KEY, RECENTS_KEY, SELECTED_HUNT_KEY].includes(event.key || '')) {
-          renderBackpackTray();
+          refreshBackpackUI();
         }
       });
 
@@ -666,8 +717,8 @@ window.UOGA_UI = (() => {
         if (trayOpen) positionBackpackTray();
       }, { passive: true });
 
-      document.addEventListener(BACKPACK_CHANGED_EVENT, renderBackpackTray);
-      renderBackpackTray();
+      document.addEventListener(BACKPACK_CHANGED_EVENT, refreshBackpackUI);
+      refreshBackpackUI();
     }
 
   function notifyBackpackChanged() {
@@ -681,6 +732,7 @@ window.UOGA_UI = (() => {
     }
     initThemeToggle();
     initBackpackTray();
+    renderHuntBasketSidebar();
   }
 
   return {

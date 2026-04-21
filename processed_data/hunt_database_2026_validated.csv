@@ -1,0 +1,1290 @@
+hunt_code,hunt_name,sex_type,species,weapon,hunt_type,season,permits_2026_res,permits_2026_nr,permits_2026_total,source_file,permits_2025_res,permits_2025_nr,permits_2025_total,permit_overlay_source
+BI1000,Bison - Statewide Permit,Hunter's Choice,Bison,Any Legal Weapon,Statewide,"Aug 1, 2026 - Jan 31, 2027",,,,bison bull.csv,,,,
+BI6500,Antelope Island,Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Dec 07 2026 - Dec 09 2026,2,0,2,bison bull.xlsx,2,0,2,hunt_join_2025.1.csv
+BI6503,Henry Mtns,Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Oct 28 2026 - Nov 8 2026,4,2,6,bison bull.xlsx,5,2,7,hunt_join_2025.1.csv
+BI6504,Henry Mtns,Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Nov 11 2026 - Nov 22 2026,5,2,7,bison bull.xlsx,5,2,7,hunt_join_2025.1.csv
+BI6505,Henry Mtns,Antlerless,Bison,Any Legal Weapon,Once-in-a-lifetime,Dec 9 2026 - Dec 20 2026,8,3,11,bison  cow.xlsx,25,4,29,hunt_join_2025.1.csv
+BI6506,Henry Mtns,Antlerless,Bison,Any Legal Weapon,Once-in-a-lifetime,"Dec 23, 2026 - Jan 3, 2027",11,0,11,bison  cow.xlsx,30,0,30,hunt_join_2025.1.csv
+BI6509,Henry Mtns,Hunter's Choice,Bison,Archery,Once-in-a-lifetime,"Jan 18 - 31, 2027",5,0,5,bison bull.xlsx,4,0,4,hunt_join_2025.1.csv
+BI6516,Henry Mtns,Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Nov 25 2026 - Dec 6 2026,6,0,6,bison bull.xlsx,5,0,5,hunt_join_2025.1.csv
+BI6527,Nine Mile,Hunter's Choice,Bison,Any Legal Weapon,General Season,"Aug 1, 2025 - Jan 31, 2026",,,,bison bull.csv,,,,
+BI6528,"Book Cliffs, Little Creek/South",Hunter's Choice,Bison,Archery,Once-in-a-lifetime,Aug 15 2026 - Sept 11 2026,5,0,5,bison bull.xlsx,5,0,5,hunt_join_2025.1.csv
+BI6529,"Book Cliffs, Little Creek/South",Antlerless,Bison,Any Legal Weapon,Once-in-a-lifetime,Oct 17 2026 - Oct 27 2026,8,0,8,bison  cow.xlsx,8,0,8,hunt_join_2025.1.csv
+BI6531,"Book Cliffs, Little Creek/South",Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Sept 21 2026 - Oct 02 2026,10,0,10,bison bull.xlsx,8,0,8,hunt_join_2025.1.csv
+BI6532,"Book Cliffs, Bitter Creek",Hunter's Choice,Bison,Archery,Once-in-a-lifetime,Aug 15 2026 - Sept 11 2026,5,0,5,bison bull.xlsx,5,0,5,hunt_join_2025.1.csv
+BI6534,"Book Cliffs, Bitter Creek",Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Sept 20 2026,10,0,10,bison bull.xlsx,5,0,5,hunt_join_2025.1.csv
+BI6535,"Book Cliffs, Bitter Creek",Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Oct 03 2026 - Oct 15 2026,8,0,8,bison bull.xlsx,5,0,5,hunt_join_2025.1.csv
+BI6536,"Book Cliffs, Bitter Creek",Antlerless,Bison,Any Legal Weapon,Once-in-a-lifetime,Nov 14 2026 - Nov 29 2026,15,0,15,bison  cow.xlsx,3,0,3,hunt_join_2025.1.csv
+BI6537,"Book Cliffs, Little Creek/South",Hunter's Choice,Bison,Any Legal Weapon,Once-in-a-lifetime,Nov 07 2026 - Jan 31 2027,8,7,15,bison bull.xlsx,5,5,10,hunt_join_2025.1.csv
+BI6538,"Nine Mile, Private Lands Only",Hunter's Choice,Bison,Any Legal Weapon,General Season,"Aug 1, 2025 - Jan 31, 2026 | Harvest survey due by Feb 15, 2026 Visit: http://wildlife.utah.gov/harvest to submit your survey",,,,bison bull.csv,,,,
+BI6539,Henry Mtns,Antlerless,Bison,Any Legal Weapon,Once-in-a-lifetime,"Jan 6 - 17, 2027",11,0,11,bison  cow.xlsx,,,,hunt_join_2025.1.csv
+BR1000,Black Bear - Statewide Permit,Either Sex,Black Bear,Any Legal Weapon,Statewide,Any open season on any open bear unit during the 2026 season. See 2026 Black Bear Guidebook for season dates,,,,black bear.csv,,,,
+BR1007,Black Bear Pursuit - Resident,Either Sex,Black Bear,Pursuit Only,Pursuit,"Spring: Mar 28-May 25, 2026 | Summer: July 5-July 31, 2026 | Fall: Nov 2-8, 2026",,,,black bear.csv,,,,
+CG9999,Cougar - Statewide,Either Sex,Cougar,Any Legal Weapon,Statewide,open,,,,cougar.csv,,,,
+DA1001,"Box Elder, West Bear River",Antlerless,Deer,Archery,General Season,Aug 18 2025 - Aug 30 2025,,,30,antlerless deer.xlsx,24,0,24,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1002,"Box Elder, West Bear River",Antlerless,Deer,Archery,General Season,Nov 24 2025 - Nov 29 2025,,,30,antlerless deer.xlsx,24,0,24,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1003,"Monroe/Plateau, Sevier Valley",Antlerless,Deer,Archery,General Season,Sep 01 2025 - Sep 30 2025,,,15,antlerless deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1009,"Pine Valley, Enterprise",Antlerless,Deer,Any Legal Weapon,General Season,Aug 01 2025 - Aug 15 2025,,,20,antlerless deer.xlsx,20,0,20,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1011,George Creek CWMU,Antlerless,Deer,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless deer.xlsx,4,0,4,25_antlerless_drawing_odds_report.pdf
+DA1012,Junction Valley CWMU,Antlerless,Deer,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless deer.xlsx,12,0,12,25_antlerless_drawing_odds_report.pdf
+DA1013,Mt Carmel CWMU,Antlerless,Deer,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless deer.xlsx,4,0,4,25_antlerless_drawing_odds_report.pdf
+DA1018,"Pine Valley, New Harmony",Antlerless,Deer,Archery,General Season,Aug 01 2025 - Aug 15 2025,,,15,antlerless deer.xlsx,15,1,16,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1027,"East Canyon, Davis-North Salt Lake",Antlerless,Deer,Any Legal Weapon,General Season,Aug 01 2025 - Sep 15 2025,,,30,antlerless deer.xlsx,24,0,24,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1030,"Nine Mile, Price River Valley",Antlerless,Deer,Archery,General Season,Aug 16 2025 - Sep 12 2025,,,25,antlerless deer.xlsx,19,1,20,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1031,"Oquirrh-Stansbury, Settlement Cyn",Antlerless,Deer,Archery,General Season,Aug 16 2025 - Sep 12 2025,,,20,antlerless deer.xlsx,16,0,16,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1033,"San Juan, Monticello",Antlerless,Deer,Archery,General Season,Aug 01 2025 - Sep 14 2025,,,10,antlerless deer.xlsx,4,0,4,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1041,"Nine Mile, Green River Valley",Antlerless,Deer,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,,,15,antlerless deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1042,"San Juan, Monticello",Antlerless,Deer,Archery,General Season,Nov 24 2025 - Dec 31 2025,,,5,antlerless deer.xlsx,4,0,4,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1045,"Fillmore, Oak City",Antlerless,Deer,Archery,General Season,Aug 01 2025 - Sep 04 2025,,,20,antlerless deer.xlsx,16,0,16,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1046,"Nine Mile, Price River Valley",Antlerless,Deer,Archery,General Season,Sep 13 2025 - Oct 12 2025,,,25,antlerless deer.xlsx,20,0,20,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1047,Vernal-Ouray Valley,Antlerless,Deer,Any Legal Weapon,General Season,Sep 27 2025 - Dec 12 2025,,,25,antlerless deer.xlsx,18,2,20,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1048,Fillmore City,Antlerless,Deer,Archery,General Season,Aug 01 2025 - Sep 04 2025,,,15,antlerless deer.xlsx,12,0,12,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1049,"Vernal, Ashley Valley",Antlerless,Deer,Archery,General Season,Aug 16 2025 - Dec 12 2025,,,35,antlerless deer.xlsx,27,1,28,hunt_join_2025.1.csv; 25_antlerless_drawing_odds_report.pdf
+DA1050,The Rose of Snowville CWMU,Antlerless,Deer,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless deer.xlsx,7,0,7,25_antlerless_drawing_odds_report.pdf
+DB0001,Southeastern Navajo Buck Deer,Male Only,Deer,Any Legal Weapon,Tribal,"Oct 18, 2025 - Oct 26, 2025",,,,BUCK DEER.csv,,,,
+DB0002,Southeastern Navajo Buck Deer,Male Only,Deer,Archery,Tribal,"Aug 16, 2025 - Sept 12, 2025",,,,BUCK DEER.csv,,,,
+DB0003,Southeastern Navajo Buck Deer,Male Only,Deer,Muzzleloader,Tribal,"Sept 24 - Oct 2, 2025",,,,BUCK DEER.csv,,,,
+DB0004,Southern Navajo Buck Deer,Male Only,Deer,Any Legal Weapon,Tribal,"Oct 18, 2025 - Oct 26, 2025",,,,BUCK DEER.csv,,,,
+DB0005,Southern Navajo Buck Deer,Male Only,Deer,Archery,Tribal,"Aug 16, 2025 - Sept 12, 2025",,,,BUCK DEER.csv,,,,
+DB0006,Southern Navajo Buck Deer,Male Only,Deer,Muzzleloader,Tribal,"Sept 24 - Oct 2, 2025",,,,BUCK DEER.csv,,,,
+DB0007,Buck Deer - Statewide Permit,Male Only,Deer,Any Legal Weapon,Statewide,"Archery: Aug 15 - Aug 31, 2026 | ALW: Sept 1, 2026 - Jan 15, 2027",,,,BUCK DEER.csv,,,,
+DB0008,Extended Archery Deer,Hunter's Choice,Deer,Archery,Extended Archery,"Sept 12-Oct 15, 2026 -OR- Sept 12-Nov 30, 2026 | See guidebook for units & dates",,,2000,deer hunter's choice.xlsx,,,,
+DB0009,Antelope Island - Conservation/Expo,Male Only,Deer,Any Legal Weapon,Premium Limited Entry,"Nov 9, 2026 - Nov 16, 2026",,,,BUCK DEER.csv,,,,
+DB0010,Southern Paiute Buck Deer (early),Male Only,Deer,Any Legal Weapon,Tribal,"Oct 18, 2025 - Oct 26, 2025",,,,BUCK DEER.csv,,,,
+DB0011,Southern Paiute Buck Deer,Male Only,Deer,Archery,Tribal,"Aug 16, 2025 - Sept 12, 2025",,,,BUCK DEER.csv,,,,
+DB0012,Southern Paiute Buck Deer,Male Only,Deer,Muzzleloader,Tribal,"Sept 24 - Oct 2, 2025",,,,BUCK DEER.csv,,,,
+DB0013,Southern Paiute Buck Deer (late),Male Only,Deer,Any Legal Weapon,Tribal,"Oct 18, 2025 - Oct 26, 2025",,,,BUCK DEER.csv,,,,
+DB1000,Henry Mtns,Male Only,Deer,Archery,Premium Limited Entry,Aug 15 2026 - Sept 11 2026,8,1,9,buck_deer.xlsx,8,1,9,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1001,Paunsaugunt,Male Only,Deer,Archery,Premium Limited Entry,Aug 15 2026 - Sept 11 2026,26,3,29,buck_deer.xlsx,25,3,28,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1002,Antelope Island,Male Only,Deer,Any Legal Weapon,Premium Limited Entry,Nov 11 2026 - Nov 18 2026,1,0,1,buck_deer.xlsx,1,0,1,hunt_join_2025.1.csv
+DB1003,Henry Mtns,Male Only,Deer,Any Legal Weapon,Premium Limited Entry,Oct 17 2026 - Oct 25 2026,24,3,27,buck_deer.xlsx,22,3,25,hunt_join_2025.1.csv
+DB1004,Paunsaugunt,Male Only,Deer,Any Legal Weapon,Premium Limited Entry,Oct 17 2026 - Oct 31 2026,75,8,83,buck_deer.xlsx,73,7,80,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1005,Henry Mtns,Male Only,Deer,Muzzleloader,Premium Limited Entry,Sept 23 2026 - Oct 01 2026,8,1,9,buck_deer.xlsx,8,1,9,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1006,Paunsaugunt,Male Only,Deer,Muzzleloader,Premium Limited Entry,Sept 23 2026 - Oct 01 2026,26,3,29,buck_deer.xlsx,25,3,28,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1007,Henry Mtns,Male Only,Deer,Multiseason,Premium Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 25, 2026",1,0,1,buck_deer.xlsx,1,0,1,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1008,Paunsaugunt,Male Only,Deer,Multiseason,Premium Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 31, 2026",3,1,4,buck_deer.xlsx,3,1,4,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1009,Henry Mtns (Management Buck Deer),Male Only,Deer,Any Legal Weapon,Management Buck Deer,Oct 26 2026 - Oct 30 2026,10,1,11,buck_deer.xlsx,10,1,11,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1010,Paunsaugunt,Male Only,Deer,Any Legal Weapon,Management Buck Deer,Nov 02 2026 - Nov 20 2026,30,3,33,buck_deer.xlsx,23,3,26,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1011,Book Cliffs,Male Only,Deer,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,55,6,61,buck_deer.xlsx,44,4,48,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1012,"Fillmore, Oak Creek LE",Male Only,Deer,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,12,1,13,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1013,Dolores Triangle,Male Only,Deer,Archery,Limited Entry,Oct 31 2026 - Nov 13 2026,5,0,5,buck_deer.xlsx,4,0,4,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1014,"San Juan, Elk Ridge",Male Only,Deer,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,15,2,17,buck_deer.xlsx,14,2,16,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1015,Diamond Mtn,Male Only,Deer,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,22,2,24,buck_deer.xlsx,19,2,21,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1016,"West Desert, Vernon",Male Only,Deer,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,46,5,51,buck_deer.xlsx,39,4,43,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1017,"Book Cliffs, North",Male Only,Deer,Any Legal Weapon,Limited Entry,Oct 17 2026 - Oct 25 2026,137,15,152,buck_deer.xlsx,111,12,123,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1018,"Book Cliffs, South",Male Only,Deer,Any Legal Weapon,Limited Entry,Oct 17 2026 - Oct 25 2026,34,4,38,buck_deer.xlsx,27,2,29,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1019,"Fillmore, Oak Creek LE",Male Only,Deer,Any Legal Weapon,Limited Entry,Oct 17 2026 - Oct 25 2026,33,4,37,buck_deer.xlsx,29,3,32,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1020,Dolores Triangle,Male Only,Deer,Any Legal Weapon,Limited Entry,Nov 14 2026 - Nov 22 2026,13,2,15,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1022,"San Juan, Elk Ridge",Male Only,Deer,Any Legal Weapon,Limited Entry,Oct 17 2026 - Oct 25 2026,42,5,47,buck_deer.xlsx,39,3,42,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1023,Diamond Mtn,Male Only,Deer,Any Legal Weapon,Limited Entry,Oct 17 2026 - Oct 25 2026,61,7,68,buck_deer.xlsx,55,5,60,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1024,"West Desert, Vernon",Male Only,Deer,Any Legal Weapon,Limited Entry,Oct 17 2026 - Oct 25 2026,130,14,144,buck_deer.xlsx,115,12,127,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1025,Book Cliffs,Male Only,Deer,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,55,6,61,buck_deer.xlsx,43,4,47,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1026,"Cache, Crawford Mtn",Male Only,Deer,Muzzleloader,Limited Entry,Nov 07 2026 - Nov 22 2026,8,1,9,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1028,Fillmore,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,11,1,12,buck_deer.xlsx,10,1,11,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1029,"Fillmore, Oak Creek LE",Male Only,Deer,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,12,1,13,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1030,Kamas,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,4,1,5,buck_deer.xlsx,5,1,6,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1031,Dolores Triangle,Male Only,Deer,Muzzleloader,Limited Entry,Nov 23 2026 - Dec 01 2026,5,0,5,buck_deer.xlsx,4,0,4,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1032,Monroe,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,5,1,6,buck_deer.xlsx,5,1,6,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1033,Nine Mile,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,6,1,7,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1034,Pine Valley,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,13,2,15,buck_deer.xlsx,12,2,14,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1037,"San Juan, Elk Ridge",Male Only,Deer,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,15,2,17,buck_deer.xlsx,14,2,16,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1038,Diamond Mtn,Male Only,Deer,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,22,2,24,buck_deer.xlsx,19,2,21,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1039,Yellowstone,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,6,1,7,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1040,Southwest Desert,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1041,"Wasatch Mtns, East",Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,30,3,33,buck_deer.xlsx,26,3,29,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1042,"West Desert, Vernon",Male Only,Deer,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,46,5,51,buck_deer.xlsx,40,4,44,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1043,Zion,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,15,2,17,buck_deer.xlsx,12,2,14,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1044,Book Cliffs,Male Only,Deer,Multiseason,Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-25, 2026",8,1,9,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1045,"Fillmore, Oak Creek LE",Male Only,Deer,Multiseason,Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 25, 2026",2,0,2,buck_deer.xlsx,2,0,2,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1046,"San Juan, Elk Ridge",Male Only,Deer,Multiseason,Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 25, 2026",2,0,2,buck_deer.xlsx,2,0,2,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1047,Diamond Mtn,Male Only,Deer,Multiseason,Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 25, 2026",4,0,4,buck_deer.xlsx,3,0,3,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1048,"West Desert, Vernon",Male Only,Deer,Multiseason,Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 25, 2026",7,1,8,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1053,Mt Dutton,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1054,Ogden,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,13,1,14,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1055,Fishlake,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,6,1,7,buck_deer.xlsx,5,1,6,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1056,Book Cliffs (North & South),Male Only,Deer,Any Legal Weapon,Conservation,"Oct 17, 2026 - Oct 25, 2026",1,,1,BUCK DEER.csv,,,,
+DB1058,Paunsaugunt,Male Only,Deer,Any Legal Weapon,Cactus Buck,Nov 02 2026 - Nov 20 2026,18,2,20,buck_deer.xlsx,27,3,30,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1065,North Slope,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,14,2,16,buck_deer.xlsx,13,2,15,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1073,Paunsaugunt,Male Only,Deer,Archery,Management Buck Deer,Aug 15 2026 - Sept 11 2026,10,1,11,buck_deer.xlsx,8,1,9,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1074,Paunsaugunt,Male Only,Deer,Muzzleloader,Management Buck Deer,Sept 23 2026 - Oct 01 2026,10,1,11,buck_deer.xlsx,8,1,9,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1075,Book Cliffs (North & South),Male Only,Deer,Archery,Conservation,Aug 16 2025 - Sept 12 2025,1,,1,BUCK DEER.csv,,,,
+DB1076,Book Cliffs (North & South),Male Only,Deer,Muzzleloader,Conservation,Sept 24 2025 - Oct 02 2025,1,,1,BUCK DEER.csv,,,,
+DB1077,Box Elder,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,23,3,26,buck_deer.xlsx,22,3,25,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1078,Cache,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,11,1,12,buck_deer.xlsx,9,1,10,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1079,Manti/San Rafael,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,40,5,45,buck_deer.xlsx,37,4,41,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1080,Nebo,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,23,3,26,buck_deer.xlsx,22,3,25,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1081,La Sal Mtns,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,8,1,9,buck_deer.xlsx,8,1,9,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1083,Panguitch Lake,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,12,1,13,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1084,Boulder/Kaiparowits,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,12,1,13,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1085,"San Juan, Abajo Mtns",Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,13,1,14,buck_deer.xlsx,12,1,13,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1086,Vernal/Bonanza,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,6,1,7,buck_deer.xlsx,5,1,6,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1087,"Wasatch Mtns, West",Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,36,4,40,buck_deer.xlsx,29,3,32,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1090,"Book Cliffs, Floy Canyon",Male Only,Deer,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,6,1,7,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1091,Kaiparowits HAMSS,Male Only,Deer,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1100,Chalk Creek,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,10,1,11,buck_deer.xlsx,10,1,11,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1101,East Canyon,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,9,1,10,buck_deer.xlsx,9,1,10,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1103,Morgan-South Rich,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,7,1,8,buck_deer.xlsx,7,0,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1105,East Canyon,Male Only,Deer,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,6,1,7,buck_deer.xlsx,6,1,7,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1106,Thousand Lakes,Male Only,Deer,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,20,2,22,buck_deer.xlsx,9,2,11,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1107,Thousand Lakes,Male Only,Deer,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,20,2,22,buck_deer.xlsx,2,2,4,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1108,Thousand Lakes,Male Only,Deer,Restricted Rifle,Limited Entry,Oct 17 2026 - Oct 25 2026,27,3,30,buck_deer.xlsx,25,3,28,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1109,Thousand Lakes,Male Only,Deer,Restricted Multiseason,Limited Entry,"Archery: Aug 15-Sept 11, 2026 | Muzz: Sept 23-Oct 1, 2026 | ALW: Oct 17-Oct 25, 2026",2,0,2,buck_deer.xlsx,2,0,2,hunt_join_2025.1.csv
+DB1110,"Beaver, East",Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,10,1,11,buck_deer.xlsx,9,1,10,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1111,"Beaver, West",Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1112,"West Desert, Swasey",Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1113,Oquirrh/Tintic,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,10,1,11,buck_deer.xlsx,11,1,12,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1114,Cedar/Stansbury,Male Only,Deer,Muzzleloader,Limited Entry,Oct 28 2026 - Nov 05 2026,5,1,6,buck_deer.xlsx,5,1,6,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1115,Little Rockies,Male Only,Deer,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 30 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1116,"San Juan, Mancos Mesa",Male Only,Deer,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,4,1,5,buck_deer.xlsx,4,1,5,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1118,Dolores Triangle,Male Only,Deer,Multiseason,Conservation,"Arch: Oct 31-Nov 13, 2026 | Any Legal Weapon: Nov 14-22, 2026 | Muzz: Nov 23-Dec 1, 2026",1,,1,BUCK DEER.csv,,,,
+DB1119,"La Sal, Moab Valley",Male Only,Deer,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 22 2026,9,1,10,buck_deer.xlsx,9,1,10,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1120,Castle Valley,Male Only,Deer,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 22 2026,13,2,15,buck_deer.xlsx,13,2,15,hunt_join_2025.1.csv; 25_bg-odds.pdf
+DB1121,Antelope Island,Male Only,Deer,Any Legal Weapon,Management Buck Deer,"Nov 16 2026 - Nov 20, 2026",2,0,2,buck_deer.xlsx,,,,hunt_join_2025.1.csv
+DB1200,Alton - Premium Buck CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,buck_deer.xlsx,3,0,3,25_bg-odds.pdf
+DB1201,Alton - Management Buck CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1202,Antelope Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1203,Avintaquin Canyon CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1204,Bally Watts CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1205,Bar J Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1206,Bear Mountain CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1207,Bear Springs CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1208,Blackhawk CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1209,Blind Springs CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1211,Blue Spring Hills CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1212,Bluebell CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1213,Boobe Hole CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1215,Buckhorn Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1216,Castle Valley Outdoors CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1217,Causey Spring CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1219,Chimney Rock CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1222,Coldwater Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1224,Cotton Thomas CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1227,Deer Haven CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1228,Deseret CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,13,0,13,25_bg-odds.pdf
+DB1229,Dilly Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1230,Double R Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1231,Dove Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1232,Durst Mountain CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1233,East Fork Chalk Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,4,0,4,25_bg-odds.pdf
+DB1234,East Zion CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1236,Engineer Springs CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1237,Ensign Ranches CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,3,0,3,25_bg-odds.pdf
+DB1238,Folley Ridge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,3,0,3,25_bg-odds.pdf
+DB1239,Fort Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1240,George Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1241,Golden Spike CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1242,Grass Valley/Clark Canyon CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,14,0,14,25_bg-odds.pdf
+DB1243,Grazing Pasture CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1244,Green Canyon CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1245,Guildersleeve CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1246,Hardscrabble CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1248,Heaston East CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1249,Hiawatha CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1250,Indian Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1251,Indian Head CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1252,Ingham Peak CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,5,0,5,25_bg-odds.pdf
+DB1253,Circle E Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1255,Johnson Mountain Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1256,Junction Valley CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,6,0,6,25_bg-odds.pdf
+DB1258,Little Red Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1259,Tunnel Hollow CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1260,Middle Ridge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1261,Minnie Maud Ridge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,5,0,5,25_bg-odds.pdf
+DB1263,Moon Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1264,Mountain Meadow CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1265,Mountain Top CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1266,Mt Carmel CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,3,0,3,25_bg-odds.pdf
+DB1269,North Promontory CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1270,Nucor West CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1271,Oak Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1272,Old Woman Plateau CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,3,0,3,25_bg-odds.pdf
+DB1273,Park Valley Hereford CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,6,0,6,25_bg-odds.pdf
+DB1274,Patmos Ridge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1275,Pine Canyon CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1276,Plymouth Peak CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,,,,
+DB1277,Pocatello Valley CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1279,Preston Nutter Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1280,Promontory Point CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1281,Rattlesnake Pass CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1282,Redd Ranches CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1283,Roan Cliffs CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1285,Sand Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1286,Pisgah Mountain CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1287,Scofield Canyons CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1288,Scofield West CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1289,Sharp Mountain CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1290,Skull Crack CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1291,Skull Valley South CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1292,Soldier Summit CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1293,South Canyon CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1294,Spring Creek Acres CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1295,Spring Creek/Dodge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,6,0,6,25_bg-odds.pdf
+DB1298,Strawberry Ridge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1299,Summit Point CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,3,0,3,25_bg-odds.pdf
+DB1300,Thatcher Mountain CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1301,Three C CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1303,North Peaks CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1304,Two Bear CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1305,Wallsburg CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1306,Washakie CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1308,West Hills CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1309,West Willow Creek Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,5,0,5,25_bg-odds.pdf
+DB1310,White's Valley CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1312,Woodruff Creek South CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1317,Jacob's Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1322,Pahvant Ensign CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1323,Rock House CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1325,Double Cone CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1326,Rosette CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1327,Mountain Sky Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1328,Clear Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1330,Iron Spring CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1331,Raft River CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1332,West Ridge CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,5,0,5,25_bg-odds.pdf
+DB1333,5S CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1334,Alton - Cactus Buck CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1335,Big Piney Ranch CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1336,First Light CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1337,Little Pole Canyon CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1341,Dry Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1342,Faust Valley CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,1,0,1,25_bg-odds.pdf
+DB1347,The Rose of Snowville CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,2,0,2,25_bg-odds.pdf
+DB1349,Weber Florence Creek/Stillman Creek CWMU,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,9,0,9,25_bg-odds.pdf
+DB1351,The Dirty Dozen,Male Only,Deer,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,buck_deer.xlsx,,,,
+DB1501,Box Elder,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,1040,buck_deer.xlsx,,,,
+DB1502,Cache,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,1160,buck_deer.xlsx,,,,
+DB1503,Manti/San Rafael,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,1800,buck_deer.xlsx,,,,
+DB1504,Nebo,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,1060,buck_deer.xlsx,,,,
+DB1506,Fillmore,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,460,buck_deer.xlsx,,,,
+DB1508,Kamas,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,200,buck_deer.xlsx,,,,
+DB1509,La Sal Mtns,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,360,buck_deer.xlsx,,,,
+DB1510,Monroe,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,220,buck_deer.xlsx,,,,
+DB1511,Mt Dutton,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,80,buck_deer.xlsx,,,,
+DB1512,Nine Mile,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,280,buck_deer.xlsx,,,,
+DB1513,North Slope,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,620,buck_deer.xlsx,,,,
+DB1514,Ogden,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,540,buck_deer.xlsx,,,,
+DB1516,Panguitch Lake,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,500,buck_deer.xlsx,,,,
+DB1517,Pine Valley,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,600,buck_deer.xlsx,,,,
+DB1518,Boulder/Kaiparowits,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,720,buck_deer.xlsx,,,,
+DB1519,Fishlake,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,260,buck_deer.xlsx,,,,
+DB1521,"San Juan, Abajo Mtns",Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,560,buck_deer.xlsx,,,,
+DB1522,Vernal/Bonanza,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,420,buck_deer.xlsx,,,,
+DB1523,Yellowstone,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,280,buck_deer.xlsx,,,,
+DB1524,Southwest Desert,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,100,buck_deer.xlsx,,,,
+DB1525,"Wasatch Mtns, East",Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,1300,buck_deer.xlsx,,,,
+DB1526,"Wasatch Mtns, West",Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,1580,buck_deer.xlsx,,,,
+DB1529,Zion,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,675,buck_deer.xlsx,,,,
+DB1531,Box Elder,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,2080,buck_deer.xlsx,,,,
+DB1533,Manti/San Rafael,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,5400,buck_deer.xlsx,,,,
+DB1534,Nebo,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,3180,buck_deer.xlsx,,,,
+DB1536,Fillmore,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,920,buck_deer.xlsx,,,,
+DB1538,Kamas,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,400,buck_deer.xlsx,,,,
+DB1539,La Sal Mtns,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1080,buck_deer.xlsx,,,,
+DB1540,Monroe,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,660,buck_deer.xlsx,,,,
+DB1541,Mt Dutton,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,240,buck_deer.xlsx,,,,
+DB1542,Nine Mile,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,560,buck_deer.xlsx,,,,
+DB1543,North Slope,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1240,buck_deer.xlsx,,,,
+DB1544,Ogden,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1620,buck_deer.xlsx,,,,
+DB1546,Panguitch Lake,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1000,buck_deer.xlsx,,,,
+DB1547,Pine Valley,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1200,buck_deer.xlsx,,,,
+DB1549,Fishlake,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,520,buck_deer.xlsx,,,,
+DB1551,"San Juan, Abajo Mtns",Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1680,buck_deer.xlsx,,,,
+DB1552,Vernal/Bonanza,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,700,buck_deer.xlsx,,,,
+DB1553,Yellowstone,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,840,buck_deer.xlsx,,,,
+DB1554,Southwest Desert,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,300,buck_deer.xlsx,,,,
+DB1555,"Wasatch Mtns, East",Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,3900,buck_deer.xlsx,,,,
+DB1556,"Wasatch Mtns, West",Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,4740,buck_deer.xlsx,,,,
+DB1559,Zion,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1350,buck_deer.xlsx,,,,
+DB1561,Box Elder,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,1040,buck_deer.xlsx,,,,
+DB1563,Manti/San Rafael,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,1800,buck_deer.xlsx,,,,
+DB1564,Nebo,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,1060,buck_deer.xlsx,,,,
+DB1566,Fillmore,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,460,buck_deer.xlsx,,,,
+DB1568,Kamas,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,200,buck_deer.xlsx,,,,
+DB1569,La Sal Mtns,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,360,buck_deer.xlsx,,,,
+DB1570,Monroe,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,220,buck_deer.xlsx,,,,
+DB1571,Mt Dutton,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,80,buck_deer.xlsx,,,,
+DB1572,Nine Mile,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,280,buck_deer.xlsx,,,,
+DB1573,North Slope,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,620,buck_deer.xlsx,,,,
+DB1574,Ogden,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,540,buck_deer.xlsx,,,,
+DB1576,Panguitch Lake,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,500,buck_deer.xlsx,,,,
+DB1577,Pine Valley,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,600,buck_deer.xlsx,,,,
+DB1579,Fishlake,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,260,buck_deer.xlsx,,,,
+DB1581,"San Juan, Abajo Mtns",Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,560,buck_deer.xlsx,,,,
+DB1582,Vernal/Bonanza,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,280,buck_deer.xlsx,,,,
+DB1583,Yellowstone,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,280,buck_deer.xlsx,,,,
+DB1584,Southwest Desert,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,100,buck_deer.xlsx,,,,
+DB1585,"Wasatch Mtns, East",Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,1300,buck_deer.xlsx,,,,
+DB1586,"Wasatch Mtns, West",Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,1580,buck_deer.xlsx,,,,
+DB1589,Zion,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,675,buck_deer.xlsx,,,,
+DB1591,Fillmore,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,460,buck_deer.xlsx,,,,
+DB1592,Kamas,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,200,buck_deer.xlsx,,,,
+DB1593,Nine Mile,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,280,buck_deer.xlsx,,,,
+DB1594,Panguitch Lake,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,500,buck_deer.xlsx,,,,
+DB1595,Pine Valley,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,600,buck_deer.xlsx,,,,
+DB1596,Fishlake,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,260,buck_deer.xlsx,,,,
+DB1597,Zion,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,675,buck_deer.xlsx,,,,
+DB1598,North Slope,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,620,buck_deer.xlsx,,,,
+DB1599,Chalk Creek,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,880,buck_deer.xlsx,,,,
+DB1600,Chalk Creek,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,440,buck_deer.xlsx,,,,
+DB1601,Chalk Creek,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,440,buck_deer.xlsx,,,,
+DB1602,Chalk Creek,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,440,buck_deer.xlsx,,,,
+DB1603,East Canyon,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,760,buck_deer.xlsx,,,,
+DB1604,East Canyon,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,380,buck_deer.xlsx,,,,
+DB1605,East Canyon,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,380,buck_deer.xlsx,,,,
+DB1606,East Canyon,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,380,buck_deer.xlsx,,,,
+DB1607,Morgan-South Rich,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,640,buck_deer.xlsx,,,,
+DB1608,Morgan-South Rich,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,320,buck_deer.xlsx,,,,
+DB1609,Morgan-South Rich,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,320,buck_deer.xlsx,,,,
+DB1610,Morgan-South Rich,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,320,buck_deer.xlsx,,,,
+DB1611,"Beaver, East",Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,440,buck_deer.xlsx,,,,
+DB1612,"Beaver, East",Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,440,buck_deer.xlsx,,,,
+DB1613,"Beaver, East",Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1320,buck_deer.xlsx,,,,
+DB1614,"Beaver, West",Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,130,buck_deer.xlsx,,,,
+DB1615,"Beaver, West",Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,130,buck_deer.xlsx,,,,
+DB1616,"Beaver, West",Male Only,Deer,Restricted Rifle,General Season,Oct 17 2026 - Oct 25 2026,,,390,buck_deer.xlsx,,,,
+DB1617,"West Desert, Swasey",Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,80,buck_deer.xlsx,,,,
+DB1618,"West Desert, Swasey",Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,80,buck_deer.xlsx,,,,
+DB1619,"West Desert, Swasey",Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,240,buck_deer.xlsx,,,,
+DB1620,Oquirrh/Tintic,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,450,buck_deer.xlsx,,,,
+DB1621,Oquirrh/Tintic,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,450,buck_deer.xlsx,,,,
+DB1622,Oquirrh/Tintic,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,1350,buck_deer.xlsx,,,,
+DB1623,Cedar/Stansbury,Male Only,Deer,Archery,General Season,Aug 15 2026 - Sept 11 2026,,,250,buck_deer.xlsx,,,,
+DB1624,Cedar/Stansbury,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,250,buck_deer.xlsx,,,,
+DB1625,Cedar/Stansbury,Male Only,Deer,Any Legal Weapon,General Season,Oct 17 2026 - Oct 25 2026,,,750,buck_deer.xlsx,,,,
+DB1627,Cache,Male Only,Deer,Restricted Rifle,General Season,Oct 17 2026 - Oct 25 2026,,,3480,buck_deer.xlsx,,,,
+DB1628,Cache,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,1160,buck_deer.xlsx,,,,
+DB1629,Boulder/Kaiparowits,Male Only,Deer,Restricted Rifle,General Season,Oct 17 2026 - Oct 25 2026,,,960,buck_deer.xlsx,,,,
+DB1630,Boulder/Kaiparowits,Male Only,Deer,Muzzleloader,General Season,Sept 23 2026 - Oct 01 2026,,,720,buck_deer.xlsx,,,,
+DB1631,Box Elder,Male Only,Deer,Any Legal Weapon,General Season,Oct 07 2026 - Oct 11 2026,,,1040,buck_deer.xlsx,,,,
+DB1770,Box Elder,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,688,buck_deer.xlsx,,,,
+DB1771,Cache,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Restricted Muzz: Sept 23 2026 - Oct 01 2026 | Restricted Rifle: Oct 17 2026 - Oct 25 2026,,,588,buck_deer.xlsx,,,,
+DB1772,Manti/San Rafael,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,573,buck_deer.xlsx,,,,
+DB1773,Nebo,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,349,buck_deer.xlsx,,,,
+DB1775,Fillmore,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,42,buck_deer.xlsx,,,,
+DB1777,Kamas,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,55,buck_deer.xlsx,,,,
+DB1778,La Sal Mtns,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,67,buck_deer.xlsx,,,,
+DB1779,Monroe,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,45,buck_deer.xlsx,,,,
+DB1780,Mt Dutton,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,26,buck_deer.xlsx,,,,
+DB1781,Nine Mile,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,62,buck_deer.xlsx,,,,
+DB1782,North Slope,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,340,buck_deer.xlsx,,,,
+DB1783,Ogden,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,297,buck_deer.xlsx,,,,
+DB1785,Panguitch Lake,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,112,buck_deer.xlsx,,,,
+DB1786,Pine Valley,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,228,buck_deer.xlsx,,,,
+DB1787,Boulder/Kaiparowits,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Restricted Muzz: Sept 23 2026 - Oct 01 2026 | Restricted Rifle: Oct 17 2026 - Oct 25 2026,,,70,buck_deer.xlsx,,,,
+DB1788,Fishlake,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,49,buck_deer.xlsx,,,,
+DB1790,"San Juan, Abajo Mtns",Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,261,buck_deer.xlsx,,,,
+DB1791,Vernal/Bonanza,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,45,buck_deer.xlsx,,,,
+DB1792,Yellowstone,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,63,buck_deer.xlsx,,,,
+DB1793,Southwest Desert,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,46,buck_deer.xlsx,,,,
+DB1794,"Wasatch Mtns, East",Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,271,buck_deer.xlsx,,,,
+DB1795,"Wasatch Mtns, West",Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,701,buck_deer.xlsx,,,,
+DB1798,Zion,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,256,buck_deer.xlsx,,,,
+DB1799,Chalk Creek,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,292,buck_deer.xlsx,,,,
+DB1800,East Canyon,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,186,buck_deer.xlsx,,,,
+DB1801,Morgan-South Rich,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | Early ALW: Oct 07 2026 - Oct 11 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,211,buck_deer.xlsx,,,,
+DB1802,"Beaver, East",Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,61,buck_deer.xlsx,,,,
+DB1803,"Beaver, West",Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Restricted Muzz: Sept 23 2026 - Oct 01 2026 | Restricted Rifle: Oct 17 2026 - Oct 25 2026,,,44,buck_deer.xlsx,,,,
+DB1804,Cedar/Stansbury,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,42,buck_deer.xlsx,,,,
+DB1805,Oquirrh/Tintic,Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,65,buck_deer.xlsx,,,,
+DB1806,"West Desert, Swasey",Male Only,Deer,Dedicated Hunter,General Season,Archery: Aug 15 2026 - Sept 11 2026 | Muzz: Sept 23 2026 - Oct 01 2026 | ALW: Oct 17 2026 - Oct 25 2026,,,36,buck_deer.xlsx,,,,
+DS1002,"Kaiparowits, East",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Conservation,"Sept 13, 2025 - Dec 31, 2025",1,0,1,desert sheep ram.csv,,,,
+DS1003,"Kaiparowits, Escalante East/West",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Conservation,"Sept 12 - Nov 10, 2026",1,0,1,desert sheep ram.csv,,,,
+DS1004,"San Rafael, Dirty Devil",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Conservation,"Sept 13 - Dec 31, 2025",1,0,1,desert sheep ram.csv,,,,
+DS1006,"Kaiparowits, West",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Conservation,"Sept 13, 2025 - Dec 31, 2025",1,0,1,desert sheep ram.csv,,,,
+DS1007,"San Rafael, South",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Conservation,"Sept 13, 2025 - Dec 31, 2025",1,0,1,desert sheep ram.csv,,,,
+DS6600,Henry Mtns,Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,3,0,3,desert sheep ram.xlsx,3,0,3,hunt_join_2025.1.csv
+DS6601,"Kaiparowits, East",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,10,3,13,desert sheep ram.xlsx,10,2,12,hunt_join_2025.1.csv
+DS6603,"Kaiparowits, West",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,3,1,4,desert sheep ram.xlsx,4,1,5,hunt_join_2025.1.csv
+DS6604,"La Sal, Potash/South Cisco",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,8,0,8,desert sheep ram.xlsx,6,0,6,hunt_join_2025.1.csv
+DS6605,"Pine Valley, Beaver Dam",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Conservation,"Sept 13, 2025 - Dec 31, 2025",1,0,1,desert sheep ram.csv,,,,
+DS6606,"San Juan, Lockhart",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,2,0,2,desert sheep ram.xlsx,2,0,2,hunt_join_2025.1.csv
+DS6607,"San Juan, South",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,2,0,2,desert sheep ram.xlsx,2,0,2,hunt_join_2025.1.csv
+DS6608,"San Rafael, Dirty Devil",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,3,1,4,desert sheep ram.xlsx,5,2,7,hunt_join_2025.1.csv
+DS6609,"San Rafael, North",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,8,0,8,desert sheep ram.xlsx,8,0,8,hunt_join_2025.1.csv
+DS6610,"San Rafael, South",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,10,2,12,desert sheep ram.xlsx,10,2,12,hunt_join_2025.1.csv
+DS6611,Zion,Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,3,0,3,desert sheep ram.xlsx,3,0,3,hunt_join_2025.1.csv
+DS6620,"Pine Valley, Virgin River",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 24 2026 - Dec 25 2026,3,0,3,desert sheep ram.xlsx,3,0,3,hunt_join_2025.1.csv
+DS6621,"Pine Valley, Beaver Dam",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 24 2026 - Dec 25 2026,2,0,2,desert sheep ram.xlsx,5,0,5,hunt_join_2025.1.csv
+DS6622,"San Juan, North",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,3,0,3,desert sheep ram.xlsx,3,0,3,hunt_join_2025.1.csv
+DS6623,"San Juan, San Juan River",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,2,0,2,desert sheep ram.xlsx,2,0,2,hunt_join_2025.1.csv
+DS6624,"San Rafael, Dirty Devil",Male Only,Desert Bighorn Sheep,Archery,Once-in-a-lifetime,Nov 11 2026 - Dec 17 2026,2,0,2,desert sheep ram.xlsx,2,0,2,hunt_join_2025.1.csv
+DS6625,Mineral Mtns,Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,4,0,4,desert sheep ram.xlsx,3,0,3,hunt_join_2025.1.csv
+DS6626,"Escalante, East",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,5,2,7,desert sheep ram.xlsx,5,2,7,hunt_join_2025.1.csv
+DS6627,"Escalante, West",Male Only,Desert Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Nov 10 2026,3,0,3,desert sheep ram.xlsx,3,0,3,hunt_join_2025.1.csv
+EA1010,"Cache, Rich",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,31,4,35,antlerless elk.xlsx,18,2,20,hunt_join_2025.1.csv
+EA1011,"Cache, Richards Hollow",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Dec 31 2025,18,2,20,antlerless elk.xlsx,9,1,10,hunt_join_2025.1.csv
+EA1012,"Cache, Richmond Hyde Park",Antlerless,Elk,Any Legal Weapon,General Season,Aug 01 2025 - Dec 01 2025,1,1,2,antlerless elk.xlsx,,,,
+EA1013,"Manti, Central",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,63,7,70,antlerless elk.xlsx,63,7,70,hunt_join_2025.1.csv
+EA1015,"Manti, Ferron Canyon",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,63,7,70,antlerless elk.xlsx,63,7,70,hunt_join_2025.1.csv
+EA1017,"Manti, Gordon Creek-Price Canyon",Antlerless,Elk,Any Legal Weapon,General Season,Nov 27 2025 - Jan 31 2026,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1018,"Manti, Horn Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Nov 19 2025 - Dec 31 2025,54,6,60,antlerless elk.xlsx,54,6,60,hunt_join_2025.1.csv
+EA1020,"Manti, Mohrland-Stump Flat",Antlerless,Elk,Any Legal Weapon,General Season,Nov 27 2025 - Jan 31 2026,108,12,120,antlerless elk.xlsx,108,12,120,hunt_join_2025.1.csv
+EA1021,Nebo,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,252,28,280,antlerless elk.xlsx,207,23,230,hunt_join_2025.1.csv
+EA1022,"Manti, North",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,270,30,300,antlerless elk.xlsx,270,30,300,hunt_join_2025.1.csv
+EA1023,"Manti, South",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1024,"Manti, South",Antlerless,Elk,Any Legal Weapon,General Season,Nov 19 2025 - Jan 31 2026,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1025,"Manti, West",Antlerless,Elk,Any Legal Weapon,General Season,Nov 19 2025 - Jan 31 2026,108,12,120,antlerless elk.xlsx,108,12,120,hunt_join_2025.1.csv
+EA1026,Chalk Creek,Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 31 2026,315,35,350,antlerless elk.xlsx,315,35,350,hunt_join_2025.1.csv
+EA1030,"Fillmore, Pahvant",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Dec 06 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1031,"Fillmore, Pahvant",Antlerless,Elk,Any Legal Weapon,General Season,Dec 13 2025 - Jan 30 2026,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1033,Kamas,Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 18 2026,90,10,100,antlerless elk.xlsx,112,13,125,hunt_join_2025.1.csv
+EA1035,"Kamas, Oakley",Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Dec 31 2025,90,10,100,antlerless elk.xlsx,112,13,125,hunt_join_2025.1.csv
+EA1037,"La Sal, Dolores Triangle",Antlerless,Elk,Any Legal Weapon,General Season,Dec 12 2025 - Jan 31 2026,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1038,"La Sal, La Sal Mtns",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,180,20,200,antlerless elk.xlsx,180,20,200,hunt_join_2025.1.csv
+EA1039,"La Sal, La Sal Mtns",Antlerless,Elk,Any Legal Weapon,General Season,Nov 17 2025 - Dec 31 2025,135,15,150,antlerless elk.xlsx,135,15,150,hunt_join_2025.1.csv
+EA1044,"Morgan-South Rich, South Rich",Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Jan 31 2026,31,4,35,antlerless elk.xlsx,31,4,35,hunt_join_2025.1.csv
+EA1049,"Mt Dutton, Deep Creek",Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Dec 07 2025,8,8,16,antlerless elk.xlsx,,,,
+EA1054,"Nine Mile, West Anthro",Antlerless,Elk,Any Legal Weapon,General Season,Dec 13 2025 - Dec 30 2025,90,10,100,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1056,"North Slope, Greendale",Antlerless,Elk,Any Legal Weapon,General Season,Nov 17 2025 - Nov 30 2025,4,1,5,antlerless elk.xlsx,4,1,5,hunt_join_2025.1.csv
+EA1058,"North Slope, Henry's Fork-Burnt Fork",Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 31 2026,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1060,"North Slope, West Daggett",Antlerless,Elk,Muzzleloader,General Season,Oct 29 2025 - Nov 06 2025,18,2,20,antlerless elk.xlsx,18,2,20,hunt_join_2025.1.csv
+EA1061,"North Slope, West Daggett",Antlerless,Elk,Muzzleloader,General Season,Sep 24 2025 - Oct 02 2025,18,2,20,antlerless elk.xlsx,18,2,20,hunt_join_2025.1.csv
+EA1063,Ogden,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,90,10,100,antlerless elk.xlsx,67,8,75,hunt_join_2025.1.csv
+EA1064,Ogden,Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Nov 30 2025,67,8,75,antlerless elk.xlsx,67,8,75,hunt_join_2025.1.csv
+EA1069,Panguitch Lake,Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Nov 30 2025,22,3,25,antlerless elk.xlsx,31,4,35,hunt_join_2025.1.csv
+EA1073,Paunsaugunt,Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Dec 30 2025,18,2,20,antlerless elk.xlsx,18,2,20,hunt_join_2025.1.csv
+EA1075,Boulder East,Antlerless,Elk,Any Legal Weapon,General Season,Nov 21 2025 - Dec 31 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1076,Boulder West,Antlerless,Elk,Any Legal Weapon,General Season,Nov 21 2025 - Dec 31 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1077,Boulder-Circle Cliffs,Antlerless,Elk,Any Legal Weapon,General Season,Oct 07 2025 - Jan 10 2026,27,3,30,antlerless elk.xlsx,27,3,30,hunt_join_2025.1.csv
+EA1078,Fishlake/Thousand Lakes,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,243,27,270,antlerless elk.xlsx,243,27,270,hunt_join_2025.1.csv
+EA1079,Fishlake/Thousand Lakes East,Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Dec 31 2025,58,7,65,antlerless elk.xlsx,58,7,65,hunt_join_2025.1.csv
+EA1080,Fishlake/Thousand Lakes West,Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Dec 31 2025,54,6,60,antlerless elk.xlsx,54,6,60,hunt_join_2025.1.csv
+EA1081,San Juan,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,112,13,125,antlerless elk.xlsx,112,13,125,hunt_join_2025.1.csv
+EA1082,San Juan,Antlerless,Elk,Any Legal Weapon,General Season,Nov 19 2025 - Dec 31 2025,112,13,125,antlerless elk.xlsx,112,13,125,hunt_join_2025.1.csv
+EA1084,"San Rafael, North",Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 31 2026,4,1,5,antlerless elk.xlsx,4,1,5,hunt_join_2025.1.csv
+EA1085,Vernal/Bonanza,Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 17 2025,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1087,Bonanza/Vernal,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 17 2025,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1089,Diamond Mtn,Antlerless,Elk,Any Legal Weapon,General Season,Nov 01 2025 - Nov 09 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1090,Diamond Mtn,Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Nov 23 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1094,"Vernal, Mosby Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 04 2026,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1101,Southwest Desert,Antlerless,Elk,Any Legal Weapon,General Season,Nov 20 2025 - Jan 11 2026,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1106,"Wasatch Mtns, Avintaquin",Antlerless,Elk,Any Legal Weapon,General Season,Jan 03 2026 - Jan 18 2026,180,20,200,antlerless elk.xlsx,180,20,200,hunt_join_2025.1.csv
+EA1110,"Wasatch Mtns, Salt Lake",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Jan 31 2026,40,5,45,antlerless elk.xlsx,40,5,45,hunt_join_2025.1.csv
+EA1111,"Wasatch Mtns, Wallsburg",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Dec 14 2025,31,4,35,antlerless elk.xlsx,31,4,35,hunt_join_2025.1.csv
+EA1112,"Wasatch Mtns, Wallsburg",Antlerless,Elk,Any Legal Weapon,General Season,Dec 20 2025 - Jan 31 2026,49,6,55,antlerless elk.xlsx,49,6,55,hunt_join_2025.1.csv
+EA1113,"Wasatch Mtns, West Heber",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Jan 31 2026,27,3,30,antlerless elk.xlsx,27,3,30,hunt_join_2025.1.csv
+EA1114,"Wasatch Mtns, West Timpanogos",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Jan 31 2026,22,3,25,antlerless elk.xlsx,22,3,25,hunt_join_2025.1.csv
+EA1117,Zion,Antlerless,Elk,Any Legal Weapon,General Season,Nov 11 2025 - Jan 11 2026,198,22,220,antlerless elk.xlsx,198,22,220,hunt_join_2025.1.csv
+EA1118,Alton CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1119,Bar J Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1120,Bear Mountain CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1121,Boobe Hole CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1122,Causey Spring CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1124,Chimney Rock CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1125,Coldwater Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1129,Deseret CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1130,Double Cone CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1131,Durst Mountain CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1132,East Fork Chalk Creek CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1134,Ensign Ranches CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1135,Folley Ridge CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1136,Grass Valley/Clark Canyon CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1137,Grazing Pasture CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1138,Guildersleeve CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1139,Hardscrabble CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1140,Heaston East CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1141,Hiawatha CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1142,Indian Head CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1143,Circle E Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1145,Johnson Mountain Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1146,Jump Creek CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1147,Little Red Creek CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1149,Minnie Maud Ridge CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1151,Moon Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1153,Old Woman Plateau CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1156,Preston Nutter Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1157,Redd Ranches CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1158,Cactus Ranch LLC CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1159,Roan Cliffs CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1160,Sand Creek CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1161,Scofield Canyons CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1162,Scofield East CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1163,Scofield West CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1164,SJ Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1165,Skull Crack CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1166,Soldier Summit CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1167,South Canyon CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1168,Spring Creek/Dodge CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1170,Strawberry Ridge CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1171,Summit Point CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1172,Three C CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1174,Two Bear CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1175,Wallsburg CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1177,Woodruff Creek South CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1180,La Sal (Conservation),Antlerless,Elk,Any Legal Weapon,Conservation,"Oct 4 - Oct 16, 2025 & Nov 17 - Dec 31, 2025",1,0,1,antlerless elk.csv,,,,
+EA1187,"Paunsaugunt, Hatch Bench",Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Dec 30 2025,2,2,4,antlerless elk.xlsx,,,,
+EA1189,"Wasatch Mtns, West-Central",Antlerless,Elk,Muzzleloader,General Season,Nov 01 2025 - Nov 09 2025,382,43,425,antlerless elk.xlsx,382,43,425,hunt_join_2025.1.csv
+EA1192,Pahvant Ensign CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1193,"Cache, Rich",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Jan 10 2026,31,4,35,antlerless elk.xlsx,18,2,20,hunt_join_2025.1.csv
+EA1196,"North Slope, Summit",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,67,8,75,antlerless elk.xlsx,67,8,75,hunt_join_2025.1.csv
+EA1198,Bear Springs CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1200,Double R Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1201,Mountain Sky Ranch CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1203,"Box Elder, Pilot Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Aug 01 2025 - Aug 15 2025,4,1,5,antlerless elk.xlsx,4,1,5,hunt_join_2025.1.csv
+EA1204,"Box Elder, Pilot Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Oct 11 2025 - Nov 01 2025,4,1,5,antlerless elk.xlsx,4,1,5,hunt_join_2025.1.csv
+EA1206,"Cache, Richmond Hyde Park",Antlerless,Elk,Any Legal Weapon,General Season,Dec 02 2025 - Jan 15 2026,1,1,2,antlerless elk.xlsx,,,,
+EA1207,"Nebo, Moroni Hills",Antlerless,Elk,Any Legal Weapon,General Season,Aug 01 2025 - Aug 19 2025,9,1,10,antlerless elk.xlsx,9,1,10,hunt_join_2025.1.csv
+EA1208,Nebo,Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Jan 18 2026,292,33,325,antlerless elk.xlsx,247,28,275,hunt_join_2025.1.csv
+EA1209,"Fillmore, Oak Creek LE",Antlerless,Elk,Any Legal Weapon,General Season,Nov 15 2025 - Jan 30 2026,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1217,"Wasatch Mtns, Avintaquin",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,135,15,150,antlerless elk.xlsx,135,15,150,hunt_join_2025.1.csv
+EA1220,Manti (Expo),Antlerless,Elk,Any Legal Weapon,General Season,"Oct 4 - Oct 16, 2025",,,,antlerless elk.csv,,,,
+EA1221,Fishlake/Thousand Lake (Expo),Antlerless,Elk,Any Legal Weapon,General Season,"Oct 4 - Oct 16, 2025",,,,antlerless elk.csv,,,,
+EA1222,"Beaver, East",Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Dec 12 2025,36,4,40,antlerless elk.xlsx,27,3,30,hunt_join_2025.1.csv
+EA1223,"Beaver, East",Antlerless,Elk,Any Legal Weapon,General Season,Dec 13 2025 - Dec 27 2025,36,4,40,antlerless elk.xlsx,27,3,30,hunt_join_2025.1.csv
+EA1224,"Book Cliffs, Bitter Creek/South",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,117,13,130,antlerless elk.xlsx,117,13,130,hunt_join_2025.1.csv
+EA1225,"Book Cliffs, Bitter Creek/South",Antlerless,Elk,Any Legal Weapon,General Season,Nov 17 2025 - Dec 14 2025,147,16,163,antlerless elk.xlsx,147,16,163,hunt_join_2025.1.csv
+EA1226,"Nebo, Moroni Hills",Antlerless,Elk,Any Legal Weapon,General Season,Sep 13 2025 - Oct 03 2025,9,1,10,antlerless elk.xlsx,9,1,10,hunt_join_2025.1.csv
+EA1228,Morgan-South Rich,Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Dec 21 2025,67,8,75,antlerless elk.xlsx,67,8,75,hunt_join_2025.1.csv
+EA1229,Morgan-South Rich,Antlerless,Elk,Any Legal Weapon,General Season,Dec 22 2025 - Jan 31 2026,144,16,160,antlerless elk.xlsx,144,16,160,hunt_join_2025.1.csv
+EA1231,"West Desert, Tintic Valley",Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 31 2026,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1233,Avintaquin Canyon CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1234,Royal Ivory Outfitters CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1235,Sharp Mountain CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1236,East Canyon,Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Jan 11 2026,135,15,150,antlerless elk.xlsx,135,15,150,hunt_join_2025.1.csv
+EA1237,"La Sal, La Sal Mtns-North",Antlerless,Elk,Any Legal Weapon,General Season,Nov 17 2025 - Dec 07 2025,157,18,175,antlerless elk.xlsx,157,18,175,hunt_join_2025.1.csv
+EA1239,"Nine Mile, Range Creek",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1240,"Nine Mile, Range Creek",Antlerless,Elk,Any Legal Weapon,General Season,Nov 27 2025 - Jan 31 2026,135,15,150,antlerless elk.xlsx,135,15,150,hunt_join_2025.1.csv
+EA1242,"Vernal, Buckskin Hills-Jensen",Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Dec 31 2025,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1243,"Vernal, Buckskin Hills-Jensen",Antlerless,Elk,Any Legal Weapon,General Season,Jan 01 2026 - Jan 31 2026,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1244,Yellowstone,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 17 2025,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1245,Yellowstone,Antlerless,Elk,Muzzleloader,General Season,Oct 29 2025 - Nov 06 2025,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1250,"North Slope, West Daggett",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,27,3,30,antlerless elk.xlsx,27,3,30,hunt_join_2025.1.csv
+EA1251,"Southwest Desert, Burbank/Garrison",Antlerless,Elk,Any Legal Weapon,General Season,Aug 01 2025 - Aug 15 2025,11,1,12,antlerless elk.xlsx,13,2,15,hunt_join_2025.1.csv
+EA1254,Pine Valley,Antlerless,Elk,Any Legal Weapon,General Season,Nov 11 2025 - Jan 11 2026,27,3,30,antlerless elk.xlsx,27,3,30,hunt_join_2025.1.csv
+EA1256,Little Pole Canyon CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1257,Tunnel Hollow CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1258,La Sal (Expo),Antlerless,Elk,Any Legal Weapon,General Season,"Oct 4 - Oct 16, 2025",,,,antlerless elk.csv,,,,
+EA1259,Diamond Mountain CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1260,West Ridge CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1261,Blackhawk CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1263,Weber Florence Creek/Stillman Creek CWMU,Antlerless,Elk,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,antlerless elk.xlsx,,,,
+EA1264,"Wasatch Mtns, Rabbit Gulch",Antlerless,Elk,Any Legal Weapon,General Season,Jan 17 2026 - Jan 25 2026,45,5,50,antlerless elk.xlsx,45,5,50,hunt_join_2025.1.csv
+EA1265,"Wasatch Mtns, Tabby Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Dec 20 2025 - Dec 30 2025,90,10,100,antlerless elk.xlsx,90,10,100,hunt_join_2025.1.csv
+EA1266,"Box Elder, Hansel Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Aug 01 2025 - Jan 31 2026,27,3,30,antlerless elk.xlsx,18,2,20,hunt_join_2025.1.csv
+EA1267,Cache,Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,180,20,200,antlerless elk.xlsx,81,9,90,hunt_join_2025.1.csv
+EA1268,"North Slope, Summit",Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 17 2025,180,20,200,antlerless elk.xlsx,180,20,200,hunt_join_2025.1.csv
+EA1269,Ogden (Excludes Hyrum),Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Dec 31 2025,270,30,300,antlerless elk.xlsx,180,20,200,hunt_join_2025.1.csv
+EA1270,Fishlake (Conservation),Antlerless,Elk,Any Legal Weapon,Conservation,"Oct 4 - Oct 16, 2025 & Nov 22 - Dec 31, 2025",,,,antlerless elk.csv,,,,
+EA1271,Manti (Conservation),Antlerless,Elk,Any Legal Weapon,Conservation,"Oct 4 - Oct 16, 2025 & Nov 19, 2025 - Jan 31, 2026",,,,antlerless elk.csv,,,,
+EA1272,"East Canyon, East",Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Jan 31 2026,135,15,150,antlerless elk.xlsx,135,15,150,hunt_join_2025.1.csv
+EA1273,"North Slope, Three Corners",Antlerless,Elk,Any Legal Weapon,General Season,Dec 20 2025 - Jan 04 2026,22,3,25,antlerless elk.xlsx,22,3,25,hunt_join_2025.1.csv
+EA1274,"North Slope, Three Corners",Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 05 2025,22,3,25,antlerless elk.xlsx,22,3,25,hunt_join_2025.1.csv
+EA1276,"Wasatch Mtns, Box Elder Peak",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,40,5,45,antlerless elk.xlsx,40,5,45,hunt_join_2025.1.csv
+EA1277,"North Slope, Three Corners",Antlerless,Elk,Any Legal Weapon,General Season,Nov 22 2025 - Nov 30 2025,22,3,25,antlerless elk.xlsx,22,3,25,hunt_join_2025.1.csv
+EA1278,"Manti, Ferron-Nelson Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Oct 04 2025 - Nov 30 2025,5,5,10,antlerless elk.xlsx,,,,
+EA1279,"Manti, Ferron-Nelson Mtn",Antlerless,Elk,Any Legal Weapon,General Season,Dec 01 2025 - Jan 31 2026,5,5,10,antlerless elk.xlsx,,,,
+EA1280,"La Sal, La Sal Mtns-North",Antlerless,Elk,Any Legal Weapon,General Season,Dec 08 2025 - Dec 31 2025,18,18,36,antlerless elk.xlsx,,,,
+EA1281,"Mt Dutton, Deep Creek",Antlerless,Elk,Any Legal Weapon,General Season,Dec 20 2025 - Jan 11 2026,8,8,16,antlerless elk.xlsx,,,,
+EA1282,"Ogden, North",Antlerless,Elk,Archery,General Season,Dec 16 2025 - Jan 31 2026,20,20,40,antlerless elk.xlsx,,,,
+EA1283,Panguitch Lake,Antlerless,Elk,Archery,General Season,Aug 16 2025 - Aug 31 2025,31,4,35,antlerless elk.xlsx,31,4,35,hunt_join_2025.1.csv
+EA1284,Panguitch Lake,Antlerless,Elk,Muzzleloader,General Season,Oct 29 2025 - Nov 06 2025,49,6,55,antlerless elk.xlsx,31,4,35,hunt_join_2025.1.csv
+EA1285,Panguitch Lake,Antlerless,Elk,Any Legal Weapon,General Season,Dec 13 2025 - Dec 21 2025,22,3,25,antlerless elk.xlsx,31,4,35,hunt_join_2025.1.csv
+EA1286,Monroe,Antlerless,Elk,Any Legal Weapon,General Season,2026 Season Dates Pending,36,4,40,antlerless elk.csv,27,3,30,hunt_join_2025.1.csv
+EA2000,Antlerless Elk Control,Antlerless,Elk,Any Legal Weapon,Antlerless Elk Control,"Valid for the season/weapon listed on your qualifying permit on the Chalk Creek, East Canyon, Kamas, Henry Mtns, Morgan-S. Rich, Ogden, Pine Valley & Zion Units",,,,antlerless elk.csv,,,,
+EA2002,Morgan-South Rich,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,600,antlerless elk.xlsx,,,600,hunt_join_2025.1.csv
+EA2003,East Canyon,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,500,antlerless elk.xlsx,,,500,hunt_join_2025.1.csv
+EA2004,Chalk Creek,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,600,antlerless elk.xlsx,,,600,hunt_join_2025.1.csv
+EA2005,"North Slope, West Daggett",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,100,antlerless elk.xlsx,,,100,hunt_join_2025.1.csv
+EA2006,Yellowstone,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,2000,antlerless elk.xlsx,,,2000,hunt_join_2025.1.csv
+EA2008,"Nine Mile, Anthro-Myton Bench",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,250,antlerless elk.xlsx,,,250,hunt_join_2025.1.csv
+EA2009,"La Sal, La Sal Mtns",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,70,antlerless elk.xlsx,,,70,hunt_join_2025.1.csv
+EA2010,San Juan,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,50,antlerless elk.xlsx,,,50,hunt_join_2025.1.csv
+EA2011,Manti,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,300,antlerless elk.xlsx,,,300,hunt_join_2025.1.csv
+EA2012,"Wasatch Mtns, West",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,500,antlerless elk.xlsx,,,400,hunt_join_2025.1.csv
+EA2013,"Wasatch Mtns, Currant Creek",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,2000,antlerless elk.xlsx,,,2000,hunt_join_2025.1.csv
+EA2014,"Wasatch Mtns, Avintaquin - White River",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,400,antlerless elk.xlsx,,,400,hunt_join_2025.1.csv
+EA2015,Paunsaugunt,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,75,antlerless elk.xlsx,,,100,hunt_join_2025.1.csv
+EA2016,Nebo,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,325,antlerless elk.xlsx,,,275,hunt_join_2025.1.csv
+EA2017,Mt Dutton,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,75,antlerless elk.xlsx,,,,
+EA2018,Panguitch Lake,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,75,antlerless elk.xlsx,,,75,hunt_join_2025.1.csv
+EA2019,"West Desert, Tintic Valley",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,60,antlerless elk.xlsx,,,60,hunt_join_2025.1.csv
+EA2020,Zion,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,320,antlerless elk.xlsx,,,320,hunt_join_2025.1.csv
+EA2021,"Beaver, East",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,30,antlerless elk.xlsx,,,30,hunt_join_2025.1.csv
+EA2026,"Box Elder, Hansel Mtn",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,200,antlerless elk.xlsx,,,200,hunt_join_2025.1.csv
+EA2027,Cache,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,250,antlerless elk.xlsx,,,300,hunt_join_2025.1.csv
+EA2028,Vernal/Bonanza,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,450,antlerless elk.xlsx,,,450,hunt_join_2025.1.csv
+EA2029,"Nine Mile, Range Creek",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,150,antlerless elk.xlsx,,,150,hunt_join_2025.1.csv
+EA2030,Diamond Mtn,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,200,antlerless elk.xlsx,,,200,hunt_join_2025.1.csv
+EA2033,Kamas,Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 17 2025,180,20,200,antlerless elk.xlsx,225,25,250,hunt_join_2025.1.csv
+EA2034,"Nine Mile, Anthro",Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 17 2025,180,20,200,antlerless elk.xlsx,180,20,200,hunt_join_2025.1.csv
+EA2036,"Oquirrh-Stansbury, East",Antlerless,Elk,Any Legal Weapon,General Season,Nov 08 2025 - Jan 31 2026,63,7,70,antlerless elk.xlsx,54,6,60,hunt_join_2025.1.csv
+EA2037,Yellowstone,Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 17 2025,180,20,200,antlerless elk.xlsx,180,20,200,hunt_join_2025.1.csv
+EA2038,Wasatch Mtns,Antlerless,Elk,Archery,General Season,Aug 16 2025 - Sep 05 2025,1080,120,1200,antlerless elk.xlsx,1080,120,1200,hunt_join_2025.1.csv
+EA2039,"Fillmore, Pahvant",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,150,antlerless elk.xlsx,,,150,hunt_join_2025.1.csv
+EA2040,Kamas,Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,150,antlerless elk.xlsx,,,150,hunt_join_2025.1.csv
+EA2041,Cache (Conservation),Antlerless,Elk,Any Legal Weapon,Conservation,"Oct 4 - Oct 26, 2025",,,,antlerless elk.csv,,,,
+EA2045,Wasatch Mtns (Conservation),Antlerless,Elk,Any Legal Weapon,Conservation,"Oct 4 - Oct 16, 2025 & Nov 15, 2025 - Jan 31, 2026",,,,antlerless elk.csv,,,,
+EA2046,"Box Elder, Sawtooth",Antlerless,Elk,Any Legal Weapon,Private Lands Only,Aug 01 2025 - Jan 31 2026,,,50,antlerless elk.xlsx,,,25,hunt_join_2025.1.csv
+EB1000,Elk - Statewide Permit,Male Only,Elk,Any Legal Weapon,Statewide,"Archery: Aug 15 - Aug 31, 2026 | ALW: Sept 1, 2026 - Jan 15, 2027",,,,BULL ELK DATABASE.csv,,,,
+EB1001,Any Bull Elk Units,Male Only,Elk,Any Legal Weapon,General Season - Any Bull,Oct 04 2025 - Oct 10 2025,,,,BULL ELK DATABASE.csv,,,,
+EB1002,Any Bull Elk Units,Male Only,Elk,Muzzleloader,General Season - Any Bull,Oct 29 2025 - Nov 06 2025,,,,BULL ELK DATABASE.csv,,,,
+EB1003,Spike Only Units,Male Only,Elk,Any Legal Weapon,General Season - Spike Bull,Oct 04 2025 - Oct 16 2025,,,,BULL ELK DATABASE.csv,,,,
+EB1004,Spike Only Units,Male Only,Elk,Muzzleloader,General Season - Spike Bull,Oct 29 2025 - Nov 06 2025,,,,BULL ELK DATABASE.csv,,,,
+EB1005,Archery Hunters Choice Elk,Male Only,Elk,Archery,General Season - Archery,"Any bull units: Aug 16 2025 - Sept 17 2025 | Spike only units: Aug 16-Sept 5, 2025 (Paunsaugunt closed to archery)",,,,BULL ELK DATABASE.csv,,,,
+EB1007,Draw-only Youth Any Bull/Hunters Choice Elk,Male Only,Elk,Any Legal Weapon,General Season - Any Bull,Sept 12 2026 - Sept 22 2026,,,750,BULL ELK DATABASE.csv,,,,
+EB1009,Spike Only Elk Units - Multiseason,Male Only,Elk,Multiseason,General Season - Spike Bull,"Spike Archery: Aug 16-Sept 5, 2025 (Paunsaugunt closed to archery) Any Bull Archery: Aug 16-Sept 17, 2025 | ALW: Oct 4 - 16, 2025 | Muzz: Oct 29-Nov 6, 2025",,,,BULL ELK DATABASE.csv,,,,
+EB1010,Any Bull Elk Units,Male Only,Elk,Any Legal Weapon,General Season - Any Bull,Oct 11 2025 - Oct 17 2025,,,,BULL ELK DATABASE.csv,,,,
+EB1011,Youth General Season Bull Elk,Male Only,Elk,Any Legal Weapon,General Season - Youth,ANY BULL: Arch: 08/16-09/17/2025|ALW: 10/4-10-17/2025|Muzz: 10/29-11/6/2025 SPIKE ONLY: Arch:8/16-09/05/2025|ALW: 10/4-10/16/2025|Muzz: 10/29-11/6/2025 |Uinta Basin Private Land only:08/01-11/15/2025,,,,BULL ELK DATABASE.csv,,,,
+EB1012,Uinta Basin Private Lands Any Bull Elk,Male Only,Elk,Any Legal Weapon,General Season - Any Bull,Aug 01 2025 - Nov 15 2025 - Valid only on private property within the unit,,,500,BULL ELK DATABASE.csv,,,,
+EB3000,"Beaver, East",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,22,3,25,BULL ELK DATABASE.csv,22,2,24,hunt_join_2025.1.csv
+EB3002,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,4,0,4,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3003,"Cache, Meadowville",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,9,1,10,BULL ELK DATABASE.csv,11,1,12,hunt_join_2025.1.csv
+EB3005,"Cache, South",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,10,1,11,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3006,Manti,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,148,17,165,BULL ELK DATABASE.csv,157,18,175,hunt_join_2025.1.csv
+EB3008,"Fillmore, Pahvant",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,19,2,21,BULL ELK DATABASE.csv,19,2,21,hunt_join_2025.1.csv
+EB3009,La Sal Mtns,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,36,4,40,BULL ELK DATABASE.csv,36,4,40,hunt_join_2025.1.csv
+EB3010,Monroe,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,21,2,23,BULL ELK DATABASE.csv,19,2,21,hunt_join_2025.1.csv
+EB3011,Mt Dutton,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,19,2,21,BULL ELK DATABASE.csv,18,2,20,hunt_join_2025.1.csv
+EB3013,"North Slope, Three Corners",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,6,1,7,BULL ELK DATABASE.csv,6,1,7,hunt_join_2025.1.csv
+EB3015,Panguitch Lake,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,17,2,19,BULL ELK DATABASE.csv,16,2,18,hunt_join_2025.1.csv
+EB3018,Fishlake/Thousand Lakes,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,84,9,93,BULL ELK DATABASE.csv,81,9,90,hunt_join_2025.1.csv
+EB3019,San Juan Bull Elk,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,29,3,32,BULL ELK DATABASE.csv,26,3,29,hunt_join_2025.1.csv
+EB3020,Diamond Mtn,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,25,3,28,BULL ELK DATABASE.csv,22,3,25,hunt_join_2025.1.csv
+EB3022,Wasatch Mtns,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,130,15,145,BULL ELK DATABASE.csv,164,18,182,hunt_join_2025.1.csv
+EB3024,"Beaver, East",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3025,"Beaver, East",Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,15,2,17,BULL ELK DATABASE.csv,14,2,16,hunt_join_2025.1.csv
+EB3028,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,3,0,3,BULL ELK DATABASE.csv,2,0,2,hunt_join_2025.1.csv
+EB3031,"Box Elder, Pilot Mtn",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 12 2026 - Oct 02 2026,6,1,7,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3032,"Cache, Meadowville",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,3,1,4,BULL ELK DATABASE.csv,4,1,5,hunt_join_2025.1.csv
+EB3033,"Cache, Meadowville",Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,6,1,7,BULL ELK DATABASE.csv,7,1,8,hunt_join_2025.1.csv
+EB3036,"Cache, South",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,4,0,4,BULL ELK DATABASE.csv,4,0,4,hunt_join_2025.1.csv
+EB3037,"Cache, South",Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,6,1,7,BULL ELK DATABASE.csv,5,1,6,hunt_join_2025.1.csv
+EB3038,Manti,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,61,7,68,BULL ELK DATABASE.csv,65,7,72,hunt_join_2025.1.csv
+EB3039,Manti,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,102,11,113,BULL ELK DATABASE.csv,108,12,120,hunt_join_2025.1.csv
+EB3042,"Fillmore, Pahvant",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,8,1,9,BULL ELK DATABASE.csv,8,1,9,hunt_join_2025.1.csv
+EB3043,"Fillmore, Pahvant",Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,13,2,15,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3044,Dolores Triangle,Male Only,Elk,Any Legal Weapon,Limited Entry,Dec 05 2026 - Jan 31 2027,6,1,7,BULL ELK DATABASE.csv,6,1,7,hunt_join_2025.1.csv
+EB3045,La Sal Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,14,2,16,BULL ELK DATABASE.csv,14,2,16,hunt_join_2025.1.csv
+EB3046,La Sal Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,24,3,27,BULL ELK DATABASE.csv,24,3,27,hunt_join_2025.1.csv
+EB3047,Monroe,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,8,1,9,BULL ELK DATABASE.csv,8,1,9,hunt_join_2025.1.csv
+EB3048,Monroe,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,13,2,15,BULL ELK DATABASE.csv,13,1,14,hunt_join_2025.1.csv
+EB3049,Mt Dutton,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,8,1,9,BULL ELK DATABASE.csv,7,1,8,hunt_join_2025.1.csv
+EB3050,Mt Dutton,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,13,2,15,BULL ELK DATABASE.csv,13,1,14,hunt_join_2025.1.csv
+EB3053,"North Slope, Three Corners",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3056,Panguitch Lake,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,7,1,8,BULL ELK DATABASE.csv,6,1,7,hunt_join_2025.1.csv
+EB3057,Panguitch Lake,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,12,1,13,BULL ELK DATABASE.csv,11,1,12,hunt_join_2025.1.csv
+EB3063,Fishlake/Thousand Lakes,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,34,4,38,BULL ELK DATABASE.csv,33,4,37,hunt_join_2025.1.csv
+EB3064,Fishlake/Thousand Lakes,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,99,11,110,BULL ELK DATABASE.csv,96,11,107,hunt_join_2025.1.csv
+EB3065,Fishlake/Thousand Lakes,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,57,6,63,BULL ELK DATABASE.csv,56,6,62,hunt_join_2025.1.csv
+EB3066,San Juan Bull Elk,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,12,1,13,BULL ELK DATABASE.csv,11,1,12,hunt_join_2025.1.csv
+EB3067,San Juan Bull Elk,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,20,2,22,BULL ELK DATABASE.csv,18,2,20,hunt_join_2025.1.csv
+EB3068,Diamond Mtn,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,10,1,11,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3069,Diamond Mtn,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,30,3,33,BULL ELK DATABASE.csv,27,3,30,hunt_join_2025.1.csv
+EB3072,Wasatch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,54,6,60,BULL ELK DATABASE.csv,67,7,74,hunt_join_2025.1.csv
+EB3073,Wasatch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,89,10,99,BULL ELK DATABASE.csv,112,12,124,hunt_join_2025.1.csv
+EB3077,"Beaver, East",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,13,2,15,BULL ELK DATABASE.csv,13,1,14,hunt_join_2025.1.csv
+EB3079,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,2,0,2,BULL ELK DATABASE.csv,2,0,2,hunt_join_2025.1.csv
+EB3081,"Cache, Meadowville",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,5,1,6,BULL ELK DATABASE.csv,6,1,7,hunt_join_2025.1.csv
+EB3083,"Cache, South",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,5,1,6,BULL ELK DATABASE.csv,5,1,6,hunt_join_2025.1.csv
+EB3084,Manti,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,89,10,99,BULL ELK DATABASE.csv,94,11,105,hunt_join_2025.1.csv
+EB3086,"Fillmore, Pahvant",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,12,1,13,BULL ELK DATABASE.csv,12,1,13,hunt_join_2025.1.csv
+EB3087,La Sal Mtns,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,22,2,24,BULL ELK DATABASE.csv,22,2,24,hunt_join_2025.1.csv
+EB3088,Monroe,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,13,1,14,BULL ELK DATABASE.csv,11,1,12,hunt_join_2025.1.csv
+EB3089,Mt Dutton,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,12,1,13,BULL ELK DATABASE.csv,11,1,12,hunt_join_2025.1.csv
+EB3091,"North Slope, Three Corners",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,4,0,4,BULL ELK DATABASE.csv,4,0,4,hunt_join_2025.1.csv
+EB3093,Panguitch Lake,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,10,1,11,BULL ELK DATABASE.csv,10,1,11,hunt_join_2025.1.csv
+EB3096,Fishlake/Thousand Lakes,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,50,6,56,BULL ELK DATABASE.csv,49,5,54,hunt_join_2025.1.csv
+EB3097,San Juan Bull Elk,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,17,2,19,BULL ELK DATABASE.csv,15,2,17,hunt_join_2025.1.csv
+EB3098,Diamond Mtn,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,15,2,17,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3100,Wasatch Mtns,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,78,9,87,BULL ELK DATABASE.csv,98,11,109,hunt_join_2025.1.csv
+EB3102,"Beaver, East",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",3,0,3,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3104,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026",1,0,1,BULL ELK DATABASE.csv,1,0,1,hunt_join_2025.1.csv
+EB3105,"Cache, Meadowville",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",1,0,1,BULL ELK DATABASE.csv,1,0,1,hunt_join_2025.1.csv
+EB3107,"Cache, South",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",1,0,1,BULL ELK DATABASE.csv,1,0,1,hunt_join_2025.1.csv
+EB3108,Manti,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",18,2,20,BULL ELK DATABASE.csv,19,2,21,hunt_join_2025.1.csv
+EB3110,"Fillmore, Pahvant",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",3,0,3,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3111,La Sal Mtns,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",5,0,5,BULL ELK DATABASE.csv,5,0,5,hunt_join_2025.1.csv
+EB3112,Monroe,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",3,0,3,BULL ELK DATABASE.csv,2,0,2,hunt_join_2025.1.csv
+EB3113,Mt Dutton,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",3,0,3,BULL ELK DATABASE.csv,2,0,2,hunt_join_2025.1.csv
+EB3115,"North Slope, Three Corners",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026",1,0,1,BULL ELK DATABASE.csv,1,0,1,hunt_join_2025.1.csv
+EB3117,Panguitch Lake,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",2,0,2,BULL ELK DATABASE.csv,2,0,2,hunt_join_2025.1.csv
+EB3120,Fishlake/Thousand Lakes,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",10,1,11,BULL ELK DATABASE.csv,10,1,11,hunt_join_2025.1.csv
+EB3121,San Juan Bull Elk,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",4,0,4,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3122,Diamond Mtn,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",3,0,3,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3124,Wasatch Mtns,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",15,2,17,BULL ELK DATABASE.csv,20,2,22,hunt_join_2025.1.csv
+EB3126,Manti,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,175,20,195,BULL ELK DATABASE.csv,186,21,207,hunt_join_2025.1.csv
+EB3127,Wasatch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,155,17,172,BULL ELK DATABASE.csv,193,22,215,hunt_join_2025.1.csv
+EB3128,"Box Elder, Grouse Creek",Male Only,Elk,Multiseason,Conservation,"Any Legal Weapon: Sept 16-20, 2026 & Oct 3 - 15, 2026 | Muzz: Sept 21-Oct 2, 2026",,,,BULL ELK DATABASE.csv,,,,
+EB3130,"Box Elder, Pilot Mtn",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 06 2026,2,0,2,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3132,"Cache, North",Male Only,Elk,Archery,Limited Entry,Sept 01 2026 - Sept 30 2026,22,2,24,BULL ELK DATABASE.csv,25,3,28,hunt_join_2025.1.csv
+EB3135,Barney Top/Kaiparowits,Male Only,Elk,Archery,Limited Entry,Sept 01 2026 - Sept 30 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3136,"Southwest Desert, North",Male Only,Elk,Archery,Limited Entry,Sept 01 2026 - Sept 30 2026,21,2,23,BULL ELK DATABASE.csv,16,2,18,hunt_join_2025.1.csv
+EB3137,"West Desert, Deep Creek",Male Only,Elk,Archery,Limited Entry,Sept 01 2026 - Sept 30 2026,13,2,15,BULL ELK DATABASE.csv,13,1,14,hunt_join_2025.1.csv
+EB3139,"Cache, North",Male Only,Elk,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,22,2,24,BULL ELK DATABASE.csv,25,3,28,hunt_join_2025.1.csv
+EB3142,Barney Top/Kaiparowits,Male Only,Elk,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3143,"Southwest Desert, North",Male Only,Elk,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,21,2,23,BULL ELK DATABASE.csv,16,2,18,hunt_join_2025.1.csv
+EB3144,"West Desert, Deep Creek",Male Only,Elk,Archery,Limited Entry,Nov 07 2026 - Nov 30 2026,13,2,15,BULL ELK DATABASE.csv,13,1,14,hunt_join_2025.1.csv
+EB3145,Boulder,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,31,4,35,BULL ELK DATABASE.csv,28,3,31,hunt_join_2025.1.csv
+EB3146,"Southwest Desert, South",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,39,4,43,BULL ELK DATABASE.csv,37,4,41,hunt_join_2025.1.csv
+EB3147,"Box Elder, Grouse Creek",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,6,1,7,BULL ELK DATABASE.csv,6,1,7,hunt_join_2025.1.csv
+EB3148,Boulder,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,13,1,14,BULL ELK DATABASE.csv,12,1,13,hunt_join_2025.1.csv
+EB3149,"Southwest Desert, South",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,16,2,18,BULL ELK DATABASE.csv,15,2,17,hunt_join_2025.1.csv
+EB3150,"Box Elder, Grouse Creek",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,12,1,13,BULL ELK DATABASE.csv,12,1,13,hunt_join_2025.1.csv
+EB3151,Boulder,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,22,2,24,BULL ELK DATABASE.csv,19,2,21,hunt_join_2025.1.csv
+EB3152,"Southwest Desert, South",Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,26,3,29,BULL ELK DATABASE.csv,25,3,28,hunt_join_2025.1.csv
+EB3153,"Box Elder, Grouse Creek",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,2,1,3,BULL ELK DATABASE.csv,2,1,3,hunt_join_2025.1.csv
+EB3154,Boulder,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,19,2,21,BULL ELK DATABASE.csv,17,2,19,hunt_join_2025.1.csv
+EB3155,"Southwest Desert, South",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,23,3,26,BULL ELK DATABASE.csv,22,2,24,hunt_join_2025.1.csv
+EB3156,Boulder,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",4,0,4,BULL ELK DATABASE.csv,4,0,4,hunt_join_2025.1.csv
+EB3157,"Southwest Desert, South",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",5,0,5,BULL ELK DATABASE.csv,5,0,5,hunt_join_2025.1.csv
+EB3158,"Beaver, East",Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,18,2,20,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3159,"Beaver, East",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,27,3,30,BULL ELK DATABASE.csv,25,3,28,hunt_join_2025.1.csv
+EB3160,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,22,2,24,BULL ELK DATABASE.csv,20,2,22,hunt_join_2025.1.csv
+EB3161,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,4,1,5,BULL ELK DATABASE.csv,4,1,5,hunt_join_2025.1.csv
+EB3162,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,9,1,10,BULL ELK DATABASE.csv,8,1,9,hunt_join_2025.1.csv
+EB3163,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,14,2,16,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3164,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,25,3,28,BULL ELK DATABASE.csv,23,3,26,hunt_join_2025.1.csv
+EB3165,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",3,0,3,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3166,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,13,1,14,BULL ELK DATABASE.csv,12,1,13,hunt_join_2025.1.csv
+EB3167,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,4,1,5,BULL ELK DATABASE.csv,3,1,4,hunt_join_2025.1.csv
+EB3168,"Cache, Meadowville",Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,4,1,5,BULL ELK DATABASE.csv,4,1,5,hunt_join_2025.1.csv
+EB3169,"Cache, Meadowville",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,11,1,12,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3170,"Cache, South",Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,4,1,5,BULL ELK DATABASE.csv,4,1,5,hunt_join_2025.1.csv
+EB3171,"Cache, South",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,11,1,12,BULL ELK DATABASE.csv,10,1,11,hunt_join_2025.1.csv
+EB3172,Manti,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3173,Nebo/San Pitch Mtns,Male Only,Elk,Archery,Limited Entry,Aug 15 2026 - Sept 15 2026,29,3,32,BULL ELK DATABASE.csv,22,2,24,hunt_join_2025.1.csv
+EB3174,Nebo/San Pitch Mtns,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,13,2,15,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3175,Nebo/San Pitch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,12,1,13,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3176,Nebo/San Pitch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,20,2,22,BULL ELK DATABASE.csv,14,2,16,hunt_join_2025.1.csv
+EB3177,Nebo/San Pitch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,34,4,38,BULL ELK DATABASE.csv,25,3,28,hunt_join_2025.1.csv
+EB3178,Nebo/San Pitch Mtns,Male Only,Elk,Multiseason,Limited Entry,"Arch: Aug 15-Sept 15, 2026 | Muzz: Sept 21-Oct 2, 2026 | ALW: Sept 16-20, 2026 & Oct 3-15, 2026 & Nov 7-15, 2026",4,0,4,BULL ELK DATABASE.csv,3,0,3,hunt_join_2025.1.csv
+EB3179,Nebo/San Pitch Mtns,Male Only,Elk,Muzzleloader,Limited Entry,Sept 21 2026 - Oct 02 2026,17,2,19,BULL ELK DATABASE.csv,13,1,14,hunt_join_2025.1.csv
+EB3180,"Fillmore, Pahvant",Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,18,2,20,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3181,"Fillmore, Pahvant",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,22,3,25,BULL ELK DATABASE.csv,22,3,25,hunt_join_2025.1.csv
+EB3182,La Sal Mtns,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3183,La Sal Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,42,5,47,BULL ELK DATABASE.csv,42,5,47,hunt_join_2025.1.csv
+EB3184,Monroe,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,7,1,8,BULL ELK DATABASE.csv,7,1,8,hunt_join_2025.1.csv
+EB3185,Monroe,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,24,3,27,BULL ELK DATABASE.csv,22,3,25,hunt_join_2025.1.csv
+EB3186,Mt Dutton,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,13,2,15,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3187,Mt Dutton,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,22,3,25,BULL ELK DATABASE.csv,22,2,24,hunt_join_2025.1.csv
+EB3188,Panguitch Lake,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,13,2,15,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3189,Panguitch Lake,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,20,2,22,BULL ELK DATABASE.csv,19,2,21,hunt_join_2025.1.csv
+EB3190,Boulder,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,4,1,5,BULL ELK DATABASE.csv,4,1,5,hunt_join_2025.1.csv
+EB3191,Boulder,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,37,4,41,BULL ELK DATABASE.csv,33,4,37,hunt_join_2025.1.csv
+EB3192,Fishlake/Thousand Lakes,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,13,2,15,BULL ELK DATABASE.csv,13,2,15,hunt_join_2025.1.csv
+EB3193,San Juan Bull Elk,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3194,San Juan Bull Elk,Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,33,4,37,BULL ELK DATABASE.csv,31,3,34,hunt_join_2025.1.csv
+EB3195,Diamond Mtn,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,4,1,5,BULL ELK DATABASE.csv,4,1,5,hunt_join_2025.1.csv
+EB3196,Diamond Mtn,Male Only,Elk,Any Legal Weapon,Limited Entry,Nov 07 2026 - Nov 15 2026,17,2,19,BULL ELK DATABASE.csv,15,2,17,hunt_join_2025.1.csv
+EB3197,"Southwest Desert, South",Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,18,2,20,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3198,"Southwest Desert, South",Male Only,Elk,Any Legal Weapon,Limited Entry,Oct 03 2026 - Oct 15 2026,46,5,51,BULL ELK DATABASE.csv,43,5,48,hunt_join_2025.1.csv
+EB3199,Wasatch Mtns,Male Only,Elk,Archery,Limited Entry,Nov 28 2026 - Dec 13 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3205,East Canyon,Male Only,Elk,Archery,Limited Entry,Dec 19 2026 - Dec 27 2026,7,1,8,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3208,Morgan-South Rich,Male Only,Elk,Any Legal Weapon,Limited Entry,Dec 19 2026 - Dec 27 2026,9,1,10,BULL ELK DATABASE.csv,9,1,10,hunt_join_2025.1.csv
+EB3209,"Box Elder, Pilot Mtn",Male Only,Elk,Multiseason,Conservation,"Archery: Aug 15-Sept 6, 2026 | Any Legal Weapon: Sept 12-Oct 2, 2026",,,,BULL ELK DATABASE.csv,,,,
+EB3210,"North Slope, Three Corners",Male Only,Elk,Any Legal Weapon,Limited Entry,Sept 16 2026 - Sept 20 2026,5,0,5,BULL ELK DATABASE.csv,5,0,5,hunt_join_2025.1.csv
+EB3500,Alton CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3501,Bar J Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3502,Bear Mountain CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3503,Bear Springs CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3504,Blackhawk CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3505,Boobe Hole CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3506,Causey Spring CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3508,Chimney Rock CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3509,Coldwater Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3511,Cotton Thomas CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3514,Deseret CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3515,Double Cone CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3516,Durst Mountain CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3517,East Fork Chalk Creek CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3519,Ensign Ranches CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3520,Folley Ridge CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3521,Grass Valley/Clark Canyon CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3522,Grazing Pasture CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3523,Guildersleeve CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3524,Hardscrabble CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3525,Heaston East CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3526,Hiawatha CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3527,Indian Head CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3528,Ingham Peak CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3529,Circle E Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3530,Jacob's Creek CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3531,Johnson Mountain Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3532,Jump Creek CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3533,Junction Valley CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3534,Little Red Creek CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3536,Minnie Maud Ridge CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3538,Moon Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3540,Old Woman Plateau CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3541,Patmos Ridge CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3543,Preston Nutter Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3544,Redd Ranches CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3545,Cactus Ranch LLC CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3546,Roan Cliffs CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3547,Sand Creek CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3548,Scofield Canyons CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3549,Scofield East CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3550,Scofield West CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3551,SJ Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3552,Skull Crack CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3553,Soldier Summit CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3554,South Canyon CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3555,Spring Creek/Dodge CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3557,Strawberry Ridge CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3558,Summit Point CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3559,Three C CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3562,Wallsburg CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3564,Woodruff Creek South CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3565,North Peaks CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3603,Pahvant Ensign CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3604,Double R Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3606,Mountain Sky Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3607,West Willow Creek Ranch CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3608,Avintaquin Canyon CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3610,Sharp Mountain CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3611,West Ridge CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3613,Little Pole Canyon CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3614,Tunnel Hollow CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3619,Weber Florence Creek/Stillman Creek CWMU,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EB3620,The Dirty Dozen,Male Only,Elk,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,BULL ELK DATABASE.csv,,,,
+EL3000,"Beaver, East",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3002,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3003,"Cache, Meadowville",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3005,"Cache, South",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3006,Manti,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3008,"Fillmore, Pahvant",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3009,"La Sal, La Sal Mtns",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3010,Monroe,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3011,Mt Dutton,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3013,"North Slope, Three Corners",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3015,Panguitch Lake,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3018,Fishlake/Thousand Lakes,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3019,San Juan Bull Elk,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3020,Diamond Mtn,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3022,Wasatch Mtns,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3024,"Beaver, East",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3025,"Beaver, East",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3028,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3031,"Box Elder, Pilot Mtn",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3032,"Cache, Meadowville",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3033,"Cache, Meadowville",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3036,"Cache, South",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3037,"Cache, South",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3038,Manti,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3039,Manti,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3042,"Fillmore, Pahvant",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3043,"Fillmore, Pahvant",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3044,"La Sal, Dolores Triangle",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Dec 06 2025 - Jan 31 2026 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3045,"La Sal, La Sal Mtns",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3046,"La Sal, La Sal Mtns",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3047,Monroe,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3048,Monroe,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3049,Mt Dutton,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3050,Mt Dutton,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3053,"North Slope, Three Corners",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3056,Panguitch Lake,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3057,Panguitch Lake,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3063,Fishlake/Thousand Lakes,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3064,Fishlake/Thousand Lakes,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3065,Fishlake/Thousand Lakes,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3066,San Juan Bull Elk,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3067,San Juan Bull Elk,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3068,Diamond Mtn,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3069,Diamond Mtn,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3072,Wasatch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3073,Wasatch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3077,"Beaver, East",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3079,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3081,"Cache, Meadowville",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3083,"Cache, South",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3084,Manti,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3086,"Fillmore, Pahvant",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3087,"La Sal, La Sal Mtns",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3088,Monroe,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3089,Mt Dutton,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3091,"North Slope, Three Corners",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3093,Panguitch Lake,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3096,Fishlake/Thousand Lakes,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3097,San Juan Bull Elk,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3098,Diamond Mtn,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3100,Wasatch Mtns,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3126,Manti,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3127,Wasatch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3130,"Box Elder, Pilot Mtn",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 07 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3132,"Cache, North",Male Only,Elk,Archery,Limited Entry - Private Land Only,Sept 01 2025 - Sept 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3135,Barney Top/Kaiparowits,Male Only,Elk,Archery,Limited Entry - Private Land Only,Sept 01 2025 - Sept 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3136,"Southwest Desert, North",Male Only,Elk,Archery,Limited Entry - Private Land Only,Sept 01 2025 - Sept 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3137,"West Desert, Deep Creek",Male Only,Elk,Archery,Limited Entry - Private Land Only,Sept 01 2025 - Sept 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3139,"Cache, North",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 08 2025 - Nov 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3142,Barney Top/Kaiparowits,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 08 2025 - Nov 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3143,"Southwest Desert, North",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 08 2025 - Nov 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3144,"West Desert, Deep Creek",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 08 2025 - Nov 30 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3145,Boulder,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3146,"Southwest Desert, South",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3147,"Box Elder, Grouse Creek",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3148,Boulder,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3149,"Southwest Desert, South",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3150,"Box Elder, Grouse Creek",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3151,Boulder,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3152,"Southwest Desert, South",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3153,"Box Elder, Grouse Creek",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3154,Boulder,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3155,"Southwest Desert, South",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3158,"Beaver, East",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3159,"Beaver, East",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3160,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3161,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3162,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3163,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3164,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3166,"Book Cliffs, Bitter Creek/East",Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3167,"Book Cliffs, Little Creek Roadless",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3168,"Cache, Meadowville",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3169,"Cache, Meadowville",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3170,"Cache, South",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3171,"Cache, South",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3172,Manti,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3173,Nebo/San Pitch Mtns,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3174,Nebo/San Pitch Mtns,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3175,Nebo/San Pitch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3176,Nebo/San Pitch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3177,Nebo/San Pitch Mtns,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3179,Nebo/San Pitch Mtns,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,Sept 22 2025 - Oct 03 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3180,"Fillmore, Pahvant",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3181,"Fillmore, Pahvant",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3182,"La Sal, La Sal Mtns",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3183,"La Sal, La Sal Mtns",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3184,Monroe,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3185,Monroe,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3186,Mt Dutton,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3187,Mt Dutton,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3188,Panguitch Lake,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3189,Panguitch Lake,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3190,Boulder,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3191,Boulder,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3192,Fishlake/Thousand Lakes,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3193,San Juan Bull Elk,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3194,San Juan Bull Elk,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3195,Diamond Mtn,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3196,Diamond Mtn,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3197,"Southwest Desert, South",Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3198,"Southwest Desert, South",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Oct 04 2025 - Oct 16 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3199,Wasatch Mtns,Male Only,Elk,Archery,Limited Entry - Private Land Only,Nov 29 2025 - Dec 14 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3205,East Canyon,Male Only,Elk,Archery,Limited Entry - Private Land Only,Dec 20 2025 - Dec 28 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3208,Morgan-South Rich,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Dec 20 2025 - Dec 28 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EL3210,"North Slope, Three Corners",Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Sept 17 2025 - Sept 21 2025 - Private Land Only,,,,BULL ELK DATABASE.csv,,,,
+EX1000,Elk Extended Archery,Hunter's Choice,Elk,Archery,Extended Archery,"Aug 16 - Dec 15, 2025",,,,bull elk hunter's choice.csv,,,,
+GO1000,Mountain Goat - Statewide Permit,Hunter's Choice,Mountain Goat,Any Legal Weapon,Statewide,"Sept 1 - Dec 31, 2026",,,,mtn goat.csv,,,,
+GO6800,Beaver,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Sept 27 2026,7,2,9,mtn goat.xlsx,7,2,9,hunt_join_2025.1.csv
+GO6801,Beaver,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 28 2026 - Oct 26 2026,9,0,9,mtn goat.xlsx,9,0,9,hunt_join_2025.1.csv
+GO6803,Nebo,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 26 2026 - Nov 25 2026,21,3,24,mtn goat.xlsx,16,2,18,hunt_join_2025.1.csv
+GO6804,High Uintas Kamas,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Oct 31 2026,1,0,1,mtn goat.xlsx,1,0,1,hunt_join_2025.1.csv
+GO6805,High Uintas Central,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Oct 31 2026,5,0,5,mtn goat.xlsx,5,0,5,hunt_join_2025.1.csv
+GO6806,High Uintas East,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Oct 31 2026,3,0,3,mtn goat.xlsx,2,0,2,hunt_join_2025.1.csv
+GO6807,High Uintas Leidy Peak,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Oct 31 2026,2,0,2,mtn goat.xlsx,1,0,1,hunt_join_2025.1.csv
+GO6808,High Uintas West,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Oct 31 2026,9,2,11,mtn goat.xlsx,9,2,11,hunt_join_2025.1.csv
+GO6810,"Ogden, Willard Peak",Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,1,0,1,mtn goat.xlsx,1,0,1,hunt_join_2025.1.csv
+GO6813,"Wasatch Mtns, Provo Peak",Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,5,0,5,mtn goat.xlsx,5,0,5,hunt_join_2025.1.csv
+GO6814,Mt Dutton,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,2,0,2,mtn goat.xlsx,2,0,2,hunt_join_2025.1.csv
+GO6817,La Sal Mtns,Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,10,2,12,mtn goat.xlsx,9,2,11,hunt_join_2025.1.csv
+GO6818,"Wasatch Mtns, Box Elder Peak",Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,3,0,3,mtn goat.xlsx,3,0,3,hunt_join_2025.1.csv
+GO6819,"Wasatch Mtns, Lone Peak",Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,1,0,1,mtn goat.xlsx,1,0,1,hunt_join_2025.1.csv
+GO6820,"Wasatch Mtns, Timpanogos",Hunter's Choice,Mountain Goat,Any Legal Weapon,Once-in-a-lifetime,Sept 05 2026 - Nov 25 2026,8,2,10,mtn goat.xlsx,8,2,10,hunt_join_2025.1.csv
+GO6821,Nebo,Hunter's Choice,Mountain Goat,Archery,Once-in-a-lifetime,Sept 16 2026 - Sept 25 2026,12,0,12,mtn goat.xlsx,12,0,12,hunt_join_2025.1.csv
+GO6822,Beaver,Hunter's Choice,Mountain Goat,Archery,Once-in-a-lifetime,Nov 14 2026 - Nov 23 2026,2,0,2,mtn goat.xlsx,2,0,2,hunt_join_2025.1.csv
+LD1001,Paunsaugunt - Private Land Only,Male Only,Deer,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 12 2025 - Private Land Only,,,,BUCK DEER.csv,,,,
+LD1004,Paunsaugunt - Private Land Only,Male Only,Deer,Any Legal Weapon,Limited Entry - Private Land Only,Oct 18 2025 - Oct 31 2025 - Private Land Only,,,,BUCK DEER.csv,,,,
+LD1006,Paunsaugunt - Private Land Only,Male Only,Deer,Muzzleloader,Limited Entry - Private Land Only,Sept 24 2025 - Oct 02 2025 - Private Land Only,,,,BUCK DEER.csv,,,,
+LD1019,"Fillmore, Oak Creek LE - Private Land Only",Male Only,Deer,Any Legal Weapon,Limited Entry - Private Land Only,Oct 18 2025 - Oct 26 2025 - Private Land Only,,,,BUCK DEER.csv,,,,
+LD1023,Diamond Mtn - Private Land Only,Male Only,Deer,Any Legal Weapon,Limited Entry - Private Land Only,Oct 18 2025 - Oct 26 2025 - Private Land Only,,,,BUCK DEER.csv,,,,
+LD1108,Thousand Lakes - Private Land Only,Male Only,Deer,Restricted Rifle,Limited Entry - Private Land Only,Oct 18 2025 - Oct 26 2025 - Private Land Only,,,,BUCK DEER.csv,,,,
+LO0008,Diamond Mtn Landowner Association,Male Only,Deer,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 12 2025 - Valid only on property enrolled in the Diamond Mtn LOA,,,,BUCK DEER.csv,,,,
+LO0009,Diamond Mtn Landowner Association,Male Only,Deer,Any Legal Weapon,Limited Entry - Private Land Only,Oct 18 2025 - Oct 26 2025 - Valid only on property enrolled in the Diamond Mtn LOA,,,,BUCK DEER.csv,,,,
+LO0011,Diamond Mtn Landowner Association,Male Only,Elk,Archery,Limited Entry - Private Land Only,Aug 16 2025 - Sept 16 2025 - Valid only on property enrolled in the Diamond Mtn LOA,,,,BULL ELK DATABASE.csv,,,,
+LO0012,Diamond Mtn Landowner Association,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,"Sept 17-Sept 21, 2025 - Valid only on property enrolled in the Diamond Mtn LOA",,,,BULL ELK DATABASE.csv,,,,
+LO0013,Diamond Mtn Landowner Association,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,"Oct 4, 2025 - Oct 16, 2025 - Valid only on property enrolled in the Diamond Mtn LOA",,,,BULL ELK DATABASE.csv,,,,
+LO0014,Diamond Mtn Landowner Association,Male Only,Elk,Muzzleloader,Limited Entry - Private Land Only,"Sept 22, 2025 - Oct 3, 2025 - Valid only on property enrolled in the Diamond Mtn LOA",,,,BULL ELK DATABASE.csv,,,,
+LO0015,Diamond Mtn Landowner Association,Male Only,Elk,Any Legal Weapon,Limited Entry - Private Land Only,Nov 08 2025 - Nov 16 2025 - Valid only on property enrolled in the Diamond Mtn LOA,,,,BULL ELK DATABASE.csv,,,,
+LO1501,Box Elder,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1502,Cache,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1503,Manti/San Rafael,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1504,Nebo,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1506,Fillmore,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1508,Kamas,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1509,"La Sal, La Sal Mtns",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1510,Monroe,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1511,Mt Dutton,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1512,Nine Mile,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1513,North Slope,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1514,Ogden,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1516,Panguitch Lake,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1517,Pine Valley,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1518,Boulder/Kaiparowits,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1519,Fishlake,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1521,"San Juan, Abajo Mtns",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1522,Vernal/Bonanza,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1523,Yellowstone,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1524,Southwest Desert,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1525,"Wasatch Mtns, East",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1526,"Wasatch Mtns, West",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1529,Zion,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1531,Box Elder,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1533,Manti/San Rafael,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1534,Nebo,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1536,Fillmore,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1538,Kamas,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1539,"La Sal, La Sal Mtns",Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1540,Monroe,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1541,Mt Dutton,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1542,Nine Mile,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1543,North Slope,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1544,Ogden,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1546,Panguitch Lake,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1547,Pine Valley,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1549,Fishlake,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1551,"San Juan, Abajo Mtns",Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1552,Vernal/Bonanza,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1553,Yellowstone,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1554,Southwest Desert,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1555,"Wasatch Mtns, East",Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1556,"Wasatch Mtns, West",Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1559,Zion,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1561,Box Elder,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1563,Manti/San Rafael,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1564,Nebo,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1566,Fillmore,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1568,Kamas,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1569,"La Sal, La Sal Mtns",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1570,Monroe,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1571,Mt Dutton,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1572,Nine Mile,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1573,North Slope,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1574,Ogden,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1576,Panguitch Lake,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1577,Pine Valley,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1579,Fishlake,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1581,"San Juan, Abajo Mtns",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1582,Vernal/Bonanza,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1583,Yellowstone,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1584,Southwest Desert,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1585,"Wasatch Mtns, East",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1586,"Wasatch Mtns, West",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1589,Zion,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1591,Fillmore,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1592,Kamas,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1593,Nine Mile,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1594,Panguitch Lake,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1595,Pine Valley,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1596,Fishlake,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1597,Zion,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1598,North Slope,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1599,Chalk Creek,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1600,Chalk Creek,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1601,Chalk Creek,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1602,Chalk Creek,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1603,East Canyon,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1604,East Canyon,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1605,East Canyon,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1606,East Canyon,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1607,Morgan-South Rich,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1608,Morgan-South Rich,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1609,Morgan-South Rich,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1610,Morgan-South Rich,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1611,"Beaver, East",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1612,"Beaver, East",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1613,"Beaver, East",Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1614,"Beaver, West",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1615,"Beaver, West",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1616,"Beaver, West",Male Only,Deer,Restricted Rifle,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1617,"West Desert, Swasey",Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1618,"West Desert, Swasey",Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1619,"West Desert, Swasey",Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1620,Oquirrh/Tintic,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1621,Oquirrh/Tintic,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1622,Oquirrh/Tintic,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1623,Cedar/Stansbury,Male Only,Deer,Archery,General Season - Private Land Only,Aug 16 2025 - Sept 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1624,Cedar/Stansbury,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1625,Cedar/Stansbury,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1627,Cache,Male Only,Deer,Restricted Rifle,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1628,Cache,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1629,Boulder/Kaiparowits,Male Only,Deer,Restricted Rifle,General Season - Private Land Only,Oct 18 2025 - Oct 26 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1630,Boulder/Kaiparowits,Male Only,Deer,Muzzleloader,General Season - Private Land Only,Sept 24 2025 - Oct 02 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LO1631,Box Elder,Male Only,Deer,Any Legal Weapon,General Season - Private Land Only,Oct 08 2025 - Oct 12 2025 - PRIVATE LAND ONLY,,,,BUCK DEER.csv,,,,
+LP5025,Beaver - Private Land Only,Male Only,Pronghorn,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Sept 21 2025 - Private Land Only,,,,pronghorn buck.csv,,,,
+LP5031,"Box Elder, West - Private Land Only",Male Only,Pronghorn,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Sept 21 2025 - Private Land Only,,,,pronghorn buck.csv,,,,
+LP5033,"Fillmore, Oak Creek South - Private Land Only",Male Only,Pronghorn,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Sept 21 2025 - Private Land Only,,,,pronghorn buck.csv,,,,
+LP5046,"San Rafael, North - Private Land Only",Male Only,Pronghorn,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Sept 21 2025 - Private Land Only,,,,pronghorn buck.csv,,,,
+LP5049,Southwest Desert - Private Land Only,Male Only,Pronghorn,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Sept 21 2025 - Private Land Only,,,,pronghorn buck.csv,,,,
+LP5051,"West Desert, Rush Valley - Private Land Only",Male Only,Pronghorn,Any Legal Weapon,Limited Entry - Private Land Only,Sept 13 2025 - Sept 21 2025 - Private Land Only,,,,pronghorn buck.csv,,,,
+MA1005,Morgan-South Rich,Antlerless,Moose,Any Legal Weapon,Limited Entry,Sep 20 2025 - Oct 19 2025,6,1,7,cow moose.xlsx,6,1,7,hunt_join_2025.1.csv
+MA1007,Morgan-South Rich,Antlerless,Moose,Archery,Limited Entry,Aug 01 2025 - Sep 19 2025,3,0,3,cow moose.xlsx,3,0,3,hunt_join_2025.1.csv
+MA1008,"Wasatch Mtns, Salt Lake-Timpanogos",Antlerless,Moose,Any Legal Weapon,Limited Entry,Sep 20 2025 - Oct 19 2025,4,1,5,cow moose.xlsx,4,1,5,hunt_join_2025.1.csv
+MA1009,Causey Spring CWMU,Antlerless,Moose,Any Legal Weapon,CWMU,Contact Operator for 2025 season dates,0,0,0,cow moose.xlsx,,,,
+MA1010,Deseret CWMU,Antlerless,Moose,Any Legal Weapon,CWMU,Contact Operator for 2025 season dates,0,0,0,cow moose.xlsx,,,,
+MB1000,Moose - Statewide Permit,Male Only,Moose,Any Legal Weapon,Statewide,"Sept 1 - Nov 15, 2026",,,,bull moose.csv,,,,
+MB6000,Cache,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,14,3,17,bull moose.xlsx,12,3,15,hunt_join_2025.1.csv
+MB6001,Chalk Creek,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,4,0,4,bull moose.xlsx,3,0,3,hunt_join_2025.1.csv
+MB6002,East Canyon,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,5,0,5,bull moose.xlsx,5,0,5,hunt_join_2025.1.csv
+MB6003,"East Canyon, Morgan-Summit",Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,5,0,5,bull moose.xlsx,4,0,4,hunt_join_2025.1.csv
+MB6004,Kamas,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,6,0,6,bull moose.xlsx,5,0,5,hunt_join_2025.1.csv
+MB6005,Morgan-South Rich,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,6,0,6,bull moose.xlsx,6,0,6,hunt_join_2025.1.csv
+MB6006,"North Slope, Summit",Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,20,3,23,bull moose.xlsx,19,3,22,hunt_join_2025.1.csv
+MB6007,"North Slope, Three Corners/West Daggett",Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,6,2,8,bull moose.xlsx,6,2,8,hunt_join_2025.1.csv
+MB6008,Ogden,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,7,0,7,bull moose.xlsx,7,0,7,hunt_join_2025.1.csv
+MB6009,Diamond Mtn/Vernal,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,2,0,2,bull moose.xlsx,2,0,2,hunt_join_2025.1.csv
+MB6010,Yellowstone,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,6,0,6,bull moose.xlsx,5,0,5,hunt_join_2025.1.csv
+MB6011,Wasatch Mtns/Central Mtns,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,19,3,22,bull moose.xlsx,19,3,22,hunt_join_2025.1.csv
+MB6012,Box Elder,Male Only,Moose,Any Legal Weapon,Once-in-a-lifetime,Sept 12 2026 - Oct 31 2026,2,0,2,bull moose.xlsx,2,0,2,hunt_join_2025.1.csv
+MB6201,Beaver Hollow CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6202,Causey Spring CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6206,Deseret CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6208,East Fork Chalk Creek CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6211,Grass Valley/Clark Canyon CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6219,Skull Crack CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6222,Strawberry Ridge CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6251,Hardscrabble CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6256,Woodruff Creek South CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6258,Jacob's Creek CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6262,Junction Valley CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6265,Little Pole Canyon CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,0,0,0,bull moose.xlsx,,,,
+MB6266,Weber Florence Creek/Stillman Creek CWMU,Male Only,Moose,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,3,,3,bull moose.xlsx,,,,
+PB1000,Pronghorn - Statewide Permit,Male Only,Pronghorn,Any Legal Weapon,Statewide,"Archery: Aug 15 - Aug 31, 2026 | ALW: Sept 1 - Nov 15, 2026",,,,pronghorn buck.csv,,,,
+PB5000,Beaver,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,11,1,12,pronghorn buck.xlsx,10,1,11,hunt_join_2025.1.csv
+PB5001,"Book Cliffs, Bitter Creek",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,13,1,14,pronghorn buck.xlsx,13,1,14,hunt_join_2025.1.csv
+PB5002,"Book Cliffs, South",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,8,1,9,pronghorn buck.xlsx,7,1,8,hunt_join_2025.1.csv
+PB5003,"Box Elder, Promontory",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,4,0,4,pronghorn buck.xlsx,4,0,4,hunt_join_2025.1.csv
+PB5004,"Box Elder, Puddle Valley",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,3,1,4,pronghorn buck.xlsx,3,1,4,hunt_join_2025.1.csv
+PB5005,"Box Elder, Snowville",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,9,1,10,pronghorn buck.xlsx,9,1,10,hunt_join_2025.1.csv
+PB5006,"Box Elder, West",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,10,1,11,pronghorn buck.xlsx,9,1,10,hunt_join_2025.1.csv
+PB5008,"Fillmore, Oak Creek South",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,15,2,17,pronghorn buck.xlsx,13,2,15,hunt_join_2025.1.csv
+PB5009,"La Sal, Potash/South Cisco",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,6,0,6,pronghorn buck.xlsx,6,0,6,hunt_join_2025.1.csv
+PB5011,"Nine Mile, Anthro-Myton Bench",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,30,3,33,pronghorn buck.xlsx,30,3,33,hunt_join_2025.1.csv
+PB5012,"North Slope, Three Corners/West Daggett",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,10,1,11,pronghorn buck.xlsx,12,1,13,hunt_join_2025.1.csv
+PB5013,Pine Valley,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,7,1,8,pronghorn buck.xlsx,7,1,8,hunt_join_2025.1.csv
+PB5015,"San Rafael, North",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,21,2,23,pronghorn buck.xlsx,20,2,22,hunt_join_2025.1.csv
+PB5016,Diamond Mtn/Bonanza,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,17,2,19,pronghorn buck.xlsx,17,2,19,hunt_join_2025.1.csv
+PB5017,Vernal,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,18,2,20,pronghorn buck.xlsx,20,2,22,hunt_join_2025.1.csv
+PB5018,Southwest Desert,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,31,4,35,pronghorn buck.xlsx,31,4,35,hunt_join_2025.1.csv
+PB5019,"West Desert, Riverbed",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,18,2,20,pronghorn buck.xlsx,16,2,18,hunt_join_2025.1.csv
+PB5020,"West Desert, Rush Valley",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,8,1,9,pronghorn buck.xlsx,8,1,9,hunt_join_2025.1.csv
+PB5021,"West Desert, Snake Valley",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,23,3,26,pronghorn buck.xlsx,22,2,24,hunt_join_2025.1.csv
+PB5024,Southwest Desert,Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,31,4,35,pronghorn buck.xlsx,31,4,35,hunt_join_2025.1.csv
+PB5025,Beaver,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,43,5,48,pronghorn buck.xlsx,40,4,44,hunt_join_2025.1.csv
+PB5026,"Book Cliffs, Bitter Creek",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,50,6,56,pronghorn buck.xlsx,50,6,56,hunt_join_2025.1.csv
+PB5027,"Book Cliffs, South",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,34,4,38,pronghorn buck.xlsx,31,3,34,hunt_join_2025.1.csv
+PB5028,"Box Elder, Promontory",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,14,2,16,pronghorn buck.xlsx,14,2,16,hunt_join_2025.1.csv
+PB5029,"Box Elder, Puddle Valley",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,14,2,16,pronghorn buck.xlsx,14,2,16,hunt_join_2025.1.csv
+PB5030,"Box Elder, Snowville",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,28,3,31,pronghorn buck.xlsx,27,3,30,hunt_join_2025.1.csv
+PB5031,"Box Elder, West",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,30,3,33,pronghorn buck.xlsx,27,3,30,hunt_join_2025.1.csv
+PB5033,"Fillmore, Oak Creek South",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,46,5,51,pronghorn buck.xlsx,40,5,45,hunt_join_2025.1.csv
+PB5034,Kaiparowits,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,2,0,2,pronghorn buck.xlsx,2,0,2,hunt_join_2025.1.csv
+PB5035,"La Sal, Potash/South Cisco",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,22,2,24,pronghorn buck.xlsx,20,2,22,hunt_join_2025.1.csv
+PB5037,"Nine Mile, Anthro-Myton Bench",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,89,10,99,pronghorn buck.xlsx,89,10,99,hunt_join_2025.1.csv
+PB5038,"Nine Mile, Range Creek",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,13,1,14,pronghorn buck.xlsx,11,1,12,hunt_join_2025.1.csv
+PB5039,"North Slope, Summit",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,15,2,17,pronghorn buck.xlsx,15,2,17,hunt_join_2025.1.csv
+PB5040,"North Slope, Three Corners/West Daggett",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,29,3,32,pronghorn buck.xlsx,34,4,38,hunt_join_2025.1.csv
+PB5041,"Panguitch Lake/Zion, North",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,21,2,23,pronghorn buck.xlsx,21,2,23,hunt_join_2025.1.csv
+PB5042,Pine Valley,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,21,2,23,pronghorn buck.xlsx,21,2,23,hunt_join_2025.1.csv
+PB5044,"San Juan, Hatch Point",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,3,0,3,pronghorn buck.xlsx,4,0,4,hunt_join_2025.1.csv
+PB5045,"San Rafael, Desert",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,7,1,8,pronghorn buck.xlsx,5,1,6,hunt_join_2025.1.csv
+PB5046,"San Rafael, North",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,62,7,69,pronghorn buck.xlsx,59,7,66,hunt_join_2025.1.csv
+PB5047,Diamond Mtn/Bonanza,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,50,6,56,pronghorn buck.xlsx,50,6,56,hunt_join_2025.1.csv
+PB5048,Vernal,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,54,6,60,pronghorn buck.xlsx,59,7,66,hunt_join_2025.1.csv
+PB5049,Southwest Desert,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,94,11,105,pronghorn buck.xlsx,94,11,105,hunt_join_2025.1.csv
+PB5050,"West Desert, Riverbed",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,73,8,81,pronghorn buck.xlsx,67,7,74,hunt_join_2025.1.csv
+PB5051,"West Desert, Rush Valley",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,32,4,36,pronghorn buck.xlsx,32,4,36,hunt_join_2025.1.csv
+PB5052,"West Desert, Snake Valley",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,95,11,106,pronghorn buck.xlsx,86,10,96,hunt_join_2025.1.csv
+PB5053,"Nine Mile, Range Creek",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,4,0,4,pronghorn buck.xlsx,3,0,3,hunt_join_2025.1.csv
+PB5054,"Panguitch Lake/Zion, North",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,7,1,8,pronghorn buck.xlsx,7,1,8,hunt_join_2025.1.csv
+PB5055,"San Rafael, Desert",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,2,0,2,pronghorn buck.xlsx,2,0,2,hunt_join_2025.1.csv
+PB5056,"San Rafael, North",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,21,2,23,pronghorn buck.xlsx,20,2,22,hunt_join_2025.1.csv
+PB5059,"Nine Mile, Anthro-Myton Bench",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,30,3,33,pronghorn buck.xlsx,30,3,33,hunt_join_2025.1.csv
+PB5060,Diamond Mtn/Bonanza,Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,17,2,19,pronghorn buck.xlsx,17,2,19,hunt_join_2025.1.csv
+PB5061,"Panguitch Lake/Zion, North",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,7,1,8,pronghorn buck.xlsx,7,1,8,hunt_join_2025.1.csv
+PB5062,Pine Valley,Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,7,1,8,pronghorn buck.xlsx,7,1,8,hunt_join_2025.1.csv
+PB5065,"Fillmore, Oak Creek South",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,15,2,17,pronghorn buck.xlsx,13,2,15,hunt_join_2025.1.csv
+PB5066,"North Slope, Three Corners/West Daggett",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,10,1,11,pronghorn buck.xlsx,12,1,13,hunt_join_2025.1.csv
+PB5072,Vernal,Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,18,2,20,pronghorn buck.xlsx,20,2,22,hunt_join_2025.1.csv
+PB5073,"Cache, Rich",Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,6,0,6,pronghorn buck.xlsx,6,0,6,hunt_join_2025.1.csv
+PB5074,"Cache, Rich",Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,2,0,2,pronghorn buck.xlsx,2,0,2,hunt_join_2025.1.csv
+PB5075,"Cache, Rich",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,2,0,2,pronghorn buck.xlsx,2,0,2,hunt_join_2025.1.csv
+PB5076,Parker Mtn,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,135,15,150,pronghorn buck.xlsx,72,8,80,hunt_join_2025.1.csv
+PB5077,Parker Mtn,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,45,5,50,pronghorn buck.xlsx,54,6,60,hunt_join_2025.1.csv
+PB5078,Parker Mtn,Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,45,5,50,pronghorn buck.xlsx,54,6,60,hunt_join_2025.1.csv
+PB5079,"Box Elder, West",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,10,1,11,pronghorn buck.xlsx,9,1,10,hunt_join_2025.1.csv
+PB5080,"Box Elder, Snowville",Male Only,Pronghorn,Muzzleloader,Limited Entry,Sept 23 2026 - Oct 01 2026,9,1,10,pronghorn buck.xlsx,9,1,10,hunt_join_2025.1.csv
+PB5300,Antelope Creek CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5302,Deseret CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5305,Park Valley CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5306,Rabbit Creek CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5309,Skull Valley South CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5311,The Rose of Snowville CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5312,TL Bar Ranch CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5314,Westlake CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5315,Zane CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5325,Allen Ranch CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5326,Cedar Springs CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5327,Cottonwood Ridge CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5328,Pahvant Ensign CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5329,Snowville Flat CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5330,George Creek CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5331,Mt Dutton/Paunsaugunt,Male Only,Pronghorn,Any Legal Weapon,Limited Entry,Sept 12 2026 - Sept 20 2026,13,2,15,pronghorn buck.xlsx,14,2,16,hunt_join_2025.1.csv
+PB5332,Mt Dutton/Paunsaugunt,Male Only,Pronghorn,Archery,Limited Entry,Aug 15 2026 - Sept 11 2026,4,1,5,pronghorn buck.xlsx,3,1,4,hunt_join_2025.1.csv
+PB5337,Heist CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5338,Castle Valley Outdoors CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5339,Iron Spring CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5342,Salt Wells CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5345,Green River Flat CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PB5346,Junction Valley CWMU,Male Only,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2026 season dates,0,0,0,pronghorn buck.xlsx,,,,
+PD1000,"Box Elder, Snowville",Antlerless,Pronghorn,Any Legal Weapon,General Season,Nov 08 2025 - Dec 07 2025,36,4,40,pronghorn doe.xlsx,72,8,80,hunt_join_2025.1.csv
+PD1012,"Box Elder, Promontory",Antlerless,Pronghorn,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,18,2,20,pronghorn doe.xlsx,22,3,25,hunt_join_2025.1.csv
+PD1017,"Box Elder, West",Antlerless,Pronghorn,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,31,4,35,pronghorn doe.xlsx,49,6,55,hunt_join_2025.1.csv
+PD1031,Westlake CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1033,"San Rafael, Poison Springs Bench",Antlerless,Pronghorn,Any Legal Weapon,General Season,Oct 04 2025 - Oct 26 2025,13,2,15,pronghorn doe.xlsx,13,2,15,hunt_join_2025.1.csv
+PD1034,"Fillmore, Oak Creek South",Antlerless,Pronghorn,Any Legal Weapon,General Season,Aug 01 2025 - Aug 13 2025,27,3,30,pronghorn doe.xlsx,27,3,30,hunt_join_2025.1.csv
+PD1035,"Fillmore, Oak Creek South",Antlerless,Pronghorn,Any Legal Weapon,General Season,Nov 01 2025 - Nov 29 2025,27,3,30,pronghorn doe.xlsx,27,3,30,hunt_join_2025.1.csv
+PD1043,"Nine Mile, Anthro-Pleasant Valley",Antlerless,Pronghorn,Any Legal Weapon,General Season,Aug 01 2025 - Aug 16 2025,9,1,10,pronghorn doe.xlsx,9,1,10,hunt_join_2025.1.csv
+PD1044,Vernal-Ouray Valley,Antlerless,Pronghorn,Any Legal Weapon,General Season,Oct 04 2025 - Oct 16 2025,4,1,5,pronghorn doe.xlsx,9,1,10,hunt_join_2025.1.csv
+PD1047,Antelope Creek CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1048,The Rose of Snowville CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1049,Zane CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1050,Cottonwood Ridge CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1051,Pahvant Ensign CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1052,Heist CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1053,Green River Flat CWMU,Antlerless,Pronghorn,Any Legal Weapon,CWMU,Contact operator for 2025 season dates,0,0,0,pronghorn doe.xlsx,,,,
+PD1054,Parker Mtn,Antlerless,Pronghorn,Archery,General Season,Aug 30 2025 - Sep 12 2025,27,3,30,pronghorn doe.xlsx,27,3,30,hunt_join_2025.1.csv
+PD1055,Parker Mtn,Antlerless,Pronghorn,Muzzleloader,General Season,Oct 29 2025 - Nov 08 2025,31,4,35,pronghorn doe.xlsx,31,4,35,hunt_join_2025.1.csv
+PD1056,Parker Mtn,Antlerless,Pronghorn,Any Legal Weapon,General Season,Dec 13 2025 - Dec 21 2025,36,4,40,pronghorn doe.xlsx,36,4,40,hunt_join_2025.1.csv
+PD1057,"Parker Mtn, Highlands",Antlerless,Pronghorn,Any Legal Weapon,General Season,Oct 08 2025 - Oct 16 2025,27,3,30,pronghorn doe.xlsx,31,4,35,hunt_join_2025.1.csv
+PD1058,"Parker Mtn, Highlands",Antlerless,Pronghorn,Any Legal Weapon,General Season,Nov 22 2025 - Nov 30 2025,36,4,40,pronghorn doe.xlsx,36,4,40,hunt_join_2025.1.csv
+PD1059,"Parker Mtn, Plains",Antlerless,Pronghorn,Any Legal Weapon,General Season,Oct 08 2025 - Oct 16 2025,31,4,35,pronghorn doe.xlsx,27,3,30,hunt_join_2025.1.csv
+PD1060,"Parker Mtn, Plains",Antlerless,Pronghorn,Any Legal Weapon,General Season,Nov 22 2025 - Nov 30 2025,36,4,40,pronghorn doe.xlsx,36,4,40,hunt_join_2025.1.csv
+RE1000,"Box Elder, Newfoundland Mtn",Antlerless,Rocky Mountain Bighorn Sheep,Any Legal Weapon,General Season,Sep 08 2025 - Sep 16 2025,4,1,5,rocky mtn sheep ewe.xlsx,4,1,5,hunt_join_2025.1.csv
+RS0001,Rocky Mountain Bighorn Sheep - Statewide Permit,Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Statewide,"Sept 1 - Dec 31, 2026",,,,rocky mtn. sheep.csv,,,,
+RS1000,Antelope Island Conservation,Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,"Nov 11, 2026 - Nov 18, 2026",,,,rocky mtn. sheep.csv,,,,
+RS1001,"Book Cliffs, South",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Conservation,"Nov 1 - Dec 31, 2025",,,,rocky mtn. sheep.csv,,,,
+RS1003,"Box Elder, Newfoundland Mtn",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Conservation,"Oct 25 - Dec 31, 2025",,,,rocky mtn. sheep.csv,,,,
+RS1006,"Nine Mile, Gray Canyon",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Conservation,"Nov 1 - Dec 31, 2025",,,,rocky mtn. sheep.csv,,,,
+RS6700,Antelope Island,Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Nov 9 2026 - Nov 16 2026,2,0,2,rocky mtn. sheep.xlsx,1,0,1,hunt_join_2025.1.csv
+RS6701,"Book Cliffs, South",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 31 2026 - Nov 30 2026,5,1,6,rocky mtn. sheep.xlsx,5,1,6,hunt_join_2025.1.csv
+RS6703,"Box Elder, Newfoundland Mtn",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 03 2026 - Oct 23 2026,4,0,4,rocky mtn. sheep.xlsx,4,0,4,hunt_join_2025.1.csv
+RS6704,"Box Elder, Newfoundland Mtn",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 24 2026 - Nov 13 2026,3,1,4,rocky mtn. sheep.xlsx,3,1,4,hunt_join_2025.1.csv
+RS6708,"North Slope, Three Corners",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 14 2026 - Nov 30 2026,2,0,2,rocky mtn. sheep.xlsx,3,0,3,hunt_join_2025.1.csv
+RS6709,"North Slope, Summit/West Daggett",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Sept 14 2026 - Nov 30 2026,3,0,3,rocky mtn. sheep.xlsx,4,0,4,hunt_join_2025.1.csv
+RS6712,"Nine Mile, Gray Canyon",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 31 2026 - Nov 30 2026,4,2,6,rocky mtn. sheep.xlsx,4,2,6,hunt_join_2025.1.csv
+RS6713,"Nine Mile, Jack Creek",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 31 2026 - Nov 30 2026,4,0,4,rocky mtn. sheep.xlsx,4,0,4,hunt_join_2025.1.csv
+RS6720,"Fillmore, Oak Creek",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 03 2026 - Oct 23 2026,4,0,4,rocky mtn. sheep.xlsx,4,0,4,hunt_join_2025.1.csv
+RS6721,"Oquirrh-Stansbury, West",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 31 2026 - Nov 30 2026,3,0,3,rocky mtn. sheep.xlsx,3,0,3,hunt_join_2025.1.csv
+RS6722,"Box Elder, Newfoundland Mtn",Male Only,Rocky Mountain Bighorn Sheep,Archery,Once-in-a-lifetime,Nov 14 2026 - Dec 06 2026,2,0,2,rocky mtn. sheep.xlsx,2,0,2,hunt_join_2025.1.csv
+RS6724,"Wasatch Mtns, West",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 31 2026 - Nov 30 2026,3,0,3,rocky mtn. sheep.xlsx,2,0,2,hunt_join_2025.1.csv
+RS6725,Nebo,Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 31 2026 - Nov 30 2026,2,0,2,rocky mtn. sheep.xlsx,2,0,2,hunt_join_2025.1.csv
+RS6726,"Fillmore, Oak Creek",Male Only,Rocky Mountain Bighorn Sheep,Any Legal Weapon,Once-in-a-lifetime,Oct 24 2026 - Nov 13 2026,3,1,4,rocky mtn. sheep.xlsx,4,1,5,hunt_join_2025.1.csv
+RS6727,"Fillmore, Oak Creek",Male Only,Rocky Mountain Bighorn Sheep,Archery,Once-in-a-lifetime,Nov 14 2026 - Dec 06 2026,2,0,2,rocky mtn. sheep.xlsx,2,0,2,hunt_join_2025.1.csv
+TK0001,Turkey - Statewide Permit,Male Only,Turkey,Any Legal Weapon,Statewide,"Apr 1 - May 31, 2026",,,,Turkey Bearded.csv,,,,
+TK1000,Statewide,Male Only,Turkey,Any Legal Weapon,Spring General Season,"May 4 - 31, 2026 | YOUTH ONLY: May 1 - 3, 2026",,,,Turkey Bearded.csv,,,,
+TK1001,Northern Region - Private land only,Either Sex,Turkey,Any Legal Weapon,Fall Management,"Oct 1, 2025 - Feb 28, 2026",,,2060,Turkey  Either Sex.xlsx,,,,
+TK1003,Central Area,Male Only,Turkey,Any Legal Weapon,Limited Entry,"April 11 - April 30, 2026 | Youth only : May 1-3, 2026",,,600,Turkey Bearded.xlsx,,,,
+TK1004,Northeastern Area,Male Only,Turkey,Any Legal Weapon,Limited Entry,"April 11 - April 30, 2026 | Youth only : May 1-3, 2026",,,347,Turkey Bearded.xlsx,,,,
+TK1005,Northern Area,Male Only,Turkey,Any Legal Weapon,Limited Entry,"April 11 - April 30, 2026 | Youth only : May 1-3, 2026",,,500,Turkey Bearded.xlsx,,,,
+TK1006,Southeastern Area,Male Only,Turkey,Any Legal Weapon,Limited Entry,"April 11 - April 30, 2026 | Youth only : May 1-3, 2026",,,250,Turkey Bearded.xlsx,,,,
+TK1007,Southern Area,Male Only,Turkey,Any Legal Weapon,Limited Entry,"April 11 - April 30, 2026 | Youth only : May 1-3, 2026",,,542,Turkey Bearded.xlsx,,,,
+TK1012,Central Area,Male Only,Turkey,Any Legal Weapon,Conservation,"Limited Entry: Apr 11-30, 2026 | General Season: May 4-31, 2026 | YOUTH ONLY: May 1-3, 2026",,,,Turkey Bearded.csv,,,,
+TK1013,Northeastern Area,Male Only,Turkey,Any Legal Weapon,Conservation,"Limited Entry: Apr 11-30, 2026 | General Season: May 4-31, 2026 | YOUTH ONLY: May 1-3, 2026",,,,Turkey Bearded.csv,,,,
+TK1014,Northern Area,Male Only,Turkey,Any Legal Weapon,Conservation,"Limited Entry: Apr 11-30, 2026 | General Season: May 4-31, 2026 | YOUTH ONLY: May 1-3, 2026",,,,Turkey Bearded.csv,,,,
+TK1015,Southeastern Area,Male Only,Turkey,Any Legal Weapon,Conservation,"Limited Entry: Apr 11-30, 2026 | General Season: May 4-31, 2026 | YOUTH ONLY: May 1-3, 2026",,,,Turkey Bearded.csv,,,,
+TK1016,Southern Area,Male Only,Turkey,Any Legal Weapon,Conservation,"Limited Entry: Apr 11-30, 2026 | General Season: May 4-31, 2026 | YOUTH ONLY: May 1-3, 2026",,,,Turkey Bearded.csv,,,,
+TK1018,Pahvant Ensign CWMU,Male Only,Turkey,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,,,6,Turkey Bearded.xlsx,,,,
+TK1019,Southeastern Region - Select areas only,Either Sex,Turkey,Any Legal Weapon,Fall Management,"Oct 1, 2025 - Feb 28, 2026",,,66,Turkey  Either Sex.xlsx,,,,
+TK1020,Central Region - Private land only,Either Sex,Turkey,Any Legal Weapon,Fall Management,"Oct 1, 2025 - Feb 28, 2026",,,800,Turkey  Either Sex.xlsx,,,,
+TK1021,East Zion CWMU,Male Only,Turkey,Any Legal Weapon,CWMU,Contact Operator for 2026 season dates,,,4,Turkey Bearded.xlsx,,,,
+TK1022,Southern Region - Select areas only,Either Sex,Turkey,Any Legal Weapon,Fall Management,"Oct 1, 2025 - Jan 4, 2026",,,155,Turkey  Either Sex.xlsx,,,,

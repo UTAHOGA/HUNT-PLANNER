@@ -52,6 +52,73 @@
     }
     body { display: grid; grid-template-rows: auto 1fr; min-height: 100dvh; }
 
+    .planner-body {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-width: 0;
+    }
+    .planner-body > .layout {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 102, 0, 0.06), transparent);
+    }
+    .hero h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.4vw, 30px);
+      line-height: 1.12;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+    .hero p {
+      margin: 10px 0 0;
+      max-width: 42rem;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .quick-start {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
+      gap: 10px 14px;
+      padding: 12px 18px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.12);
+    }
+    body:not(.theme-dark) .quick-start {
+      background: rgba(255, 255, 255, 0.35);
+    }
+    .qs-step {
+      flex: 1 1 140px;
+      max-width: 220px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    body.theme-dark .qs-step {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+    }
+
     /* --- TOPBAR & LOGO LOCKUP --- */
     .topbar { 
       display: flex; align-items: center; justify-content: space-between; gap: 18px; 
@@ -233,6 +300,72 @@
     .status { margin-top: 12px; color: var(--text); font-size: 13px; font-weight: 700; padding: 8px; background: var(--panel); border-radius: 6px; border: 1px dashed var(--accent); text-align: center;}
     
     .hunt-list, .outfitter-list { display: grid; gap: 10px; }
+
+    .hunt-basket-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      padding: 10px 12px;
+      display: grid;
+      gap: 6px;
+    }
+    .hunt-basket-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .hunt-basket-code {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .hunt-basket-remove {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .hunt-basket-name {
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.25;
+      color: var(--text);
+    }
+    .hunt-basket-meta,
+    .hunt-basket-sub {
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    .hunt-basket-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .hunt-basket-open {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #fff6ed;
+    }
+    .hunt-basket-actions a {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    body.theme-dark .hunt-basket-actions a {
+      color: #7cbcf7;
+    }
     .hunt-card, .map-chooser-card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 12px; display: grid; gap: 6px; cursor: pointer; transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease; }
     .outfitter-card { border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.04)), var(--panel); padding: 14px; display: grid; gap: 10px; box-shadow: 0 10px 24px rgba(0,0,0,0.14); }
     .hunt-card:hover, .map-chooser-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
@@ -265,13 +398,13 @@
     
     /* --- MAP --- */
     .map-wrap { position: relative; min-height: 0; overflow: hidden; }
-    .map-stage { position: relative; width: 100%; height: 100%; min-height: calc(100vh - 80px); }
+    .map-stage { position: relative; width: 100%; height: 100%; min-height: calc(100vh - 225px); }
     #map, #globeMap {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      min-height: calc(100vh - 80px);
+      min-height: calc(100vh - 225px);
     }
     #globeMap { display: none; background: #0f1723; }
     .map-wrap.is-globe-mode #map { display: none; }

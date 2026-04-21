@@ -221,6 +221,23 @@ foreach ($huntRow in $huntJoinRows) {
   $antlerlessRowSet = $antlerlessByCode[$code]
   $projectedRowSet = $projectedByCode[$code]
 
+  $hasBonusDraw = ($null -ne $bonusRowSet) -and (
+    (@($bonusRowSet.Resident).Count -gt 0) -or (@($bonusRowSet.Nonresident).Count -gt 0)
+  )
+
+  $hasAntlerlessDraw = ($null -ne $antlerlessRowSet) -and (
+    (@($antlerlessRowSet.Resident).Count -gt 0) -or (@($antlerlessRowSet.Nonresident).Count -gt 0)
+  )
+
+  $drawFamily =
+    if ($hasBonusDraw) { 'bonus' }
+    elseif ($hasAntlerlessDraw) { 'antlerless' }
+    else { 'none' }
+
+  $drawPresenceFlag =
+    if ($hasBonusDraw -or $hasAntlerlessDraw) { 'yes' }
+    else { 'no' }
+
   $payload = [ordered]@{
     hunt_code = $code
     species = $huntRow.species
@@ -236,10 +253,10 @@ foreach ($huntRow in $huntJoinRows) {
     avg_days = To-NullableNumber $huntRow.avg_days
     satisfaction = To-NullableNumber $huntRow.satisfaction
     has_harvest = To-Bool $huntRow.has_harvest
-    has_bonus_draw = To-Bool $huntRow.has_bonus_draw
-    has_antlerless_draw = To-Bool $huntRow.has_antlerless_draw
-    draw_family = if ($scoreRow) { $scoreRow.draw_family } else { $null }
-    draw_presence_flag = if ($scoreRow) { $scoreRow.draw_presence_flag } else { $null }
+    has_bonus_draw = $hasBonusDraw
+    has_antlerless_draw = $hasAntlerlessDraw
+    draw_family = $drawFamily
+    draw_presence_flag = $drawPresenceFlag
     score_family = if ($scoreRow) { $scoreRow.score_family } else { $null }
     public_rank_eligible = if ($scoreRow) { $scoreRow.public_rank_eligible } else { $null }
     draw_difficulty_flag = if ($scoreRow) { $scoreRow.draw_difficulty_flag } else { $null }

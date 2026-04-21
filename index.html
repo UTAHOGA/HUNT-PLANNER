@@ -68,10 +68,23 @@
     </div>
   </header>
 
+  <div class="planner-body">
+  <section class="hero" aria-label="Introduction">
+    <h1>Plan Your Hunt Like a Professional</h1>
+    <p>Then map it, analyze it, and hunt it right.</p>
+  </section>
+
+  <section class="quick-start" aria-label="Quick start steps">
+    <div class="qs-step">1. Select a hunt unit or filter</div>
+    <div class="qs-step">2. Choose a hunt</div>
+    <div class="qs-step">3. Analyze draw odds</div>
+    <div class="qs-step">4. Match with outfitters</div>
+  </section>
+
   <main class="layout">
     <aside class="sidebar">
       <section class="panel">
-        <h2>Find a Hunt</h2>
+        <h2>Build Your Hunt</h2>
         <div class="panel-body">
           <div class="field">
             <label for="searchInput">Search by hunt number</label>
@@ -110,7 +123,7 @@
       </section>
 
       <section class="panel">
-        <h2>Matching Hunts</h2>
+        <h2>Available Hunts</h2>
         <div class="panel-body">
           <div id="matchingHunts" class="hunt-list">
             <div class="empty-note">Use filters or click a unit to load hunts.</div>
@@ -119,9 +132,18 @@
       </section>
 
       <section class="panel">
-        <h2>Selected Hunt</h2>
+        <h2>Hunt Analysis</h2>
         <div class="panel-body" id="selectedHuntPanel">
-          <div class="empty-note">No hunt selected yet.</div>
+          <div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Saved Hunts</h2>
+        <div class="panel-body">
+          <div id="huntBasket" class="hunt-list">
+            <div class="empty-note">Save hunts to compare them here.</div>
+          </div>
         </div>
       </section>
     </aside>
@@ -136,7 +158,7 @@
         <div class="map-chooser-head">
           <div>
             <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
-            <h3 id="mapChooserTitle" class="map-chooser-title">Matching Hunts</h3>
+            <h3 id="mapChooserTitle" class="map-chooser-title">Available Hunts</h3>
           </div>
           <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
         </div>
@@ -192,6 +214,7 @@
       </section>
     </aside>
   </main>
+  </div>
 
   <section id="huntDetailsSection" class="hunt-details-section" hidden>
     <div class="hunt-details-head">

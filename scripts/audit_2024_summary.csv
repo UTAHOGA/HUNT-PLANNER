@@ -1,0 +1,13 @@
+metric,value
+reference_rows,3277
+unique_hunt_codes,1011
+rows_missing_any_core_field,260
+unique_hunt_codes_missing_any_core,98
+codes_with_draw_source,924
+codes_with_harvest_source,731
+codes_with_both_draw_and_harvest,713
+codes_with_neither_draw_nor_harvest,69
+high_confidence_codes,673
+medium_confidence_codes,205
+low_confidence_codes,133
+needs_manual_review_codes,133
