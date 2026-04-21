@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
+  <title>U.O.G.A. Hunt Planner | Hard Copy</title>
+  <link rel="stylesheet" href="./style.css?v=20260420-hardcopy-1" />
+  <style>
+    .hardcopy-shell {
+      display: grid;
+      grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+      min-height: 0;
+    }
+    .hardcopy-panel,
+    .report-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .hardcopy-panel {
+      padding: 16px;
+      align-self: start;
+      position: sticky;
+      top: 18px;
+    }
+    .hardcopy-panel h2,
+    .report-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      line-height: 1;
+    }
+    .hardcopy-panel h2 {
+      font-size: 28px;
+    }
+    .hardcopy-panel p,
+    .report-copy,
+    .source-note {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+    .hardcopy-controls {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .hardcopy-controls .hunt-input {
+      width: 100%;
+    }
+    .hardcopy-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hardcopy-actions a,
+    .hardcopy-actions button {
+      flex: 1 1 120px;
+      justify-content: center;
+      text-align: center;
+    }
+    .report-card {
+      display: grid;
+      min-width: 0;
+    }
+    .report-head {
+      padding: 18px 20px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #fff6ed;
+      display: grid;
+      gap: 10px;
+    }
+    .report-kicker {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.82);
+    }
+    .report-head h1 {
+      font-size: clamp(26px, 2.8vw, 38px);
+    }
+    .report-copy {
+      color: rgba(255,255,255,0.88);
+      max-width: 72ch;
+      margin: 0;
+    }
+    .report-body {
+      padding: 18px 20px 22px;
+      display: grid;
+      gap: 18px;
+      background: var(--panel2);
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .summary-chip {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      display: grid;
+      gap: 4px;
+    }
+    .summary-chip span {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .summary-chip strong {
+      font-size: 15px;
+      line-height: 1.25;
+    }
+    .report-section {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+    .report-section h2 {
+      margin: 0;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #fff6ed;
+      font-family: var(--font-display);
+      font-size: 18px;
+      line-height: 1.05;
+    }
+    .report-section-body {
+      padding: 14px;
+    }
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .kv-item {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+    }
+    .kv-item small {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .kv-item div {
+      font-size: 14px;
+      line-height: 1.35;
+      color: var(--text);
+      word-break: break-word;
+    }
+    .raw-table {
+      display: grid;
+      gap: 8px;
+    }
+    .raw-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 240px) minmax(0, 1fr);
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+    }
+    .raw-row strong {
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .raw-row span {
+      font-size: 14px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+    .lookup-status {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+      background: var(--panel2);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .lookup-status strong {
+      color: var(--accent);
+    }
+    .source-note {
+      margin: 0;
+    }
+    @media (max-width: 980px) {
+      .hardcopy-shell {
+        grid-template-columns: 1fr;
+      }
+      .hardcopy-panel {
+        position: static;
+      }
+      .summary-grid,
+      .kv-grid,
+      .raw-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media print {
+      .topbar,
+      .hardcopy-panel,
+      .hardcopy-actions {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .hardcopy-shell {
+        display: block;
+        padding: 0;
+      }
+      .report-card,
+      .report-section,
+      .summary-chip,
+      .kv-item,
+      .raw-row {
+        box-shadow: none !important;
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .report-head,
+      .report-section h2 {
+        background: #f2f2f2 !important;
+        color: #000 !important;
+      }
+      .report-copy,
+      .source-note,
+      .summary-chip span,
+      .kv-item small,
+      .raw-row strong {
+        color: #444 !important;
+      }
+    }
+  </style>
+</head>
+<body class="theme-dark">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo-lockup">
+        <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
+          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
+        </a>
+        <div>
+          <h1>U.O.G.A. Hunt Planner</h1>
+          <p>Hard Copy Data</p>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <nav class="utility-nav" aria-label="Site sections">
+        <a class="utility-link" href="./index.html">Hunt Planner</a>
+        <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
+        <a class="utility-link active" href="./hard-copy.html" aria-current="page">Hard Copy</a>
+        <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
+      </nav>
+      <button id="printBtnTop" type="button" class="secondary">Print</button>
+    </div>
+  </header>
+
+  <main class="hardcopy-shell">
+    <aside class="hardcopy-panel">
+      <h2>Lookup</h2>
+      <p>Open the selected hunt as a printable field sheet. We use the current hunt code from the planner unless you override it here.</p>
+      <div class="hardcopy-controls">
+        <div class="field">
+          <label for="huntCodeInput">Hunt code</label>
+          <input id="huntCodeInput" class="hunt-input" type="text" placeholder="DB1041, LE0031, etc." />
+        </div>
+        <div class="hardcopy-actions">
+          <button id="loadBtn" type="button">Load Sheet</button>
+          <button id="printBtn" type="button" class="secondary">Print Sheet</button>
+          <a class="outfitter-action-btn" href="./index.html">Back to Planner</a>
+        </div>
+      </div>
+      <div id="lookupStatus" class="lookup-status"><strong>Status:</strong> Waiting for a hunt code.</div>
+    </aside>
+
+    <section class="report-card" aria-label="Hard copy report">
+      <header class="report-head">
+        <p class="report-kicker">Printable Hunt Sheet</p>
+        <h1 id="reportTitle">Select a hunt to build the sheet</h1>
+        <p id="reportCopy" class="report-copy">This report pulls from the current canonical hunt data and prints cleanly for desk review or field notes.</p>
+      </header>
+      <div class="report-body">
+        <section class="summary-grid" id="summaryGrid"></section>
+
+        <section class="report-section">
+          <h2>Core Details</h2>
+          <div class="report-section-body">
+            <div id="coreGrid" class="kv-grid"></div>
+          </div>
+        </section>
+
+        <section class="report-section">
+          <h2>Source Notes</h2>
+          <div class="report-section-body">
+            <div id="sourceGrid" class="kv-grid"></div>
+          </div>
+        </section>
+
+        <section class="report-section">
+          <h2>Raw Fields</h2>
+          <div class="report-section-body">
+            <div id="rawTable" class="raw-table"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="./config.js?v=20260420-hardcopy-1"></script>
+  <script src="./data.js?v=20260420-hardcopy-1"></script>
+  <script>
+    (async () => {
+      const huntCodeInput = document.getElementById('huntCodeInput');
+      const loadBtn = document.getElementById('loadBtn');
+      const printBtn = document.getElementById('printBtn');
+      const printBtnTop = document.getElementById('printBtnTop');
+      const lookupStatus = document.getElementById('lookupStatus');
+      const reportTitle = document.getElementById('reportTitle');
+      const reportCopy = document.getElementById('reportCopy');
+      const summaryGrid = document.getElementById('summaryGrid');
+      const coreGrid = document.getElementById('coreGrid');
+      const sourceGrid = document.getElementById('sourceGrid');
+      const rawTable = document.getElementById('rawTable');
+
+      const normalize = (value) => String(value ?? '').trim().toUpperCase();
+      const firstNonEmpty = (...values) => {
+        for (const value of values) {
+          const text = String(value ?? '').trim();
+          if (text) return text;
+        }
+        return '';
+      };
+      const escapeHtml = (value) => String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+      async function fetchFirstJson(candidates) {
+        for (const candidate of candidates) {
+          try {
+            const resp = await fetch(candidate, { cache: 'no-store' });
+            if (!resp.ok) continue;
+            return await resp.json();
+          } catch (error) {
+            console.warn('Hard copy source failed:', candidate, error);
+          }
+        }
+        return null;
+      }
+
+      async function loadCanonicalRecords() {
+        const candidateGroups = Array.isArray(window.UOGA_CONFIG?.HUNT_DATA_SOURCES)
+          ? window.UOGA_CONFIG.HUNT_DATA_SOURCES
+          : [{ candidates: ['./data/hunt-master-canonical.json', './data/utah-hunt-planner-master-all.json'] }];
+        for (const group of candidateGroups) {
+          const json = await fetchFirstJson(group.candidates || []);
+          const records = Array.isArray(json?.records) ? json.records : (Array.isArray(json) ? json : []);
+          if (records.length) return records;
+        }
+        return [];
+      }
+
+      function getCode(record) {
+        return normalize(firstNonEmpty(record.hunt_code, record.huntCode, record.hunt_number, record.Hunt_Number, record.code));
+      }
+
+      function getField(record, ...keys) {
+        for (const key of keys) {
+          const value = record?.[key];
+          if (String(value ?? '').trim()) return value;
+        }
+        return '';
+      }
+
+      function chip(label, value) {
+        return `<div class="summary-chip"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value || 'Not listed')}</strong></div>`;
+      }
+
+      function kvItem(label, value) {
+        return `<div class="kv-item"><small>${escapeHtml(label)}</small><div>${escapeHtml(value || 'Not listed')}</div></div>`;
+      }
+
+      function rawRow(label, value) {
+        return `<div class="raw-row"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(value || 'Not listed')}</span></div>`;
+      }
+
+      function render(record, sourceLabel = '') {
+        const code = getCode(record);
+        const name = firstNonEmpty(getField(record, 'hunt_name', 'huntName', 'title', 'huntTitle'), code || 'Select a hunt');
+        const species = firstNonEmpty(getField(record, 'species', 'Species'), 'Not listed');
+        const unit = firstNonEmpty(getField(record, 'unit', 'unitName', 'unit_name', 'dwr_unit_name'), 'Not listed');
+        const weapon = firstNonEmpty(getField(record, 'weapon', 'Weapon'), 'Not listed');
+        const huntType = firstNonEmpty(getField(record, 'hunt_type', 'huntType'), 'Not listed');
+        const huntClass = firstNonEmpty(getField(record, 'hunt_class', 'huntClass'), 'Not listed');
+        const access = firstNonEmpty(getField(record, 'access_type', 'accessType'), 'Not listed');
+        const residency = firstNonEmpty(getField(record, 'residency', 'Residency'), 'Not listed');
+        const permits = firstNonEmpty(getField(record, 'permits_2026_total', 'permits', 'public_permits_2026', 'public_permits_2025'), 'Not listed');
+        const harvest = firstNonEmpty(getField(record, 'harvest_2025', 'harvest', 'hunters_2025'), 'Not listed');
+        const success = firstNonEmpty(getField(record, 'success_percent_2025', 'success_rate', 'odds_2025'), 'Not listed');
+        const sourceFile = firstNonEmpty(getField(record, 'source_file_2026', 'source_pdf', 'sourceFile', 'sourceGuide'), sourceLabel);
+        const sourcePage = firstNonEmpty(getField(record, 'sourcePage', 'source_page', 'page_ref'), 'Not listed');
+        const dataStatus = firstNonEmpty(getField(record, 'data_status', 'status', 'record_status'), 'Not listed');
+        const drawFamily = firstNonEmpty(getField(record, 'draw_family', 'drawFamily'), 'Not listed');
+        const boundaryLink = firstNonEmpty(getField(record, 'boundaryLink', 'boundary_link'), 'Not listed');
+
+        reportTitle.textContent = code ? `${code} - ${name}` : 'Select a hunt to build the sheet';
+        reportCopy.textContent = code
+          ? `${species} · ${unit} · ${weapon} · ${huntType}`
+          : 'This report pulls from the current canonical hunt data and prints cleanly for desk review or field notes.';
+
+        summaryGrid.innerHTML = [
+          chip('Hunt Code', code || 'Not listed'),
+          chip('Species', species),
+          chip('Unit', unit),
+          chip('Weapon', weapon),
+          chip('Type', huntType),
+          chip('Residency', residency)
+        ].join('');
+
+        coreGrid.innerHTML = [
+          kvItem('Hunt Name', name),
+          kvItem('Hunt Class', huntClass),
+          kvItem('Access Type', access),
+          kvItem('Draw Family', drawFamily),
+          kvItem('Permits', permits),
+          kvItem('Harvest / Hunters', harvest),
+          kvItem('Success / Odds', success),
+          kvItem('Data Status', dataStatus)
+        ].join('');
+
+        sourceGrid.innerHTML = [
+          kvItem('Source File', sourceFile),
+          kvItem('Source Page', sourcePage),
+          kvItem('Boundary Link', boundaryLink),
+          kvItem('Source Label', sourceLabel || 'Canonical hunt data')
+        ].join('');
+
+        const orderedKeys = Object.keys(record || {}).sort((a, b) => a.localeCompare(b));
+        rawTable.innerHTML = orderedKeys.map((key) => rawRow(key, record[key])).join('');
+        lookupStatus.innerHTML = `<strong>Status:</strong> ${code ? `Loaded ${escapeHtml(code)} from ${escapeHtml(sourceLabel || 'canonical source')}.` : 'Waiting for a hunt code.'}`;
+      }
+
+      function resolveInitialCode() {
+        const params = new URLSearchParams(window.location.search || '');
+        return normalize(params.get('hunt_code') || localStorage.getItem('selected_hunt_code') || '');
+      }
+
+      async function loadSheet() {
+        const code = normalize(huntCodeInput.value || resolveInitialCode());
+        if (code) huntCodeInput.value = code;
+        const records = await loadCanonicalRecords();
+        if (!records.length) {
+          lookupStatus.innerHTML = '<strong>Status:</strong> Unable to load canonical hunt data.';
+          reportTitle.textContent = 'No data loaded';
+          reportCopy.textContent = 'Check the source paths or refresh the year files before printing.';
+          return;
+        }
+        const match = records.find((record) => getCode(record) === code) || records.find((record) => getCode(record));
+        if (!match) {
+          lookupStatus.innerHTML = `<strong>Status:</strong> No matching hunt was found for <strong>${escapeHtml(code || 'blank')}</strong>.`;
+          reportTitle.textContent = 'No matching hunt found';
+          reportCopy.textContent = 'Try a different hunt code from the planner or use the selected hunt already in local storage.';
+          summaryGrid.innerHTML = '';
+          coreGrid.innerHTML = '';
+          sourceGrid.innerHTML = '';
+          rawTable.innerHTML = '';
+          return;
+        }
+        if (code) localStorage.setItem('selected_hunt_code', code);
+        render(match, 'Canonical hunt master');
+      }
+
+      loadBtn.addEventListener('click', loadSheet);
+      printBtn.addEventListener('click', () => window.print());
+      printBtnTop.addEventListener('click', () => window.print());
+      huntCodeInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          loadSheet();
+        }
+      });
+
+      const initialCode = resolveInitialCode();
+      if (initialCode) huntCodeInput.value = initialCode;
+      await loadSheet();
+    })().catch((error) => {
+      console.error('Hard copy page failed to load.', error);
+      const status = document.getElementById('lookupStatus');
+      if (status) status.innerHTML = '<strong>Status:</strong> The hard copy page could not load the hunt data.';
+    });
+  </script>
+</body>
+</html>
