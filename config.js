@@ -122,7 +122,8 @@ window.UOGA_CONFIG = (() => {
   ];
 
   const OUTFITTER_FEDERAL_COVERAGE_SOURCES = [
-    `./data/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`,
+    // Stored in processed_data (not data/) in this repo.
+    `./processed_data/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`,
     `${CLOUDFLARE_BASE}/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`,
   ];
 
@@ -221,7 +222,9 @@ window.UOGA_CONFIG = (() => {
     "&outFields=NAME,Agency,URL,Acreage&returnGeometry=true&outSR=4326&f=geojson";
 
   const UTAH_OUTLINE_QUERY_URL =
-    'https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahStateBoundary/FeatureServer/0/query?where=NAME%20%3D%20%27Utah%27&outFields=NAME&returnGeometry=true&outSR=4326&f=geojson';
+    // ArcGIS layer uses STATE as the display field; NAME is not a valid field and returns a 400 error.
+    // If this URL ever changes, prefer pinning to a local GeoJSON to avoid external schema drift.
+    'https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahStateBoundary/FeatureServer/0/query?where=STATE%20%3D%20%27Utah%27&outFields=STATE&returnGeometry=true&outSR=4326&f=geojson';
 
   const USFS_QUERY_URL =
     "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_ForestSystemBoundaries_01/MapServer/0/query?where=" +

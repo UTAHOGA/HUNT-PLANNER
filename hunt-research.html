@@ -8,20 +8,21 @@
   <link rel="stylesheet" href="./style.css?v=20260402-hunt-research-clean-1" />
   <style>
     :root {
-      --research-bg: #0f0b09;
-      --research-panel: rgba(28, 21, 17, 0.92);
-      --research-panel-strong: rgba(35, 25, 19, 0.97);
-      --research-line: rgba(170, 124, 84, 0.52);
-      --research-line-soft: rgba(255, 255, 255, 0.08);
-      --research-text: #f7efe7;
-      --research-muted: #d2b9a4;
-      --research-accent: #e07429;
-      --research-accent-dark: #a94d1a;
-      --research-good: #7fd68e;
-      --research-warn: #f1c56a;
-      --research-bad: #f29c82;
-      --research-info: #8ec6ff;
-      --research-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      /* Light theme alignment (single theme site-wide). */
+      --research-bg: var(--bg);
+      --research-panel: var(--panel);
+      --research-panel-strong: var(--panel2);
+      --research-line: var(--line);
+      --research-line-soft: rgba(255, 255, 255, 0.22);
+      --research-text: var(--text);
+      --research-muted: var(--muted);
+      --research-accent: var(--accent);
+      --research-accent-dark: var(--accent-dark);
+      --research-good: #2f7f4a;
+      --research-warn: #9a6a00;
+      --research-bad: #a63b2b;
+      --research-info: #1b5fb5;
+      --research-shadow: var(--shadow);
       --research-radius: 22px;
       --research-pill: 999px;
     }
@@ -30,9 +31,9 @@
       min-height: 100vh;
       color: var(--research-text);
       background:
-          linear-gradient(180deg, rgba(10, 8, 7, 0.78), rgba(10, 8, 7, 0.86)),
-          url('./assets/logos/gray-white-topo.png') center top / 100% auto repeat-y,
-          #110d0b;
+          linear-gradient(180deg, rgba(246, 240, 231, 0.92), rgba(246, 240, 231, 0.96)),
+          url('./assets/logos/logos/White-Topo-2-1920.png') center top / 1920px 1082px repeat,
+          #f6f0e7;
     }
 
     .topbar,
@@ -55,7 +56,7 @@
     .side-card {
       border: 1px solid var(--research-line);
       border-radius: var(--research-radius);
-      background: linear-gradient(180deg, rgba(31, 24, 19, 0.95), rgba(18, 14, 11, 0.97));
+      background: var(--research-panel);
       box-shadow: var(--research-shadow);
       overflow: hidden;
       backdrop-filter: blur(10px);
@@ -942,27 +943,21 @@
     }
   </style>
 </head>
-<body class="theme-dark research-page">
+<body class="research-page">
   <header class="topbar">
-    <div class="brand">
-      <div class="brand-logo-lockup">
-        <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
-          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
-        </a>
-        <div>
-          <h1>U.O.G.A. Hunt Research</h1>
-          <p>Can You Draw This Hunt?</p>
-        </div>
-      </div>
-    </div>
-    <div class="controls">
-      <nav class="utility-nav" aria-label="Site sections">
-        <a class="utility-link" href="./index.html">Hunt Planner</a>
-        <a class="utility-link active" href="./hunt-research.html" aria-current="page">Hunt Research</a>
-        <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
+    <div class="controls"><div class="controls-center"></div></div>
+  </header>
+
+  <section class="page-nav-strip" aria-label="Site navigation">
+    <div class="page-nav-case">
+      <nav class="utility-nav">
+        <a class="utility-link" href="./index.html">PLANNER</a>
+        <a class="utility-link active" href="./hunt-research.html" aria-current="page">RESEARCH</a>
+        <a class="utility-link" href="./vetting.html">VERIFY ~ CONNECT</a>
+        <a class="utility-link" href="./hard-data.html">HARD DATA</a>
       </nav>
     </div>
-  </header>
+  </section>
 
   <main class="research-shell">
     <section class="research-card hero-card">
@@ -974,7 +969,7 @@
               <p>See the line, your odds, and whether the hunt is realistically in reach.</p>
               <div class="hero-actions">
                 <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
-                <button class="research-btn" type="button" onclick="document.getElementById('basketList').scrollIntoView({ behavior: 'smooth', block: 'start' })">Open Hunt Backpack</button>
+                <button class="research-btn" type="button" onclick="(function(){var t=document.querySelector(\x27.uoga-backpack-toggle\x27); if(t){t.click();}})()">Open Hunt Backpack</button>
               </div>
             </div>
 
@@ -1155,23 +1150,6 @@
           </div>
         </section>
       </div>
-
-      <aside class="side-stack">
-        <section class="side-card">
-          <div class="card-head">
-            <p>Hunt Backpack</p>
-            <h3>Recent Hunts</h3>
-          </div>
-          <div class="card-body">
-            <p class="proof-note" style="margin-bottom:12px;">Saved hunts stay here for quick reload.</p>
-            <div class="backpack-actions" style="margin-bottom:12px;">
-              <button id="clearBasketButton" class="mini-btn" type="button">Clear Hunt Backpack</button>
-            </div>
-            <div id="basketList" class="basket-list"></div>
-          </div>
-        </section>
-
-      </aside>
     </div>
   </main>
 
@@ -1193,3 +1171,6 @@
   <script src="./hunt-research.js?v=20260402-hunt-research-clean-1"></script>
 </body>
 </html>
+
+
+

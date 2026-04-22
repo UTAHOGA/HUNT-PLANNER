@@ -262,13 +262,18 @@ window.UOGA_UI = (() => {
     if (!trayButton || !trayPanel) return;
     const rect = trayButton.getBoundingClientRect();
     const panelWidth = Math.min(430, Math.max(320, window.innerWidth - 28));
-    const right = Math.max(14, window.innerWidth - rect.right);
-    const left = Math.min(window.innerWidth - panelWidth - 14, Math.max(14, rect.right - panelWidth));
+    const centerX = rect.left + (rect.width / 2);
+    // Center panel under the button, then clamp to viewport padding.
+    const left = Math.min(window.innerWidth - panelWidth - 14, Math.max(14, Math.round(centerX - (panelWidth / 2))));
     trayPanel.style.top = `${rect.bottom + 12}px`;
     trayPanel.style.left = `${left}px`;
     trayPanel.style.right = 'auto';
     trayPanel.style.width = `min(430px, calc(100vw - 28px))`;
     trayPanel.style.maxHeight = `min(72vh, 760px)`;
+    // Notch (the small cap above the panel) should align under the toggle.
+    const notchWidth = 132;
+    const notchLeft = Math.max(18, Math.min(panelWidth - notchWidth - 18, Math.round(centerX - left - (notchWidth / 2))));
+    trayPanel.style.setProperty('--uoga-backpack-notch-left', `${notchLeft}px`);
   }
 
   function openBackpackTray() {
@@ -299,13 +304,13 @@ window.UOGA_UI = (() => {
     traySections.innerHTML = `
       <div class="uoga-backpack-hero">
         <div>
-          <p class="uoga-backpack-hero-kicker">Field-ready shortlist</p>
-          <h3>Hunt Backpack</h3>
+          <p class="uoga-backpack-hero-kicker">U.O.G.A.</p>
+          <h3>My Top Hunts</h3>
         </div>
         <div class="uoga-backpack-hero-media" aria-hidden="true">
           <div class="uoga-backpack-hero-badge">
             <span class="uoga-backpack-hero-badge-kicker">U.O.G.A.</span>
-            <span class="uoga-backpack-hero-badge-title">Hunt Backpack</span>
+            <span class="uoga-backpack-hero-badge-title">My Top Hunts</span>
             
           </div>
         </div>
@@ -342,7 +347,7 @@ window.UOGA_UI = (() => {
         position: relative;
         flex: 0 0 auto;
         margin-left: 10px;
-        z-index: 8;
+        z-index: 6000;
       }
       .uoga-backpack-toggle {
         position: relative;
@@ -442,14 +447,15 @@ window.UOGA_UI = (() => {
           linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--panel2) 98%, transparent));
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
-        z-index: 2000;
+        z-index: 7000;
         transform-origin: top right;
       }
       .uoga-backpack-panel::before {
           content: "";
           position: absolute;
           top: -16px;
-          right: 36px;
+          left: var(--uoga-backpack-notch-left, auto);
+          right: auto;
           width: 132px;
           height: 28px;
         border: 1px solid var(--line);
@@ -674,7 +680,7 @@ window.UOGA_UI = (() => {
     trayShell.innerHTML = `
       <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
         <span class="uoga-backpack-mark-wrap" aria-hidden="true">
-          <span class="uoga-backpack-mark">Hunt Backpack</span>
+          <span class="uoga-backpack-mark">My Top Hunts</span>
         </span>
         <span class="uoga-backpack-badge" hidden>0</span>
       </button>
@@ -730,7 +736,7 @@ window.UOGA_UI = (() => {
       document.addEventListener('DOMContentLoaded', initShell, { once: true });
       return;
     }
-    initThemeToggle();
+    // Light-only theme: no runtime toggle.
     initBackpackTray();
     renderHuntBasketSidebar();
   }

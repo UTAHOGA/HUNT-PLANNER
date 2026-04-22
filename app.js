@@ -107,7 +107,8 @@ const searchInput = document.getElementById('searchInput'),
   mapChooserTitle = document.getElementById('mapChooserTitle'),
   mapChooserKicker = document.getElementById('mapChooserKicker'),
   mapChooserBody = document.getElementById('mapChooserBody'),
-  selectedHuntFloat = document.getElementById('selectedHuntFloat');
+  selectedHuntFloat = document.getElementById('selectedHuntFloat'),
+  dwrMapFrame = document.getElementById('dwrMapFrame');
 
 // --- UTILITIES ---
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -1749,6 +1750,10 @@ function renderSelectedHunt() {
     openHuntResearch(getHuntCode(hunt));
   });
 
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'dwr') {
+    updateDwrMapFrame(hunt);
+  }
+
   openSelectedHuntFloat();
 }
 
@@ -2323,7 +2328,33 @@ function getFeatureMatches(feature) {
 }
 
 function buildPopupCardForHunt(hunt) {
-  return buildDnrPlate(hunt, true);
+  // Keep map popups clean: no large branding plates/logos. Hunters want the code + unit + key details fast.
+  const code = escapeHtml(getHuntCode(hunt) || '');
+  const unit = escapeHtml(getUnitName(hunt) || getHuntTitle(hunt));
+  const species = escapeHtml(getSpeciesDisplay(hunt) || 'N/A');
+  const sex = escapeHtml(getNormalizedSex(hunt) || 'N/A');
+  const huntType = escapeHtml(getHuntType(hunt) || 'N/A');
+  const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
+  const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
+  const heading = escapeHtml(getPanelHeading(hunt));
+  const boundaryLink = getBoundaryLink(hunt);
+
+  return `
+    <div style="min-width:320px;max-width:420px;border:1px solid rgba(92,65,45,.75);border-radius:14px;overflow:hidden;background:rgba(35,30,26,.96);color:#f4efe4;box-shadow:0 12px 34px rgba(0,0,0,.35);">
+      <div style="padding:12px 14px;border-bottom:1px solid rgba(244,239,228,.12);background:linear-gradient(180deg, rgba(255,102,0,.20), rgba(255,102,0,.06));">
+        <div style="font-size:11px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#ff6600;">${heading}</div>
+        <div style="margin-top:4px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <div style="font-size:18px;font-weight:900;line-height:1.1;">${unit}</div>
+          <div style="font-size:16px;font-weight:900;letter-spacing:.02em;">${code}</div>
+        </div>
+      </div>
+      <div style="padding:12px 14px;display:grid;gap:8px;">
+        <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${species} | ${sex} | ${huntType}</div>
+        <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${weapon}</div>
+        <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${dates}</div>
+        ${boundaryLink ? `<button type="button" data-inline-hunt-details class="secondary" style="justify-self:start;">Official Utah DWR Hunt Details</button>` : ''}
+      </div>
+    </div>`;
 }
 
 function buildPopupListForMatches(matches) {
@@ -2872,7 +2903,19 @@ function ensureCesiumViewer() {
   cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#d7e7f5');
   cesiumViewer.scene.requestRenderMode = false;
   cesiumViewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
+  // Page-first scrolling: keep the mouse wheel available to scroll the page rather than zooming the globe.
+  // Zoom is still available via right-drag (desktop) and pinch (touch/trackpad).
+  try {
+    const ssc = cesiumViewer.scene.screenSpaceCameraController;
+    if (ssc && Cesium?.CameraEventType) {
+      // Keep WHEEL enabled so Ctrl+wheel can zoom; our wheel handler prevents zoom when Ctrl is not held.
+      ssc.zoomEventTypes = [Cesium.CameraEventType.WHEEL, Cesium.CameraEventType.RIGHT_DRAG, Cesium.CameraEventType.PINCH];
+    }
+  } catch (err) {
+    console.warn('Could not update Cesium zoom event types', err);
+  }
   container.style.background = '#d7e7f5';
+  installPageScrollOnMap('globeMap');
   if (huntBoundaryGeoJson) {
     ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
   }
@@ -2897,6 +2940,22 @@ function ensureCesiumViewer() {
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
+function getDwrBoundaryUrl(hunt = selectedHunt) {
+  const huntCode = safe(hunt ? getHuntCode(hunt) : '').trim().toUpperCase();
+  if (huntCode) {
+    return `https://dwrapps.utah.gov/huntboundary/hbstart?HN=${encodeURIComponent(huntCode)}`;
+  }
+  return 'https://dwrapps.utah.gov/huntboundary/hbstart';
+}
+
+function updateDwrMapFrame(hunt = selectedHunt) {
+  if (!dwrMapFrame) return;
+  const src = getDwrBoundaryUrl(hunt);
+  if (dwrMapFrame.getAttribute('src') !== src) {
+    dwrMapFrame.setAttribute('src', src);
+  }
+}
+
 function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
@@ -2915,57 +2974,44 @@ function fallbackToGlobeMode(reason = 'Google map unavailable.') {
 }
 
 function applyMapMode() {
-  const value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
+  const value = safe(mapTypeSelect?.value || 'globe').toLowerCase();
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
+  const basemapControl = document.getElementById('globeBasemapControl');
+  if (basemapControl) basemapControl.toggleAttribute('hidden', value === 'dwr');
 
-  if (value === 'globe') {
-    googleBaselineMap?.getStreetView?.()?.setVisible(false);
+  mapWrap.classList.remove('is-dwr-mode');
+  if (dwrMapFrame) {
+    dwrMapFrame.hidden = true;
+  }
+
+  if (value === 'dwr') {
     clearOutfitterMarkers();
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
-    ensureCesiumViewer();
-    mapWrap.classList.add('is-globe-mode');
-    setTimeout(() => {
-      if (cesiumViewer) {
-        cesiumViewer.resize();
-        cesiumViewer.scene.requestRender();
-      }
-    }, 0);
-    if (selectedHunt && cesiumViewer) {
-      const boundaryId = firstNonEmpty(selectedHunt.boundaryId, selectedHunt.boundaryID, getUnitCode(selectedHunt));
-      if (boundaryId && huntUnitsLayer) {
-        const bounds = new google.maps.LatLngBounds();
-        let found = false;
-        huntUnitsLayer.forEach(f => {
-          if (safe(f.getProperty('BoundaryID')) === safe(boundaryId)) {
-            f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
-          }
-        });
-        if (found) {
-          const center = bounds.getCenter();
-          cesiumViewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(center.lng(), center.lat(), 250000)
-          });
-        }
-      }
+    updateDwrMapFrame(selectedHunt);
+    if (dwrMapFrame) {
+      dwrMapFrame.hidden = false;
     }
-    updateCesiumBoundaryStyles();
+    mapWrap.classList.remove('is-globe-mode');
+    mapWrap.classList.add('is-dwr-mode');
+    // Bring the active map into view (under the header) when switching modes.
+    mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateStatus('Utah DWR map active.');
     return;
   }
 
-  if (!googleBaselineMap) {
-    fallbackToGlobeMode('Google map is unavailable. Switched to globe view.');
-    return;
-  }
-
-  mapWrap.classList.remove('is-globe-mode');
-  googleBaselineMap.setMapTypeId(value);
-  googleBaselineMap.getStreetView()?.setVisible(false);
-  styleBoundaryLayer();
-  if (selectedHunt) {
-    updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
-  }
-  updateStatus(`${titleCaseWords(value)} map active.`);
+  // Default to globe mode (Google Maps removed).
+  clearOutfitterMarkers();
+  ensureCesiumViewer();
+  mapWrap.classList.add('is-globe-mode');
+  mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => {
+    if (cesiumViewer) {
+      cesiumViewer.resize();
+      cesiumViewer.scene.requestRender();
+    }
+  }, 0);
+  updateCesiumBoundaryStyles();
+  updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
 }
 
 function resetMapView() {
@@ -3038,6 +3084,22 @@ function openStreetViewAtFocus() {
   tryRadius(0);
 }
 
+
+function installPageScrollOnMap(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (el.__uogaWheelScrollInstalled) return;
+  el.__uogaWheelScrollInstalled = true;
+
+  // Capture phase so we see the wheel before map libraries can swallow it.
+  el.addEventListener('wheel', (e) => {
+    // With Google Maps cooperative mode, Ctrl+wheel is the intentional zoom gesture.
+    // Default (no Ctrl) should scroll the page.
+    if (e.ctrlKey) return;
+    e.preventDefault();
+    window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+  }, { passive: false, capture: true });
+}
 // --- MAP ENGINE ---
 function initGoogleBaseline() {
   if (googleMapsLoadTimeoutId) {
@@ -3051,11 +3113,15 @@ function initGoogleBaseline() {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
     mapTypeId: 'terrain',
+    // Page-first scrolling: don't let the mouse wheel get "stuck" zooming the map.
+    // Zoom still works with trackpad gestures or by using the map controls.
+    gestureHandling: 'cooperative',
     streetViewControl: true,
     fullscreenControl: true,
     mapTypeControl: false
   });
   googleApiReady = true;
+  installPageScrollOnMap('map');
   if (huntBoundaryGeoJson) buildBoundaryLayer();
   ensureUtahOutlineLayer().catch(err => console.error('Utah outline failed', err));
   if (toggleBLM?.checked) ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
@@ -3092,7 +3158,12 @@ function buildBoundaryLayer() {
 }
 
 function styleBoundaryLayer() {
-    if (!huntUnitsLayer) return;
+    // Google Maps hunt-unit layer may be absent (Google maps removed).
+    // Cesium styling still needs to update when filters or selection change.
+    if (!huntUnitsLayer) {
+      updateCesiumBoundaryStyles();
+      return;
+    }
     const showBoundaries = shouldShowHuntBoundaries();
     const showAllUnits = shouldShowAllHuntUnits();
     const filtered = getDisplayHunts();
@@ -3333,22 +3404,12 @@ function bootstrapPendingHuntSelection() {
 
 // --- BOOTSTRAP ---
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load Map
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&callback=initGoogleBaseline`;
-  script.async = true;
-  script.defer = true;
-  script.onerror = () => {
-    console.error('Google Maps API failed to load.');
-    fallbackToGlobeMode('Google map failed to load. Switched to globe view.');
-  };
-  document.head.appendChild(script);
-  googleMapsLoadTimeoutId = setTimeout(() => {
-    if (!googleApiReady) {
-      console.error('Google Maps API load timed out.');
-      fallbackToGlobeMode('Google map timed out. Switched to globe view.');
-    }
-  }, 7000);
+  // Map engines:
+  // - Globe (Cesium) is the primary interactive map.
+  // - Utah DWR map is available via iframe mode.
+  // Google Maps has been removed to reduce complexity and failure points.
+  if (mapTypeSelect) mapTypeSelect.value = safe(mapTypeSelect.value).trim() ? mapTypeSelect.value : 'globe';
+  ensureCesiumViewer();
   
   // Load Data
   await loadConservationPermitAreas();
@@ -3358,7 +3419,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadOutfitterFederalCoverage();
   try {
       huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
-      if (googleApiReady) buildBoundaryLayer();
       if (cesiumViewer) {
         ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
         ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
@@ -3368,6 +3428,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   refreshSelectionMatrix();
   renderMatchingHunts();
   bootstrapPendingHuntSelection();
+  bindControls();
   applyMapMode();
 });
 

@@ -59,9 +59,9 @@ window.UOGA_EVENTS = (() => {
    */
   function applyPageMeta(page) {
     const titles = {
-      planner: 'U.O.G.A. Hunt Planner | VERIFIED OUTFITTERS',
-      research: 'U.O.G.A. Hunt Research',
-      vetting: 'U.O.G.A. | Outfitter Verification',
+      planner: 'Utah Hunt Planner',
+      research: 'Utah Hunt Research',
+      vetting: 'Outfitter Verification',
     };
     document.title = titles[page] || titles.planner;
 
@@ -107,3 +107,5 @@ window.UOGA_EVENTS = (() => {
     bindPageEvents,
   };
 })();
+
+
