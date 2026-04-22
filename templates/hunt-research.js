@@ -887,22 +887,6 @@ window.UOGA_TEMPLATES.huntResearch = function huntResearch() {
             </div>
           </section>
         </div>
-
-        <aside class="side-stack">
-          <section class="side-card">
-            <div class="card-head">
-              <p>Hunt Backpack</p>
-              <h3>Recent Hunts</h3>
-            </div>
-            <div class="card-body">
-              <p class="proof-note" style="margin-bottom:12px;">Saved hunts stay here for quick reload.</p>
-              <div class="backpack-actions" style="margin-bottom:12px;">
-                <button id="clearBasketButton" class="mini-btn" type="button">Clear Hunt Backpack</button>
-              </div>
-              <div id="basketList" class="basket-list"></div>
-            </div>
-          </section>
-        </aside>
       </div>
     </main>
 
@@ -920,3 +904,4 @@ window.UOGA_TEMPLATES.huntResearch = function huntResearch() {
     </div>
   `;
 };
+
